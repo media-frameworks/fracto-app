@@ -2,19 +2,30 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import AppPageMain from 'app/AppPageMain';
-import {PageMainStyles as styles} from '../styles/PageMainStyles'
-import CoolSplitter, {
-   SPLITTER_TYPE_HORIZONTAL, SPLITTER_TYPE_VERTICAL
-} from "../common/ui/CoolSplitter";
-import {SPLITTER_WIDTH_PX} from "../styles/PageAppStyles";
+import LeftPaneSplitters, {
+   UPPER_HEIGHT_KEY,
+   UPPER_LEFT_WIDTH_KEY,
+   UPPER_RIGHT_WIDTH_KEY,
+   LOWER_HEIGHT_KEY
+} from "./LeftPaneSplitters";
 
-import PaneSteps from "../panes/PaneSteps";
-import PaneField from "../panes/PaneField";
-import PaneLegend from "../panes/PaneLegend";
-import PaneComps from "../panes/PaneComps";
-
-const LS_LEFT_PANE_POSITION = 'ls_left_pane_position'
-const LS_UPPER_PANE_POSITION = 'ls_upper_pane_position'
+import PaneField from "./panes/PaneField";
+import PaneSteps from "./panes/PaneSteps";
+import PaneLegend from "./panes/PaneLegend";
+import PaneComps from "./panes/PaneComps";
+import {
+   KEY_STEPS_WIDTH_PX,
+   KEY_STEPS_HEIGHT_PX,
+   KEY_FIELD_WIDTH_PX,
+   KEY_FIELD_HEIGHT_PX,
+   KEY_COMPS_WIDTH_PX,
+   KEY_COMPS_HEIGHT_PX,
+   KEY_LEGEND_WIDTH_PX,
+   KEY_LEGEND_HEIGHT_PX,
+   KEY_FOCAL_POINT,
+   KEY_SCOPE,
+   KEY_DISABLED,
+} from "./PageSettings";
 
 export class PageMain extends Component {
 
@@ -25,165 +36,121 @@ export class PageMain extends Component {
    state = {
       left_width_px: 0,
       right_width_px: 0,
-      height_px: 0,
-      left_pane_ref: React.createRef(),
-      left_pane_position: 200,
-      during_left_pane_drag: false,
-      upper_pane_ref: React.createRef(),
-      upper_pane_position: 200,
-      during_upper_pane_drag: false,
+      height_px: 1,
+      page_settings: {
+         focal_point: {x: -0.75, y: 0.0125},
+         scope: 3,
+         disabled: false,
+         canvas_buffer: null,
+         ctx: null,
+      },
+      main_ref: React.createRef()
    };
 
    componentDidMount() {
-      const {left_pane_ref} = this.state
-      console.log('page ready')
-      setTimeout(() => {
-         const bounds = left_pane_ref.current.getBoundingClientRect()
+      const {main_ref} = this.state
+      if (main_ref.current) {
+         const bounds = main_ref.current.getBoundingClientRect()
          this.setState({height_px: bounds.height})
-      }, 100)
-
-      const left_pane_position_str = localStorage.getItem(LS_LEFT_PANE_POSITION);
-      let left_pane_position = 500
-      if (left_pane_position_str) {
-         left_pane_position = parseInt(left_pane_position_str)
+         let new_setings = {}
+         new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(bounds.height)
+         this.on_settings_changed(new_setings)
       }
-      const upper_pane_position_str = localStorage.getItem(LS_UPPER_PANE_POSITION);
-      let upper_pane_position = 500
-      if (upper_pane_position_str) {
-         upper_pane_position = parseInt(upper_pane_position_str)
-      }
-      this.setState({left_pane_position, upper_pane_position})
    }
 
    on_resize = (left_width_px, right_width_px, height_px) => {
-      console.log("on_resize", left_width_px, right_width_px, height_px)
+      const {page_settings} = this.state;
       this.setState({
          left_width_px: Math.round(left_width_px),
          right_width_px: Math.round(right_width_px),
          height_px: Math.round(height_px),
       })
+      let new_setings = {}
+      new_setings[KEY_FIELD_WIDTH_PX] = left_width_px - page_settings[KEY_STEPS_WIDTH_PX]
+      new_setings[KEY_LEGEND_WIDTH_PX] = left_width_px
+      new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(height_px)
+      new_setings[KEY_COMPS_WIDTH_PX] = right_width_px
+      this.on_settings_changed(new_setings)
    }
 
-   change_left_pane_position = (new_position) => {
-      this.setState({left_pane_position: new_position})
-      localStorage.setItem(LS_LEFT_PANE_POSITION, `${new_position}`)
-   }
-
-   change_upper_pane_position = (new_position) => {
-      this.setState({upper_pane_position: new_position})
-      localStorage.setItem(LS_UPPER_PANE_POSITION, `${new_position}`)
-   }
-
-   render_upper_panes = (width_px, height_px) => {
-      const {upper_pane_ref, upper_pane_position} = this.state
-      let bounds = {width: 1, height: 1}
-      if (upper_pane_ref.current) {
-         const boundsData = upper_pane_ref.current.getBoundingClientRect()
-         bounds.top = 0
-         bounds.height = boundsData.height
+   on_settings_changed = (new_settings) => {
+      let new_state = {page_settings: this.state.page_settings}
+      if (new_settings[UPPER_HEIGHT_KEY]) {
+         new_state.page_settings[KEY_STEPS_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
+         new_state.page_settings[KEY_FIELD_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
       }
-      const left_part_style = {
-         height: `${height_px}px`,
-         width: `${upper_pane_position}px`,
-         backgroundColor: '#e7e7e7',
+      if (new_settings[LOWER_HEIGHT_KEY]) {
+         new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = new_settings[LOWER_HEIGHT_KEY]
       }
-      const right_part_style = {
-         height: `${height_px}px`,
-         width: `${width_px - upper_pane_position}px`,
-         backgroundColor: '#ffffff',
+      if (new_settings[UPPER_LEFT_WIDTH_KEY]) {
+         new_state.page_settings[KEY_STEPS_WIDTH_PX] = new_settings[UPPER_LEFT_WIDTH_KEY]
       }
-      const upper_pane_content = [
-         <styles.UpperPaneWrapper style={left_part_style} key={'upper-left-pane'}>
-            <PaneSteps
-               width_px={upper_pane_position}
-               height_px={height_px}
-            />
-         </styles.UpperPaneWrapper>,
-         <CoolSplitter
-            key={'upper-pane-splitter-bar'}
-            style={{top: 0}}
-            type={SPLITTER_TYPE_VERTICAL}
-            name={'vertical=upper-pane'}
-            bar_width_px={SPLITTER_WIDTH_PX}
-            container_bounds={bounds}
-            position={upper_pane_position}
-            on_change={this.change_upper_pane_position}
-         />,
-         <styles.UpperPaneWrapper style={right_part_style} key={'upper-right-pane'}>
-            <PaneField
-               width_px={width_px - upper_pane_position}
-               height_px={height_px}
-            />
-         </styles.UpperPaneWrapper>,
-      ]
-      const pane_style = {width: `${width_px}px`, height: `${height_px}px`}
-      return <styles.LeftPaneWrapper style={pane_style} ref={upper_pane_ref}>
-         {upper_pane_content}
-      </styles.LeftPaneWrapper>
-   }
-
-   render_left_panes = (left_width_px, height_px) => {
-      const {left_pane_ref, left_pane_position} = this.state
-      let bounds = {width: 1, height: 1}
-      if (left_pane_ref.current) {
-         bounds = left_pane_ref.current.getBoundingClientRect()
+      if (new_settings[UPPER_RIGHT_WIDTH_KEY]) {
+         new_state.page_settings[KEY_FIELD_WIDTH_PX] = new_settings[UPPER_RIGHT_WIDTH_KEY]
       }
-      const upper_part_style = {
-         height: `${left_pane_position - 1}px`,
-         marginBottom: '3px',
+      if (new_settings[KEY_FOCAL_POINT]) {
+         new_state.page_settings[KEY_FOCAL_POINT] =
+            JSON.parse(JSON.stringify(new_settings[KEY_FOCAL_POINT]))
+         new_state.page_settings[KEY_DISABLED] = true
       }
-      const lower_part_style = {
-         height: `${height_px - left_pane_position - 20}px`,
-         backgroundColor: '#eeeeee',
+      if (new_settings[KEY_SCOPE]) {
+         new_state.page_settings[KEY_SCOPE] = new_settings[KEY_SCOPE]
+         new_state.page_settings[KEY_DISABLED] = true
       }
-      const left_pane_content = [
-         <styles.PanelWrapper style={upper_part_style} key={'upper-part'}>
-            {this.render_upper_panes(left_width_px, left_pane_position)}
-         </styles.PanelWrapper>,
-         <CoolSplitter
-            key={'lower-pane-splitter-bar'}
-            type={SPLITTER_TYPE_HORIZONTAL}
-            name={'horizontal-left-pane'}
-            bar_width_px={SPLITTER_WIDTH_PX}
-            container_bounds={bounds}
-            position={left_pane_position}
-            on_change={this.change_left_pane_position}/>,
-         <styles.PanelWrapper style={lower_part_style} key={'lower-part'}>
-            <PaneLegend
-               width_px={left_width_px}
-               height_px={height_px - left_pane_position - 20}
-            />
-         </styles.PanelWrapper>,
-      ]
-      const pane_style = {width: `${left_width_px}px`, height: `${height_px}px`}
-      return <styles.LeftPaneWrapper style={pane_style} ref={left_pane_ref}>
-         {left_pane_content}
-      </styles.LeftPaneWrapper>
-   }
-
-   render_right_pane = (right_width_px, height_px) => {
-      const right_part_style = {
-         height: `${height_px}px`,
-         width: `${right_width_px}px`,
-         backgroundColor: '#f8f8f8',
+      if (new_settings[KEY_COMPS_WIDTH_PX]) {
+         new_state.page_settings[KEY_COMPS_WIDTH_PX] = new_settings[KEY_COMPS_WIDTH_PX]
       }
-      return <styles.PanelWrapper style={right_part_style} key={'right-part'}>
-         <PaneComps
-            width_px={right_width_px}
-            height_px={height_px}
-         />
-      </styles.PanelWrapper>
+      if (new_settings[KEY_COMPS_HEIGHT_PX]) {
+         new_state.page_settings[KEY_COMPS_HEIGHT_PX] = new_settings[KEY_COMPS_HEIGHT_PX]
+      }
+      if (new_settings[KEY_LEGEND_WIDTH_PX]) {
+         new_state.page_settings[KEY_LEGEND_WIDTH_PX] = new_settings[KEY_LEGEND_WIDTH_PX]
+      }
+      if (new_settings[KEY_FIELD_WIDTH_PX]) {
+         new_state.page_settings[KEY_FIELD_WIDTH_PX] = new_settings[KEY_FIELD_WIDTH_PX]
+      }
+      if (new_settings[KEY_LEGEND_HEIGHT_PX]) {
+         new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = new_settings[KEY_LEGEND_HEIGHT_PX]
+      }
+      this.setState(new_state)
    }
 
    render() {
       const {app_name} = this.props
-      const {left_width_px, right_width_px, height_px} = this.state
-      return <AppPageMain
-         app_name={app_name}
-         on_resize={this.on_resize}
-         content_left={this.render_left_panes(left_width_px, height_px)}
-         content_right={this.render_right_pane(right_width_px, height_px)}
+      const {left_width_px, height_px, page_settings, main_ref} = this.state
+      const pane_steps = <PaneSteps
+         page_settings={page_settings}
+         on_settings_changed={this.on_settings_changed}
       />
+      const pane_field = <PaneField
+         page_settings={page_settings}
+         on_settings_changed={this.on_settings_changed}
+      />
+      const pane_legend = <PaneLegend
+         page_settings={page_settings}
+         on_settings_changed={this.on_settings_changed}
+      />
+      const pane_comps = <PaneComps
+         page_settings={page_settings}
+         on_settings_changed={this.on_settings_changed}
+      />
+      const left_pane = <LeftPaneSplitters
+         width_px={left_width_px}
+         height_px={height_px}
+         pane_steps={pane_steps}
+         pane_field={pane_field}
+         pane_legend={pane_legend}
+         on_settings_changed={this.on_settings_changed}
+      />
+      return <div
+         ref={main_ref}>
+         <AppPageMain
+            app_name={app_name}
+            on_resize={this.on_resize}
+            content_left={left_pane}
+            content_right={pane_comps}
+         />
+      </div>
    }
 }
 
