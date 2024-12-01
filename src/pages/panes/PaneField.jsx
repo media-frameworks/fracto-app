@@ -14,11 +14,10 @@ export class PaneField extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
-      on_hover: PropTypes.func,
    }
 
    render() {
-      const {on_hover, on_settings_changed, page_settings} = this.props
+      const {on_settings_changed, page_settings} = this.props
       return [
          <FieldHeader
             width_px={page_settings[KEY_FIELD_WIDTH_PX]}
@@ -26,7 +25,6 @@ export class PaneField extends Component {
          <FieldImage
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
-            on_hover={on_hover}
          />,
       ]
    }

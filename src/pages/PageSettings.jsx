@@ -13,6 +13,7 @@ export const KEY_SCOPE = 'scope'
 export const KEY_DISABLED = 'disabled'
 export const KEY_CANVAS_BUFFER = 'canvas_buffer'
 export const KEY_CTX = 'ctx'
+export const KEY_HOVER_POINT = 'hover_point'
 
 export class PageSettings {
 

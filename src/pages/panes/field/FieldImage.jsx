@@ -11,7 +11,8 @@ import {
    KEY_SCOPE,
    KEY_CANVAS_BUFFER,
    KEY_CTX,
-   KEY_DISABLED
+   KEY_DISABLED,
+   KEY_HOVER_POINT,
 } from "../../PageSettings";
 
 const IMAGE_SIZE_DELTA = 50
@@ -21,11 +22,28 @@ export class FieldImage extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
-      on_hover: PropTypes.func.isRequired,
    }
 
    state = {
       image_ref: React.createRef(),
+   }
+
+   componentDidMount() {
+      window.addEventListener('keydown', this.key_listener)
+   }
+
+   componentWillUnmount() {
+      window.removeEventListener('keydown', this.key_listener)
+   }
+
+   key_listener = (e) => {
+      const {page_settings, on_settings_changed} = this.props
+      // console.log('key_listener', e)
+      if (e.code === 'Escape') {
+         let new_setings = {}
+         new_setings[KEY_SCOPE] = page_settings[KEY_SCOPE] * 1.618
+         on_settings_changed(new_setings)
+      }
    }
 
    get_mouse_pos = (e) => {
@@ -50,23 +68,27 @@ export class FieldImage extends Component {
    }
 
    on_mousemove = (e) => {
-      const {on_hover} = this.props
+      const {on_settings_changed} = this.props
       const location = this.get_mouse_pos(e)
-      if (on_hover) {
-         on_hover(location)
+      let new_setings = {}
+      new_setings[KEY_HOVER_POINT] = {
+         x: location.x,
+         y: location.y,
       }
+      on_settings_changed(new_setings)
    }
 
    on_mouseleave = (e) => {
-      const {on_hover} = this.props
-      if (on_hover) {
-         on_hover(false)
-      }
+      const {on_settings_changed} = this.props
+      let new_setings = {}
+      new_setings[KEY_HOVER_POINT] = null
+      on_settings_changed(new_setings)
    }
 
    on_click = (e) => {
       const {image_ref} = this.state
-      const {focal_point, scope, on_settings_changed, disabled} = this.props
+      const {page_settings, on_settings_changed} = this.props
+      const {focal_point, scope, disabled} = page_settings
       if (disabled) {
          return
       }
@@ -80,6 +102,9 @@ export class FieldImage extends Component {
       settings[KEY_FOCAL_POINT] = {
          x: leftmost + increment * img_x,
          y: topmost - increment * img_y,
+      }
+      if (e.ctrlKey) {
+         settings[KEY_SCOPE] = page_settings[KEY_SCOPE] * 0.618
       }
       on_settings_changed(settings)
    }
@@ -104,6 +129,7 @@ export class FieldImage extends Component {
    render() {
       const {image_ref} = this.state
       const {page_settings} = this.props
+      const {focal_point, scope, disabled} = page_settings
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
       const field_height = page_settings[KEY_FIELD_HEIGHT_PX]
@@ -115,10 +141,11 @@ export class FieldImage extends Component {
          style={{width: field_width, marginTop: ((field_height - image_width) / 2) - 5}}>
          <FractoRasterImage
             width_px={image_width}
-            scope={page_settings[KEY_SCOPE]}
-            focal_point={page_settings[KEY_FOCAL_POINT]}
+            scope={scope}
+            focal_point={focal_point}
             aspect_ratio={1.0}
             on_plan_complete={this.on_plan_complete}
+            disabled={disabled}
          />
       </styles.ImageWrapper>
    }

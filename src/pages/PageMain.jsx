@@ -25,7 +25,28 @@ import {
    KEY_FOCAL_POINT,
    KEY_SCOPE,
    KEY_DISABLED,
+   KEY_HOVER_POINT, KEY_CTX, KEY_CANVAS_BUFFER,
 } from "./PageSettings";
+
+const ALL_PANE_DIMENSIONS = [
+   KEY_STEPS_WIDTH_PX,
+   KEY_STEPS_HEIGHT_PX,
+   KEY_FIELD_WIDTH_PX,
+   KEY_FIELD_HEIGHT_PX,
+   KEY_COMPS_WIDTH_PX,
+   KEY_COMPS_HEIGHT_PX,
+   KEY_LEGEND_WIDTH_PX,
+   KEY_LEGEND_HEIGHT_PX,
+]
+
+const ALL_OPERATIVES = [
+   KEY_FOCAL_POINT,
+   KEY_SCOPE,
+   KEY_DISABLED,
+   KEY_HOVER_POINT,
+   KEY_CTX,
+   KEY_CANVAS_BUFFER,
+]
 
 export class PageMain extends Component {
 
@@ -49,13 +70,11 @@ export class PageMain extends Component {
 
    componentDidMount() {
       const {main_ref} = this.state
-      if (main_ref.current) {
-         const bounds = main_ref.current.getBoundingClientRect()
-         this.setState({height_px: bounds.height})
-         let new_setings = {}
-         new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(bounds.height)
-         this.on_settings_changed(new_setings)
-      }
+      const bounds = main_ref.current.getBoundingClientRect()
+      this.setState({height_px: bounds.height})
+      let new_setings = {}
+      new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(bounds.height)
+      this.on_settings_changed(new_setings)
    }
 
    on_resize = (left_width_px, right_width_px, height_px) => {
@@ -75,6 +94,7 @@ export class PageMain extends Component {
 
    on_settings_changed = (new_settings) => {
       let new_state = {page_settings: this.state.page_settings}
+      console.log('new_settings', new_settings)
       if (new_settings[UPPER_HEIGHT_KEY]) {
          new_state.page_settings[KEY_STEPS_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
          new_state.page_settings[KEY_FIELD_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
@@ -93,25 +113,24 @@ export class PageMain extends Component {
             JSON.parse(JSON.stringify(new_settings[KEY_FOCAL_POINT]))
          new_state.page_settings[KEY_DISABLED] = true
       }
+      if (new_settings[KEY_HOVER_POINT]) {
+         new_state.page_settings[KEY_HOVER_POINT] =
+            JSON.parse(JSON.stringify(new_settings[KEY_HOVER_POINT]))
+      }
       if (new_settings[KEY_SCOPE]) {
          new_state.page_settings[KEY_SCOPE] = new_settings[KEY_SCOPE]
          new_state.page_settings[KEY_DISABLED] = true
       }
-      if (new_settings[KEY_COMPS_WIDTH_PX]) {
-         new_state.page_settings[KEY_COMPS_WIDTH_PX] = new_settings[KEY_COMPS_WIDTH_PX]
-      }
-      if (new_settings[KEY_COMPS_HEIGHT_PX]) {
-         new_state.page_settings[KEY_COMPS_HEIGHT_PX] = new_settings[KEY_COMPS_HEIGHT_PX]
-      }
-      if (new_settings[KEY_LEGEND_WIDTH_PX]) {
-         new_state.page_settings[KEY_LEGEND_WIDTH_PX] = new_settings[KEY_LEGEND_WIDTH_PX]
-      }
-      if (new_settings[KEY_FIELD_WIDTH_PX]) {
-         new_state.page_settings[KEY_FIELD_WIDTH_PX] = new_settings[KEY_FIELD_WIDTH_PX]
-      }
-      if (new_settings[KEY_LEGEND_HEIGHT_PX]) {
-         new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = new_settings[KEY_LEGEND_HEIGHT_PX]
-      }
+      ALL_PANE_DIMENSIONS.forEach(dim_key => {
+         if (new_settings[dim_key]) {
+            new_state.page_settings[dim_key] = new_settings[dim_key]
+         }
+      })
+      ALL_OPERATIVES.forEach(operative => {
+         if (new_settings[operative] !== undefined) {
+            new_state.page_settings[operative] = new_settings[operative]
+         }
+      })
       this.setState(new_state)
    }
 
