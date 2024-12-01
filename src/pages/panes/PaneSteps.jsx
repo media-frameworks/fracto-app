@@ -1,6 +1,8 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import StepsList from "./steps/StepsList";
+
 import {
    KEY_STEPS_HEIGHT_PX,
    KEY_STEPS_WIDTH_PX
@@ -14,8 +16,11 @@ export class PaneSteps extends Component {
    }
 
    render(){
-      const {page_settings} = this.props
-      return `PaneSteps ${page_settings[KEY_STEPS_WIDTH_PX]}x${page_settings[KEY_STEPS_HEIGHT_PX]}`
+      const {page_settings, on_settings_changed} = this.props
+      return <StepsList
+         page_settings={page_settings}
+         on_settings_changed={on_settings_changed}
+      />
    }
 }
 

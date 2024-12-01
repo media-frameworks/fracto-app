@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import {
    KEY_LEGEND_WIDTH_PX,
-   KEY_LEGEND_HEIGHT_PX
+   KEY_LEGEND_HEIGHT_PX,
+   KEY_HOVER_POINT
 } from "../PageSettings";
 
 export class PaneLegend extends Component {
@@ -13,9 +14,15 @@ export class PaneLegend extends Component {
       on_settings_changed: PropTypes.func.isRequired,
    }
 
-   render(){
+   render() {
       const {page_settings} = this.props
-      return `PaneLegend ${page_settings[KEY_LEGEND_WIDTH_PX]}x${page_settings[KEY_LEGEND_HEIGHT_PX]}`
+      const {hover_point} = page_settings
+      return [
+         `PaneLegend ${page_settings[KEY_LEGEND_WIDTH_PX]}x${page_settings[KEY_LEGEND_HEIGHT_PX]}`,
+         <br/>,
+         `${hover_point ? hover_point.x : ''}x${hover_point ? hover_point.y : ''}`,
+
+      ]
    }
 }
 

@@ -48,7 +48,7 @@ export class FractoRasterImage extends Component {
       width_px: PropTypes.number.isRequired,
       focal_point: PropTypes.object.isRequired,
       scope: PropTypes.number.isRequired,
-      on_plan_complete: PropTypes.func,
+      on_plan_complete: PropTypes.func.isRequired,
       aspect_ratio: PropTypes.number,
       disabled: PropTypes.bool,
       update_counter: PropTypes.number,
@@ -153,11 +153,7 @@ export class FractoRasterImage extends Component {
          aspect_ratio,
          on_plan_complete,
          filter_level,
-         disabled
       } = this.props
-      if (disabled) {
-         return;
-      }
       let all_short_codes = []
       const all_level_sets = []
       get_tiles(width_px, focal_point, scope, aspect_ratio)
