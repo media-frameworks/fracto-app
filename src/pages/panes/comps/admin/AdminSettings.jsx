@@ -40,7 +40,7 @@ export class AdminSettings extends Component {
             let value = page_settings[key] ? page_settings[key] : 'null'
             switch (typeof value) {
                case "object":
-                  value = JSON.stringify(value, '', 2);
+                  value = !Array.isArray(value) ? JSON.stringify(value, '', 2) : '[]';
                   break;
                case "boolean":
                   value = value ? 'true' : 'false'

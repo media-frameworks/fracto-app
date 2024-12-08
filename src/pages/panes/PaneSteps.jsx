@@ -2,11 +2,15 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import StepsList from "./steps/StepsList";
+import StepsHeader from "./steps/StepsHeader";
+import {PaneStepsStyles as styles} from "../../styles/PaneStepsStyles"
 
 import {
    KEY_STEPS_HEIGHT_PX,
    KEY_STEPS_WIDTH_PX
 } from "../PageSettings";
+
+const HEADER_HEIGHT_PX = 24
 
 export class PaneSteps extends Component {
 
@@ -15,12 +19,25 @@ export class PaneSteps extends Component {
       on_settings_changed: PropTypes.func.isRequired,
    }
 
-   render(){
+   render() {
       const {page_settings, on_settings_changed} = this.props
-      return <StepsList
+      const steps_header = <StepsHeader
          page_settings={page_settings}
          on_settings_changed={on_settings_changed}
       />
+      const steps_list = <StepsList
+         page_settings={page_settings}
+         on_settings_changed={on_settings_changed}
+      />
+      const list_height_px = page_settings[KEY_STEPS_HEIGHT_PX] - HEADER_HEIGHT_PX
+      return [
+         <styles.HeaderWrapper style={{height: HEADER_HEIGHT_PX}}>
+            {steps_header}
+         </styles.HeaderWrapper>,
+         <styles.StepsListWrapper style={{height: list_height_px}}>
+            {steps_list}
+         </styles.StepsListWrapper>,
+      ]
    }
 }
 

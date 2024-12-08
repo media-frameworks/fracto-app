@@ -130,7 +130,7 @@ export class FractoRasterImage extends Component {
          ctx.fillRect(0, 0, width_px, width_px);
          return (canvas_buffer)
       }
-      if (width_px <= 0) {
+      if (!width_px) {
          return;
       }
       let height_px = Math.round(width_px * aspect_ratio);

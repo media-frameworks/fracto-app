@@ -7,10 +7,13 @@ export class PaneFieldStyles {
       border-bottom: 1px solid black;
       background-color: yellow;
    `
-   static ImageWrapper = styled(CoolStyles.InlineBlock)`
+   static FieldWrapper = styled(CoolStyles.InlineBlock)`
       padding: 0;
       text-align: center;
       vertical-align: middle ;
+   `
+   static ImageWrapper = styled(CoolStyles.InlineBlock)`
+      padding: 0;
    `
 }
 

@@ -25,7 +25,7 @@ import {
    KEY_FOCAL_POINT,
    KEY_SCOPE,
    KEY_DISABLED,
-   KEY_HOVER_POINT, KEY_CTX, KEY_CANVAS_BUFFER,
+   KEY_HOVER_POINT, KEY_CTX, KEY_CANVAS_BUFFER, KEY_IMG_X, KEY_IMG_Y,
 } from "./PageSettings";
 
 const ALL_PANE_DIMENSIONS = [
@@ -46,6 +46,8 @@ const ALL_OPERATIVES = [
    KEY_HOVER_POINT,
    KEY_CTX,
    KEY_CANVAS_BUFFER,
+   KEY_IMG_X,
+   KEY_IMG_Y,
 ]
 
 export class PageMain extends Component {
