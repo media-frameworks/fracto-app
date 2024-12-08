@@ -7,7 +7,7 @@ export class PaneStepsStyles {
    static HeaderWrapper = styled(CoolStyles.Block)`
       padding: 0;
       border-bottom: 1px solid black;
-      background-color: lightcoral;
+      background-color: #aaaaaa;
    `
    static StepsListWrapper = styled(CoolStyles.InlineBlock)`
       height: 100%;
