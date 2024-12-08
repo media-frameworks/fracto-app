@@ -16,7 +16,7 @@
     "assert": "^2.1.0",
     "aws-sdk": "^2.1669.0",
     "buffer": "^6.0.3",
-    "chart.js": "^4.4.3",
+    "chart.js": "^4.4.7",
     "fflate": "^0.8.1",
     "javascript-time-ago": "^2.5.10",
     "mathjs": "^11.11.2",
