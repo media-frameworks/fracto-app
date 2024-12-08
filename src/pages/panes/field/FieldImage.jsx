@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import FractoRasterImage from "fracto/FractoRasterImage";
 import {PaneFieldStyles as styles} from 'styles/PaneFieldStyles'
+import {HEADER_HEIGHT_PX} from "styles/PaneStepsStyles";
 
 import {
    KEY_FIELD_WIDTH_PX,
@@ -18,6 +19,9 @@ import {
 } from "../../PageSettings";
 
 const IMAGE_SIZE_DELTA = 50
+const ZOOM_FACTOR = 1.5
+const ZOOM_FACTOR_MINOR = 1.125
+const ZOOM_FACTOR_MAJOR = 2.5
 
 export class FieldImage extends Component {
 
@@ -106,10 +110,30 @@ export class FieldImage extends Component {
          y: topmost - increment * img_y,
       }
       if (e.ctrlKey) {
-         settings[KEY_SCOPE] = page_settings[KEY_SCOPE] * 0.618
+         settings[KEY_SCOPE] = page_settings[KEY_SCOPE] / ZOOM_FACTOR
       }
       settings[KEY_IMG_X] = img_x
       settings[KEY_IMG_Y] = img_y
+      on_settings_changed(settings)
+   }
+
+   on_wheel = (e) => {
+      const {page_settings, on_settings_changed} = this.props
+      const {scope, disabled} = page_settings
+      // console.log('on_wheel', e)
+      if (disabled) {
+         return;
+      }
+      let settings = {}
+      let zoom_factor = e.shiftKey ? ZOOM_FACTOR_MAJOR : ZOOM_FACTOR
+      if (e.altKey) {
+         zoom_factor = ZOOM_FACTOR_MINOR
+      }
+      if (e.deltaY > 0) {
+         settings[KEY_SCOPE] = scope * zoom_factor
+      } else {
+         settings[KEY_SCOPE] = scope / zoom_factor
+      }
       on_settings_changed(settings)
    }
 
@@ -136,7 +160,7 @@ export class FieldImage extends Component {
       const {focal_point, scope, disabled} = page_settings
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
-      const field_height = page_settings[KEY_FIELD_HEIGHT_PX]
+      const field_height = page_settings[KEY_FIELD_HEIGHT_PX] - HEADER_HEIGHT_PX
       return <styles.FieldWrapper
          style={{width: field_width, height: field_height}}>
          <styles.ImageWrapper
@@ -144,7 +168,8 @@ export class FieldImage extends Component {
             onClick={this.on_click}
             onMouseMove={this.on_mousemove}
             onMouseLeave={this.on_mouseleave}
-            style={{width: image_width, marginTop: ((field_height - image_width) / 2) - 5}}>
+            onWheel={this.on_wheel}
+            style={{width: image_width, marginTop: (field_height - image_width) / 2}}>
             <FractoRasterImage
                width_px={image_width}
                scope={scope}

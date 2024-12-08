@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import {CoolStyles} from '../common/ui/CoolImports'
 
+export const HEADER_HEIGHT_PX = 24
+
 export class PaneStepsStyles {
    static HeaderWrapper = styled(CoolStyles.Block)`
       padding: 0;
@@ -13,7 +15,7 @@ export class PaneStepsStyles {
       padding: 0;
    `
    static StepsWrapper = styled(CoolStyles.InlineBlock)`
-      background-color: goldenrod;
+      background-color: white;
    `
    static StepFrame = styled(CoolStyles.Block)`
       background-color: #f8f8f8;
