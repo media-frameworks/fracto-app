@@ -7,7 +7,7 @@ import {
    KEY_STEPS_WIDTH_PX,
    KEY_DISABLED,
 } from "../../PageSettings";
-import {PaneStepsStyles as styles, HEADER_HEIGHT_PX} from 'styles/PaneStepsStyles'
+import {PaneStepsStyles as styles} from 'styles/PaneStepsStyles'
 import FractoRasterImage from "../../../fracto/FractoRasterImage";
 
 const STEP_SCOPE_FACTOR = Math.E
@@ -76,6 +76,7 @@ export class StepsList extends Component {
       const steps = all_steps.map((step, i) => {
          const step_dim_px = page_settings[KEY_STEPS_WIDTH_PX] - 22
          return <styles.StepFrame
+            key={`step-${i}`}
             style={{width: step_dim_px, height: step_dim_px, cursor: 'pointer'}}
             onClick={e => this.click_step(step)}
          >

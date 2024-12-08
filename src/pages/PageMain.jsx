@@ -115,6 +115,10 @@ export class PageMain extends Component {
             JSON.parse(JSON.stringify(new_settings[KEY_FOCAL_POINT]))
          new_state.page_settings[KEY_DISABLED] = true
       }
+      if (new_settings[KEY_CANVAS_BUFFER]) {
+         new_state.page_settings[KEY_CANVAS_BUFFER] =
+            JSON.parse(JSON.stringify(new_settings[KEY_CANVAS_BUFFER]))
+      }
       if (new_settings[KEY_HOVER_POINT]) {
          new_state.page_settings[KEY_HOVER_POINT] =
             JSON.parse(JSON.stringify(new_settings[KEY_HOVER_POINT]))
