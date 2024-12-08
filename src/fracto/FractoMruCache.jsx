@@ -4,7 +4,7 @@ import {decompressSync} from 'fflate';
 
 const URL_BASE = network.fracto_server_url;
 const TILE_SERVER_BASE = network.tile_server_url;
-const MAX_TILE_CACHE = 100;
+const MAX_TILE_CACHE = 350;
 
 export var TILE_CACHE = {};
 export var PACKAGE_CACHE = {};

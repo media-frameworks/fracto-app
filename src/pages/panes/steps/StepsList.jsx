@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {
+   KEY_FOCAL_POINT,
    KEY_SCOPE,
-   KEY_STEPS_HEIGHT_PX,
-   KEY_STEPS_WIDTH_PX
+   KEY_STEPS_WIDTH_PX,
+   KEY_DISABLED,
 } from "../../PageSettings";
-import {PaneStepsStyles as styles} from 'styles/PaneStepsStyles'
+import {PaneStepsStyles as styles, HEADER_HEIGHT_PX} from 'styles/PaneStepsStyles'
+import FractoRasterImage from "../../../fracto/FractoRasterImage";
 
-const STEP_SCOPE_FACTOR = 1.618
+const STEP_SCOPE_FACTOR = Math.E
 
 const create_step_entry = (step_scope) => {
    return {
@@ -36,8 +38,8 @@ export class StepsList extends Component {
    componentDidUpdate(prevProps, prevState, snapshot) {
       const {page_settings} = this.props
       const {stepped_scope} = this.state
-      console.log('page_settings[KEY_SCOPE]', page_settings[KEY_SCOPE])
-      console.log('prevProps.page_settings[KEY_SCOPE]', prevProps.page_settings[KEY_SCOPE])
+      // console.log('page_settings[KEY_SCOPE]', page_settings[KEY_SCOPE])
+      // console.log('prevProps.page_settings[KEY_SCOPE]', prevProps.page_settings[KEY_SCOPE])
       const scope_changed = page_settings[KEY_SCOPE] !== stepped_scope
       if (scope_changed) {
          this.set_steps()
@@ -56,8 +58,15 @@ export class StepsList extends Component {
       }
       const step_entry = create_step_entry(3.0)
       new_steps.push(step_entry)
-      console.log('new_steps', new_steps)
+      // console.log('new_steps', new_steps)
       this.setState({all_steps: new_steps})
+   }
+
+   click_step = (step) => {
+      const {on_settings_changed} = this.props
+      let new_settings = {}
+      new_settings[KEY_SCOPE] = step.scope
+      on_settings_changed(new_settings)
    }
 
    render() {
@@ -66,8 +75,17 @@ export class StepsList extends Component {
       // console.log('all_steps', all_steps)
       const steps = all_steps.map((step, i) => {
          const step_dim_px = page_settings[KEY_STEPS_WIDTH_PX] - 22
-         return <styles.StepFrame style={{width: step_dim_px, height: step_dim_px}}>
-            {i}
+         return <styles.StepFrame
+            style={{width: step_dim_px, height: step_dim_px, cursor: 'pointer'}}
+            onClick={e => this.click_step(step)}
+         >
+            <FractoRasterImage
+               width_px={step_dim_px}
+               scope={step.scope}
+               focal_point={page_settings[KEY_FOCAL_POINT]}
+               aspect_ratio={1.0}
+               disabled={page_settings[KEY_DISABLED]}
+            />
          </styles.StepFrame>
       })
       return <styles.StepsWrapper>
