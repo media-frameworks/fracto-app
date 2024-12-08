@@ -13,6 +13,8 @@ import {
    KEY_CTX,
    KEY_DISABLED,
    KEY_HOVER_POINT,
+   KEY_IMG_X,
+   KEY_IMG_Y,
 } from "../../PageSettings";
 
 const IMAGE_SIZE_DELTA = 50
@@ -106,6 +108,8 @@ export class FieldImage extends Component {
       if (e.ctrlKey) {
          settings[KEY_SCOPE] = page_settings[KEY_SCOPE] * 0.618
       }
+      settings[KEY_IMG_X] = img_x
+      settings[KEY_IMG_Y] = img_y
       on_settings_changed(settings)
    }
 
@@ -133,21 +137,24 @@ export class FieldImage extends Component {
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
       const field_height = page_settings[KEY_FIELD_HEIGHT_PX]
-      return <styles.ImageWrapper
-         ref={image_ref}
-         onClick={this.on_click}
-         onMouseMove={this.on_mousemove}
-         onMouseLeave={this.on_mouseleave}
-         style={{width: field_width, marginTop: ((field_height - image_width) / 2) - 5}}>
-         <FractoRasterImage
-            width_px={image_width}
-            scope={scope}
-            focal_point={focal_point}
-            aspect_ratio={1.0}
-            on_plan_complete={this.on_plan_complete}
-            disabled={disabled}
-         />
-      </styles.ImageWrapper>
+      return <styles.FieldWrapper
+         style={{width: field_width, height: field_height}}>
+         <styles.ImageWrapper
+            ref={image_ref}
+            onClick={this.on_click}
+            onMouseMove={this.on_mousemove}
+            onMouseLeave={this.on_mouseleave}
+            style={{width: image_width, marginTop: ((field_height - image_width) / 2) - 5}}>
+            <FractoRasterImage
+               width_px={image_width}
+               scope={scope}
+               focal_point={focal_point}
+               aspect_ratio={1.0}
+               on_plan_complete={this.on_plan_complete}
+               disabled={disabled}
+            />
+         </styles.ImageWrapper>
+      </styles.FieldWrapper>
    }
 }
 

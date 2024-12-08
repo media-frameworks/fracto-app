@@ -14,6 +14,8 @@ export const KEY_DISABLED = 'disabled'
 export const KEY_CANVAS_BUFFER = 'canvas_buffer'
 export const KEY_CTX = 'ctx'
 export const KEY_HOVER_POINT = 'hover_point'
+export const KEY_IMG_X = 'img_x'
+export const KEY_IMG_Y = 'img_y'
 
 export class PageSettings {
 
