@@ -6,7 +6,7 @@ import Magnifier from "react-magnifier";
 import {CoolStyles, CoolColors, CoolInputText, CoolModal, CoolButton} from "common/ui/CoolImports";
 
 import FractoUtil from "./FractoUtil";
-import {render_modal_title} from "./FractoStyles";
+import {render_modal_title} from "./styles/FractoStyles";
 
 import Logo from "app/logo.jpg"
 
