@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import {CoolStyles, CoolColors} from "common/ui/CoolImports";
 
-import FractoUtil from "./FractoUtil";
+import FractoUtil from "../FractoUtil";
 
 const TitleBar = styled(CoolStyles.Block)`
    background: linear-gradient(120deg, #999999, #eeeeee);

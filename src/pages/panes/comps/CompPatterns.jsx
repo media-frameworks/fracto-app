@@ -86,6 +86,8 @@ export class CompPatterns extends Component {
 
       console.log('fracto_values.orbital_points', fracto_values.orbital_points)
       return [
+         `${(fracto_values.orbital_points?.length || 1) - 1} points`,
+         <br />,
          this.click_point_chart(
             fracto_values.orbital_points,
             [Q_center],

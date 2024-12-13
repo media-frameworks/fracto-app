@@ -24,9 +24,9 @@ const get_tiles = (
 
    const all_tiles = []
    const height_px = width_px * aspect_ratio
-   const tiles_on_edge_x = Math.ceil(width_px / 256) + 0.75;
-   const tiles_on_edge_y = Math.ceil(height_px / 256) + 0.75;
-   const max_tiles = Math.ceil(tiles_on_edge_x * tiles_on_edge_y + 0.75)
+   const tiles_on_edge_x = Math.ceil(width_px / 256) + 1;
+   const tiles_on_edge_y = Math.ceil(height_px / 256) + 1;
+   const max_tiles = Math.ceil(tiles_on_edge_x * tiles_on_edge_y + 1)
    for (let level = 2; level < MAX_LEVEL; level++) {
       const level_tiles = FractoIndexedTiles.tiles_in_scope(
          level, focal_point, scope, aspect_ratio);

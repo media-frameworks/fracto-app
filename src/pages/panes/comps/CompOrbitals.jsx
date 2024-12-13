@@ -9,7 +9,7 @@ import {
    CELL_TYPE_TEXT
 } from "common/ui/CoolTable";
 import FractoUtil from "fracto/FractoUtil";
-import {render_pattern_block} from "fracto/FractoStyles";
+import {render_pattern_block} from "fracto/styles/FractoStyles";
 import {
    KEY_COMPS_WIDTH_PX,
 } from "../../PageSettings";
@@ -91,7 +91,6 @@ export class CompOrbitals extends Component {
       for (let img_x = 0; img_x < canvas_buffer.length; img_x++) {
          for (let img_y = 0; img_y < canvas_buffer[img_x].length; img_y++) {
             const pattern = canvas_buffer[img_x][img_y][0]
-            const iteration = canvas_buffer[img_x][img_y][1]
             if (pattern === 0) {
                continue
             }
@@ -100,19 +99,10 @@ export class CompOrbitals extends Component {
                orbital_bins[orbital_key] = {
                   orbital: pattern,
                   bin_count: 0,
-                  iterations: {}
-               }
-            }
-            const iteration_key = `iteration_${iteration}`
-            if (!(iteration_key in orbital_bins[orbital_key].iterations)) {
-               orbital_bins[orbital_key].iterations[iteration_key] = {
-                  iteration: iteration,
-                  count: 0
                }
             }
             orbital_bins.total_count += 1
             orbital_bins[orbital_key].bin_count += 1
-            orbital_bins[orbital_key].iterations[iteration_key].count += 1
             if (orbital_bins[orbital_key].bin_count > orbital_bins.max_bin) {
                orbital_bins.max_bin = orbital_bins[orbital_key].bin_count
             }
@@ -124,22 +114,8 @@ export class CompOrbitals extends Component {
    color_bar = (bin) => {
       const {orbital_bins} = this.state
       const bar_width_px = COLOR_BAR_WIDTH_PX * (bin.bin_count / orbital_bins.max_bin)
-      const iteration_keys = Object.keys(bin.iterations)
-      let all_iterations = []
-      for (let bin_index = 0; bin_index < iteration_keys.length; bin_index++) {
-         const iteration_block = bin.iterations[iteration_keys[bin_index]]
-         for (let i = 0; i < iteration_block.count; i++) {
-            all_iterations.push(iteration_block.iteration)
-         }
-      }
-      const sorted_iterations = all_iterations.sort()
-      const highest_iteration = sorted_iterations[0]
-      const lowest_iteration = sorted_iterations[sorted_iterations.length - 1]
-      const color_lowest = FractoUtil.fracto_pattern_color(bin.orbital, lowest_iteration)
-      const color_highest = FractoUtil.fracto_pattern_color(bin.orbital, highest_iteration)
-      const direction = bin.orbital === 0 ? "to right" : "to left"
       const style = {
-         backgroundImage: `linear-gradient(${direction}, ${color_lowest}, ${color_highest})`,
+         backgroundColor: FractoUtil.fracto_pattern_color(bin.orbital),
          width: `${bar_width_px}px`
       };
       return <styles.ColorBarSegment

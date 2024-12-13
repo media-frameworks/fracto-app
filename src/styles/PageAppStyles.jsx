@@ -60,7 +60,6 @@ export class PageAppStyles {
       top: ${HEADER_BAR_HEIGHT_REM}rem;
       bottom: 0;
       right: 0;
-      overflow-y: auto;
    `;
 
    static LeftSideWrapper = styled(CoolStyles.InlineBlock)`
