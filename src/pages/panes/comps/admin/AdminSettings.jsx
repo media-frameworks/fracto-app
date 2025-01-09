@@ -6,7 +6,7 @@ import CoolTable, {
    CELL_ALIGN_RIGHT,
    CELL_TYPE_TEXT,
    CELL_TYPE_OBJECT,
-   TABLE_NO_HEADER, TABLE_NO_BORDER,
+   // TABLE_NO_HEADER, TABLE_NO_BORDER,
 } from "common/ui/CoolTable";
 
 const SETTINGS_COLUMNS = [
@@ -50,7 +50,7 @@ export class AdminSettings extends Component {
             }
             return {name: key, value}
          })
-      const table_options = [TABLE_NO_HEADER, TABLE_NO_BORDER]
+      const table_options = [] // [TABLE_NO_HEADER, TABLE_NO_BORDER]
       const settings_view = <CoolTable
          data={table_data}
          columns={SETTINGS_COLUMNS}
