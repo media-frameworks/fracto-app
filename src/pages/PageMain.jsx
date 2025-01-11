@@ -102,7 +102,7 @@ export class PageMain extends Component {
          new_state.page_settings[KEY_FIELD_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
       }
       if (new_settings[LOWER_HEIGHT_KEY]) {
-         new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = new_settings[LOWER_HEIGHT_KEY]
+         new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = Math.abs( new_settings[LOWER_HEIGHT_KEY])
       }
       if (new_settings[UPPER_LEFT_WIDTH_KEY]) {
          new_state.page_settings[KEY_STEPS_WIDTH_PX] = new_settings[UPPER_LEFT_WIDTH_KEY]

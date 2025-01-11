@@ -177,7 +177,9 @@ export class FractoIndexedTiles extends Component {
                   short_code: tile.short_code
                }
             })
-         short_codes = short_codes.concat(column_tiles)
+         if (column_tiles.length) {
+            column_tiles.forEach(tile=> short_codes.push(tile))
+         }
       }
       return short_codes
    }
