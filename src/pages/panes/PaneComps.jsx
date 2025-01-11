@@ -21,7 +21,7 @@ export class PaneComps extends Component {
       on_settings_changed: PropTypes.func.isRequired,
    }
    state = {
-      selected_tab: 0,
+      selected_tab: 4,
    }
 
    on_tab_select = (selected_tab) => {
