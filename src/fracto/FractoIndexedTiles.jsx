@@ -20,6 +20,8 @@ const ALL_TILE_SETS = [
    TILE_SET_UPDATED,
 ]
 
+export const MAX_LEVEL = 35
+
 export class FractoIndexedTiles extends Component {
 
    static tile_set = null;
@@ -31,7 +33,7 @@ export class FractoIndexedTiles extends Component {
       FractoIndexedTiles.tile_set = {}
       ALL_TILE_SETS.forEach(set_name => {
          FractoIndexedTiles.tile_set[set_name] = []
-         for (let level = 2; level < 40; level++) {
+         for (let level = 2; level < MAX_LEVEL; level++) {
             FractoIndexedTiles.tile_set[set_name].push({
                level: level,
                tile_size: Math.pow(2, 2 - level),
@@ -67,7 +69,9 @@ export class FractoIndexedTiles extends Component {
          console.log(`problem with ${set_name}:${level}`)
          return;
       }
-      set_level.columns = set_level.columns.concat(packet_data.columns)
+      if (packet_data.columns.length) {
+         packet_data.columns.forEach(column=> set_level.columns.push(column))
+      }
    }
 
    static load_short_codes = (tile_set_name, cb) => {

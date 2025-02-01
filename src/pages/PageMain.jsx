@@ -25,7 +25,7 @@ import {
    KEY_FOCAL_POINT,
    KEY_SCOPE,
    KEY_DISABLED,
-   KEY_HOVER_POINT, KEY_CTX, KEY_CANVAS_BUFFER, KEY_IMG_X, KEY_IMG_Y,
+   KEY_HOVER_POINT, KEY_CTX, KEY_CANVAS_BUFFER, KEY_IMG_X, KEY_IMG_Y, KEY_BAD_TILES, KEY_CACHE_SIZE,
 } from "./PageSettings";
 
 const ALL_PANE_DIMENSIONS = [
@@ -48,6 +48,8 @@ const ALL_OPERATIVES = [
    KEY_CANVAS_BUFFER,
    KEY_IMG_X,
    KEY_IMG_Y,
+   KEY_BAD_TILES,
+   KEY_CACHE_SIZE,
 ]
 
 export class PageMain extends Component {
@@ -96,7 +98,7 @@ export class PageMain extends Component {
 
    on_settings_changed = (new_settings) => {
       let new_state = {page_settings: this.state.page_settings}
-      console.log('new_settings', new_settings)
+      // console.log('new_settings', new_settings)
       if (new_settings[UPPER_HEIGHT_KEY]) {
          new_state.page_settings[KEY_STEPS_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
          new_state.page_settings[KEY_FIELD_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]

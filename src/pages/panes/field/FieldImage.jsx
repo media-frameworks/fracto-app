@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import FractoRasterImage from "fracto/FractoRasterImage";
+import FractoRasterImage, {BAD_TILES} from "fracto/FractoRasterImage";
 import {PaneFieldStyles as styles} from 'styles/PaneFieldStyles'
 import {HEADER_HEIGHT_PX} from "styles/PaneStepsStyles";
+import {CACHED_TILES} from "../../../fracto/FractoTileCache";
 
 import {
    KEY_FIELD_WIDTH_PX,
@@ -16,12 +17,14 @@ import {
    KEY_HOVER_POINT,
    KEY_IMG_X,
    KEY_IMG_Y,
+   KEY_BAD_TILES,
+   KEY_CACHE_SIZE,
 } from "../../PageSettings";
 
 const IMAGE_SIZE_DELTA = 50
 const ZOOM_FACTOR = 1.5
-const ZOOM_FACTOR_MINOR = 1.125
-const ZOOM_FACTOR_MAJOR = 2.5
+const ZOOM_FACTOR_MINOR = 1.5
+const ZOOM_FACTOR_MAJOR = 3.0
 
 export class FieldImage extends Component {
 
@@ -151,6 +154,8 @@ export class FieldImage extends Component {
       new_setings[KEY_CANVAS_BUFFER] = canvas_buffer
       new_setings[KEY_CTX] = ctx
       new_setings[KEY_DISABLED] = false
+      new_setings[KEY_BAD_TILES] = Object.keys(BAD_TILES).length;
+      new_setings[KEY_CACHE_SIZE] = Object.keys(CACHED_TILES).length;
       on_settings_changed(new_setings)
    }
 

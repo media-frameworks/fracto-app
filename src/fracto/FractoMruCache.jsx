@@ -145,20 +145,23 @@ export class FractoMruCache {
       const cache_keys = Object.keys(TILE_CACHE).sort((a, b) =>
          CACHE_MRU[a] - CACHE_MRU[b])
       if (cache_keys.length < MAX_TILE_CACHE) {
-         console.log("no cleanup required")
+         // console.log("no cleanup required")
          return;
       }
-      console.log("cleanup_cache: performance.memory", performance.memory)
+      // console.log("cleanup_cache: performance.memory", performance.memory)
       // console.log(`cleanup_cache ${cache_keys.length} tiles in cache`)
       const keys_to_delete = cache_keys.length - 100;
-      console.log(`deleting ${keys_to_delete} tiles from cache`)
+      if (!keys_to_delete) {
+         return;
+      }
+      // console.log(`deleting ${keys_to_delete} tiles from cache`)
       for (let key_index = 0; key_index < keys_to_delete; key_index++) {
          const short_code = cache_keys[key_index];
          // console.log(`delete tile with mru ${CACHE_MRU[short_code]}`)
          delete CACHE_MRU[short_code]
          delete TILE_CACHE[short_code]
       }
-      console.log("cleanup_cache complete")
+      // console.log("cleanup_cache complete")
       // const new_cache = Object.assign({}, TILE_CACHE)
       // TILE_CACHE = null
       // TILE_CACHE = new_cache
