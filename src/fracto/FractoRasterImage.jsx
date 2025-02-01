@@ -5,16 +5,17 @@ import styled from "styled-components";
 import {CoolStyles} from "common/ui/CoolImports";
 
 import FractoIndexedTiles from "fracto/FractoIndexedTiles";
-import FractoMruCache, {TILE_CACHE} from "fracto/FractoMruCache";
 import FractoUtil from "fracto/FractoUtil";
 import FractoFastCalc from "fracto/FractoFastCalc";
+import FractoTileCache from "./FractoTileCache";
 
-const FractoCanvas = styled.canvas`   
-   ${CoolStyles.narrow_box_shadow}
-   margin: 0;
+const FractoCanvas = styled.canvas`
+    ${CoolStyles.narrow_box_shadow}
+    margin: 0;
 `;
 
 const MAX_LEVEL = 35;
+export var BAD_TILES = {};
 
 const get_tiles = (
    width_px,
@@ -145,7 +146,7 @@ export class FractoRasterImage extends Component {
       return new_canvas_buffer
    }
 
-   fill_canvas_buffer = (canvas_buffer, ctx) => {
+   fill_canvas_buffer = async (canvas_buffer, ctx) => {
       const {
          width_px,
          focal_point,
@@ -154,42 +155,36 @@ export class FractoRasterImage extends Component {
          on_plan_complete,
          filter_level,
       } = this.props
-      let all_short_codes = []
       const all_level_sets = []
       get_tiles(width_px, focal_point, scope, aspect_ratio)
          .forEach(level_set => {
             if (filter_level && filter_level !== level_set.level) {
                return;
             }
-            const level_short_codes = level_set.level_tiles
-               .map(tile => tile.short_code)
-            all_short_codes = all_short_codes.concat(level_short_codes)
             all_level_sets.push(level_set)
          })
-      if (!all_short_codes.length) {
-         return;
-      }
-      setTimeout(() => {
-         FractoMruCache.get_tiles_async(all_short_codes, when_complete => {
-            const level_data_sets = all_level_sets
-               .map(level_set => {
-                  const tile_width =
-                     level_set.level_tiles[0].bounds.right
-                     - level_set.level_tiles[0].bounds.left
-                  level_set.tile_increment = tile_width / 256
-                  return level_set
-               })
-               .sort((a, b) => a.level > b.level ? -1 : 1)
-            this.raster_fill(canvas_buffer, level_data_sets, ctx)
-            if (on_plan_complete) {
-               on_plan_complete(canvas_buffer, ctx)
-            }
-            this.setState({loading_tiles: false})
+      const level_data_sets = all_level_sets
+         .map(level_set => {
+            const tile_width =
+               level_set.level_tiles[0].bounds.right
+               - level_set.level_tiles[0].bounds.left
+            level_set.tile_increment = tile_width / 256
+            return level_set
          })
-      }, 10)
+         .sort((a, b) => a.level > b.level ? -1 : 1)
+      level_data_sets.forEach(level_set => {
+         level_set.level_tiles.forEach(async tile => {
+            await FractoTileCache.get_tile(tile.short_code)
+         })
+      })
+      await this.raster_fill(canvas_buffer, level_data_sets, ctx)
+      if (on_plan_complete) {
+         on_plan_complete(canvas_buffer, ctx)
+      }
+      this.setState({loading_tiles: false})
    }
 
-   raster_fill = (canvas_buffer, level_data_sets, ctx) => {
+   raster_fill = async (canvas_buffer, level_data_sets, ctx) => {
       const {
          width_px,
          focal_point,
@@ -221,8 +216,12 @@ export class FractoRasterImage extends Component {
                      && tile.bounds.top > y
                      && tile.bounds.bottom < y)
                if (tile) {
-                  const tile_data = TILE_CACHE[tile.short_code]
+                  if (BAD_TILES[tile.short_code]) {
+                     continue;
+                  }
+                  const tile_data = await FractoTileCache.get_tile(tile.short_code)
                   if (!tile_data) {
+                     BAD_TILES[tile.short_code] = true
                      continue;
                   }
                   const tile_x = Math.floor(

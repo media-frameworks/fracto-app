@@ -19,6 +19,8 @@ export const KEY_IMG_Y = 'img_y'
 
 export const KEY_BAILIWICK_ID = 'bailiwick_id'
 export const KEY_HIGHLIGHTS = 'highlights'
+export const KEY_BAD_TILES = 'bad_tiles'
+export const KEY_CACHE_SIZE = 'cache_size'
 
 export class PageSettings {
 
