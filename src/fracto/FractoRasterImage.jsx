@@ -174,6 +174,9 @@ export class FractoRasterImage extends Component {
          .sort((a, b) => a.level > b.level ? -1 : 1)
       level_data_sets.forEach(level_set => {
          level_set.level_tiles.forEach(async tile => {
+            if (BAD_TILES[tile.short_code]) {
+               return;
+            }
             await FractoTileCache.get_tile(tile.short_code)
          })
       })

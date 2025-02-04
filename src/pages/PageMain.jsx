@@ -83,6 +83,9 @@ export class PageMain extends Component {
 
    on_resize = (left_width_px, right_width_px, height_px) => {
       const {page_settings} = this.state;
+      if (page_settings[KEY_DISABLED]) {
+         return;
+      }
       this.setState({
          left_width_px: Math.round(left_width_px),
          right_width_px: Math.round(right_width_px),
