@@ -21,7 +21,10 @@ export class PaneField extends Component {
       return [
          <FieldHeader
             width_px={page_settings[KEY_FIELD_WIDTH_PX]}
-            height_px={HEADER_HEIGHT_PX}/>,
+            height_px={HEADER_HEIGHT_PX}
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}
+         />,
          <FieldImage
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
