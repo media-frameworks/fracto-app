@@ -2,8 +2,8 @@ import {Component} from 'react';
 
 import network from "common/config/network.json";
 
-const URL_BASE = network.dev_server_url;
-const SERVER_BASE = network.fracto_server_url;
+const URL_BASE = network['fracto-prod'];
+// const SERVER_BASE = network.fracto_server_url;
 
 export const TILE_SET_INDEXED = 'indexed'
 export const TILE_SET_READY = 'ready'
@@ -75,7 +75,7 @@ export class FractoIndexedTiles extends Component {
    }
 
    static load_short_codes = (tile_set_name, cb) => {
-      const directory_url = `${URL_BASE}/directory/${tile_set_name}.csv`;
+      const directory_url = `${URL_BASE}/manifest/${tile_set_name}.csv`;
       fetch(directory_url)
          .then(response => response.text())
          .then(csv => {
@@ -86,14 +86,15 @@ export class FractoIndexedTiles extends Component {
    }
 
    static load_no_cache = (cb) => {
-      const no_cache_url = `${SERVER_BASE}/package/no_cache.csv`;
-      fetch(no_cache_url)
-         .then(response => response.text())
-         .then(csv => {
-            const lines = csv.split("\n");
-            console.log(`fetch_bin_async ${lines.length}`)
-            cb(lines.slice(1))
-         })
+      // const no_cache_url = `${SERVER_BASE}/package/no_cache.csv`;
+      // fetch(no_cache_url)
+      //    .then(response => response.text())
+      //    .then(csv => {
+      //       const lines = csv.split("\n");
+      //       console.log(`fetch_bin_async ${lines.length}`)
+      //       cb(lines.slice(1))
+      //    })
+      cb([])
    }
 
    static tiles_in_level = (level, set_name = TILE_SET_INDEXED) => {
