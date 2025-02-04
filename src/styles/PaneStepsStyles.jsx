@@ -5,9 +5,9 @@ export const HEADER_HEIGHT_PX = 24
 
 export class PaneStepsStyles {
    static HeaderWrapper = styled(CoolStyles.Block)`
-      padding: 0;
-      border-bottom: 1px solid black;
-      background-color: #aaaaaa;
+       padding: 0;
+       border-bottom: 1px solid black;
+       background: linear-gradient(70deg, #999999, #eeeeee);
    `
    static StepsListWrapper = styled(CoolStyles.InlineBlock)`
       height: 100%;

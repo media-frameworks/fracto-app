@@ -7,8 +7,8 @@ import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 
 import {CoolStyles} from "common/ui/CoolImports";
 import FractoFastCalc from "fracto/FractoFastCalc";
-import Complex from "common/math/Complex";
-import {KEY_FOCAL_POINT} from "../../PageSettings";
+import {KEY_HOVER_POINT} from "../../PageSettings";
+import FractoUtil from "../../../fracto/FractoUtil";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -23,7 +23,7 @@ export class CompPatterns extends Component {
       on_settings_changed: PropTypes.func.isRequired,
    }
 
-   click_point_chart = (set1, set2, set3) => {
+   click_point_chart = (set1) => {
       const options = {
          scales: {
             x: {
@@ -32,33 +32,20 @@ export class CompPatterns extends Component {
          },
          animation: false
       }
+      const cardinality = set1?.length - 1 || 0
       const data_dataset = {
          datasets: [
             {
                Id: 1,
-               label: "set1",
+               label: `${cardinality || '?'}-point orbital`,
                data: set1,
-               backgroundColor: 'red',
+               backgroundColor: FractoUtil.fracto_pattern_color(cardinality || 0),
                showLine: true
             },
-            {
-               Id: 2,
-               label: "set2",
-               data: set2,
-               backgroundColor: 'blue'
-            },
-            // {
-            //    Id: 3,
-            //    label: "set3",
-            //    data: set3,
-            //    backgroundColor: 'green'
-            // },
          ]
       }
       return [
          <Scatter
-            width={250}
-            height={250}
             datasetIdKey='id1'
             data={data_dataset} options={options}
          />
@@ -67,31 +54,16 @@ export class CompPatterns extends Component {
 
    click_point_data = () => {
       const {page_settings} = this.props
-      const click_point = page_settings[KEY_FOCAL_POINT]
+      const click_point = page_settings[KEY_HOVER_POINT]
       if (!click_point) {
          return []
       }
       const fracto_values = FractoFastCalc.calc(click_point.x, click_point.y)
-      const P = new Complex(click_point.x, click_point.y)
-
-      const under_radical = P.scale(-4).offset(1, 0)
-      const negative_radical = under_radical.sqrt().scale(-1)
-      const Q = negative_radical.offset(1, 0).scale(0.5)
-      const Q_center = {x: Q.re, y: Q.im}
-
-      const under_radical2 = P.scale(-4).offset(-3, 0)
-      const negative_radical2 = under_radical2.sqrt().scale(-1)
-      const Q2 = negative_radical2.offset(-1, 0).scale(0.5)
-      const Q2_center = {x: Q2.re, y: Q2.im}
-
       console.log('fracto_values.orbital_points', fracto_values.orbital_points)
       return [
          `${(fracto_values.orbital_points?.length || 1) - 1} points`,
          <br />,
-         this.click_point_chart(
-            fracto_values.orbital_points,
-            [Q_center],
-            [Q2_center]),
+         this.click_point_chart(fracto_values.orbital_points)
       ]
    }
 
