@@ -6,17 +6,31 @@ import LinearProgress from '@mui/material/LinearProgress';
 import {Buffer} from 'buffer';
 
 import network from "common/config/network.json";
-import CoolStyles from "common/ui/CoolStyles";
+import CoolStyles from "common/ui/styles/CoolStyles";
 import FractoIndexedTiles, {MAX_LEVEL} from "./FractoIndexedTiles";
+import axios from "axios";
 
-const TILE_SERVER_BASE = network.tile_server_url;
+const FRACTO_PROD = network["fracto-prod"];
 const TIMEOUT_MS = 50
+
+export const LS_TILE_LOADER_PROGRESS_PCT = 'LS_TILE_LOADER_PROGRESS_PCT';
+export const LS_TILE_LOADER_LEVEL = 'LS_TILE_LOADER_LEVEL';
 
 const ProgressWrapper = styled(CoolStyles.Block)`
     ${CoolStyles.align_center}
     width: 20rem;
     margin: 0.5rem auto;
 `
+const AXIOS_CONFIG = {
+    responseType: 'blob',
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Expose-Headers': 'Access-Control-*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    },
+    mode: 'no-cors',
+    crossdomain: true,
+}
 
 export class FractoTilesLoaderProgress extends Component {
 
@@ -41,52 +55,68 @@ export class FractoTilesLoaderProgress extends Component {
             on_complete(message)
             return
         }
-        const url = `${TILE_SERVER_BASE}/tile_index?filename=/${set_name}/packet_manifest.json`
-        fetch(url)
-            .then(response => response.json())
-            .then(json => {
-                const manifestStr = Buffer.from(json).toString()
-                const manifest = JSON.parse(manifestStr)
-                // console.log('manifest.json', manifest)
-                this.setState({
-                    packet_files: manifest.packet_files,
-                    tile_count: manifest.tile_count
-                })
-                setTimeout(() => {
-                    this.load_packet(0)
-                }, TIMEOUT_MS)
-            })
+        localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `0`)
+        this.get_manifest()
     }
 
-    load_packet = (packet_index) => {
+    get_manifest = async () => {
+        const {set_name} = this.props
+        const url = `${FRACTO_PROD}/manifest/tiles/${set_name}/packet_manifest.json`
+        try {
+            const response = await axios.get(url, AXIOS_CONFIG);
+            const blob = new Blob([response.data], {type: 'application/gzip'});
+            const arrayBuffer = await blob.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const ascii = Buffer.from(buffer, 'ascii');
+            const manifest = JSON.parse(ascii.toString());
+            this.setState({
+                packet_files: manifest.packet_files,
+                tile_count: manifest.tile_count
+            })
+            setTimeout(() => {
+                this.load_packet(0)
+            }, TIMEOUT_MS)
+        } catch (e) {
+            console.log('error in get_manifest()', e);
+        }
+    }
+
+    load_packet = async (packet_index) => {
         const {packet_files} = this.state
         const {set_name, on_complete} = this.props
         if (packet_index >= packet_files.length) {
             const complete_message = `${set_name} tile index loaded`
             console.log(complete_message)
             on_complete(complete_message)
+            localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `100`)
             return;
         }
         const file_name = packet_files[packet_index]
         const level = parseInt(file_name.substring(30, 32), 10)
+        localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `${Math.round(100 * packet_index / packet_files.length)}`)
+        localStorage.setItem(LS_TILE_LOADER_LEVEL, `${level}`)
         if (level > MAX_LEVEL) {
             this.load_packet(packet_index + 1)
             return;
         }
         this.setState({packet_index: packet_index})
-        const url = `${TILE_SERVER_BASE}/tile_index?filename=/${set_name}/${packet_files[packet_index]}`
-        fetch(url)
-            .then(response => response.json())
-            .then(json => {
-                const packetStr = Buffer.from(json).toString()
-                const packet_data = JSON.parse(packetStr)
-                const level = packet_data.level
-                this.setState({loading_level: level})
-                FractoIndexedTiles.integrate_tile_packet(set_name, packet_data)
-                setTimeout(() => {
-                    this.load_packet(packet_index + 1)
-                }, TIMEOUT_MS)
-            })
+        const url = `${FRACTO_PROD}/manifest/tiles/${set_name}/${packet_files[packet_index]}`
+        try {
+            const response = await axios.get(url, AXIOS_CONFIG);
+            const blob = new Blob([response.data], {type: 'application/gzip'});
+            const arrayBuffer = await blob.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const ascii = Buffer.from(buffer, 'ascii');
+            const packet_data = JSON.parse(ascii.toString());
+            const level = packet_data.level
+            this.setState({loading_level: level})
+            FractoIndexedTiles.integrate_tile_packet(set_name, packet_data)
+            setTimeout(() => {
+                this.load_packet(packet_index + 1)
+            }, TIMEOUT_MS)
+        } catch (e) {
+            console.log('error in get_manifest()', e);
+        }
     }
 
     render() {

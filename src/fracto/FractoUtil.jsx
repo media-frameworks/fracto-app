@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import ComplexQuarternary from "common/math/ComplexQuarternary";
-import CoolStyles from "common/ui/CoolStyles";
+import CoolStyles from "common/ui/styles/CoolStyles";
 
 const EPSILON = 0.0000000001;
 const ONE_BY_LOG_TEN_THOUSAND = 1 / Math.log(10000);

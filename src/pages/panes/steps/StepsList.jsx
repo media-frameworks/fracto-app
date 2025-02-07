@@ -5,12 +5,12 @@ import {
    KEY_FOCAL_POINT,
    KEY_SCOPE,
    KEY_STEPS_WIDTH_PX,
-   KEY_DISABLED,
+   KEY_DISABLED, KEY_STEPS_ZOOM,
 } from "../../PageSettings";
 import {PaneStepsStyles as styles} from 'styles/PaneStepsStyles'
 import FractoRasterImage from "../../../fracto/FractoRasterImage";
 
-const STEP_SCOPE_FACTOR = Math.E
+const STEP_SCOPE_FACTOR = 10
 
 const create_step_entry = (step_scope) => {
    return {
@@ -29,6 +29,7 @@ export class StepsList extends Component {
    state = {
       all_steps: [],
       stepped_scope: 0,
+      stepped_zoom: 0,
    }
 
    componentDidMount() {
@@ -37,13 +38,17 @@ export class StepsList extends Component {
 
    componentDidUpdate(prevProps, prevState, snapshot) {
       const {page_settings} = this.props
-      const {stepped_scope} = this.state
+      const {stepped_scope, stepped_zoom} = this.state
       // console.log('page_settings[KEY_SCOPE]', page_settings[KEY_SCOPE])
       // console.log('prevProps.page_settings[KEY_SCOPE]', prevProps.page_settings[KEY_SCOPE])
       const scope_changed = page_settings[KEY_SCOPE] !== stepped_scope
-      if (scope_changed) {
+      const zoom_changed = page_settings[KEY_STEPS_ZOOM] !== stepped_zoom
+      if (scope_changed || zoom_changed) {
          this.set_steps()
-         this.setState({stepped_scope: page_settings[KEY_SCOPE]})
+         this.setState({
+            stepped_scope: page_settings[KEY_SCOPE],
+            stepped_zoom: page_settings[KEY_STEPS_ZOOM],
+         })
       }
    }
 
@@ -54,7 +59,7 @@ export class StepsList extends Component {
       while (step_scope < 3.0) {
          const step_entry = create_step_entry(step_scope)
          new_steps.push(step_entry)
-         step_scope *= STEP_SCOPE_FACTOR
+         step_scope *= page_settings[KEY_STEPS_ZOOM]
       }
       const step_entry = create_step_entry(3.0)
       new_steps.push(step_entry)

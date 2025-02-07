@@ -16,6 +16,7 @@ export const KEY_CTX = 'ctx'
 export const KEY_HOVER_POINT = 'hover_point'
 export const KEY_IMG_X = 'img_x'
 export const KEY_IMG_Y = 'img_y'
+export const KEY_STEPS_ZOOM = 'steps_zoom'
 
 export const KEY_BAILIWICK_ID = 'bailiwick_id'
 export const KEY_HIGHLIGHTS = 'highlights'
