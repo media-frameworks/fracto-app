@@ -25,11 +25,16 @@ const AXIOS_CONFIG = {
 
 export class FractoTileCache {
 
+   static error_count = 0;
+
    static get_tile = async (short_code) => {
       if (CACHED_TILES[short_code]) {
          CACHED_TILES[short_code].last_access = Date.now()
          CACHED_TILES[short_code].access_count++
          return CACHED_TILES[short_code].uncompressed;
+      }
+      if (FractoTileCache.error_count > 100) {
+         return null;
       }
       const level = short_code.length
       const naught = level < 10 ? '0' : ''
@@ -54,6 +59,7 @@ export class FractoTileCache {
          return uncompressed
       } catch (e) {
          console.error(`get_tile error ${short_code}`, e.message)
+         FractoTileCache.error_count++
          return null
       }
    }
