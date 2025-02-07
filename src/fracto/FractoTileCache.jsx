@@ -16,7 +16,6 @@ const AXIOS_CONFIG = {
    responseType: 'blob',
    headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': '*',
       'Access-Control-Expose-Headers': 'Access-Control-*',
       'Access-Control-Allow-Methods': 'GET,PUT,POST,PATCH,OPTIONS',
    },
