@@ -55,7 +55,7 @@ export class FractoTilesLoaderProgress extends Component {
             on_complete(message)
             return
         }
-        // localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `0`)
+        localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `0`)
         this.get_manifest()
     }
 
