@@ -55,7 +55,7 @@ export class FractoTilesLoaderProgress extends Component {
             on_complete(message)
             return
         }
-        localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `0`)
+        // localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `0`)
         this.get_manifest()
     }
 
@@ -104,7 +104,10 @@ export class FractoTilesLoaderProgress extends Component {
         this.setState({packet_index: packet_index})
         const url = `${FRACTO_PROD}/manifest/tiles/${set_name}/${packet_files[packet_index]}`
         try {
+            console.log('calling', url)
             const response = await axios.get(url, AXIOS_CONFIG);
+            console.log('response', response)
+
             const blob = new Blob([response.data], {type: 'application/gzip'});
             const arrayBuffer = await blob.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
@@ -113,6 +116,7 @@ export class FractoTilesLoaderProgress extends Component {
             const level = packet_data.level
             this.setState({loading_level: level})
             FractoIndexedTiles.integrate_tile_packet(set_name, packet_data)
+            console.log('integrate_tile_packet', packet_data)
             setTimeout(() => {
                 this.load_packet(packet_index + 1)
             }, TIMEOUT_MS)
