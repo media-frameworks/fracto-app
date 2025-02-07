@@ -3,7 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 import FractoCommon from "./FractoCommon";
-import CoolStyles from "common/ui/CoolStyles";
+import CoolStyles from "common/ui/styles/CoolStyles";
 import FractoTilesLoaderProgress from "./FractoTilesLoaderProgress";
 import {TILE_SET_INDEXED} from "./FractoIndexedTiles";
 
@@ -29,13 +29,20 @@ export class FractoIndexedTilesLoader extends Component {
 
    state = {
       load_complete: false,
+      partial_complete: false,
+   }
+
+   componentDidMount() {
+      setTimeout(()=> {
+         this.setState({partial_complete: true});
+      }, 10000)
    }
 
    render() {
-      const {load_complete} = this.state
+      const {partial_complete, load_complete} = this.state
       const {app_page, app_name} = this.props
-      if (load_complete) {
-         console.log(`${load_complete}, running page now`)
+      if (load_complete || partial_complete) {
+         console.log(`${partial_complete}, running page now`)
          return app_page
       }
       const title_bar = <TitleBar>{app_name}</TitleBar>
