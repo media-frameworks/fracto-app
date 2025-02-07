@@ -26,7 +26,7 @@ const AXIOS_CONFIG = {
     headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Expose-Headers': 'Access-Control-*',
-        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,PATCH,OPTIONS',
     },
     mode: 'no-cors',
     crossdomain: true,
