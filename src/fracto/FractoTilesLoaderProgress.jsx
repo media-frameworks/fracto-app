@@ -93,7 +93,9 @@ export class FractoTilesLoaderProgress extends Component {
         }
         const file_name = packet_files[packet_index]
         const level = parseInt(file_name.substring(30, 32), 10)
-        localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `${Math.round(100 * packet_index / packet_files.length)}`)
+        const progress = Math.round(100 * packet_index / packet_files.length)
+        localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `${progress}`)
+        console.log('progress', progress)
         localStorage.setItem(LS_TILE_LOADER_LEVEL, `${level}`)
         if (level > MAX_LEVEL) {
             this.load_packet(packet_index + 1)
