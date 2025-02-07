@@ -86,7 +86,7 @@ export class FractoTilesLoaderProgress extends Component {
         const {set_name, on_complete} = this.props
         if (packet_index >= packet_files.length) {
             const complete_message = `${set_name} tile index loaded`
-            console.log(complete_message)
+            // console.log(complete_message)
             on_complete(complete_message)
             localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `100`)
             return;
@@ -95,7 +95,7 @@ export class FractoTilesLoaderProgress extends Component {
         const level = parseInt(file_name.substring(30, 32), 10)
         const progress = Math.round(100 * packet_index / packet_files.length)
         localStorage.setItem(LS_TILE_LOADER_PROGRESS_PCT, `${progress}`)
-        console.log('progress', progress)
+        // console.log('progress', progress)
         localStorage.setItem(LS_TILE_LOADER_LEVEL, `${level}`)
         if (level > MAX_LEVEL) {
             this.load_packet(packet_index + 1)
@@ -104,9 +104,9 @@ export class FractoTilesLoaderProgress extends Component {
         this.setState({packet_index: packet_index})
         const url = `${FRACTO_PROD}/manifest/tiles/${set_name}/${packet_files[packet_index]}`
         try {
-            console.log('calling', url)
+            // console.log('calling', url)
             const response = await axios.get(url, AXIOS_CONFIG);
-            console.log('response', response)
+            // console.log('response', response)
 
             const blob = new Blob([response.data], {type: 'application/gzip'});
             const arrayBuffer = await blob.arrayBuffer();
@@ -116,7 +116,7 @@ export class FractoTilesLoaderProgress extends Component {
             const level = packet_data.level
             this.setState({loading_level: level})
             FractoIndexedTiles.integrate_tile_packet(set_name, packet_data)
-            console.log('integrate_tile_packet', packet_data)
+            // console.log('integrate_tile_packet', packet_data)
             setTimeout(() => {
                 this.load_packet(packet_index + 1)
             }, TIMEOUT_MS)
