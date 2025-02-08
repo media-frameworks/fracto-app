@@ -35,6 +35,7 @@ const get_tiles = (
          level: level,
          level_tiles: level_tiles
       })
+      console.log(`level ${level}: ${level_tiles.length}`)
       if (level_tiles.length > max_tiles) {
          break;
       }
