@@ -23,6 +23,9 @@ const get_tiles = (
    scope,
    aspect_ratio) => {
 
+   if (isNaN(width_px)) {
+      return []
+   }
    const all_tiles = []
    const height_px = width_px * aspect_ratio
    const tiles_on_edge_x = Math.ceil(width_px / 256) + 1;
