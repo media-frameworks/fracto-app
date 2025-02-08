@@ -29,9 +29,9 @@ export class AppPageMain extends Component {
       window.addEventListener("resize", this.resize_wrapper);
       const position_key = `${app_name}_splitter_position`;
       const position_str = localStorage.getItem(position_key);
-      let splitter_position = 500
+      let splitter_position = 750
       if (position_str) {
-         splitter_position = parseInt(position_str)
+         splitter_position = parseInt(position_str, 10)
       }
       this.resize_wrapper(null, splitter_position);
    }

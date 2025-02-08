@@ -219,7 +219,7 @@ export class FractoUtil {
 
       let all_families = {}
       Object.keys(all_patterns).forEach(pattern_key => {
-         const pattern = parseInt(pattern_key.replace('_', ''));
+         const pattern = parseInt(pattern_key.replace('_', ''), 10);
          const family = FractoUtil.fracto_pattern_family(pattern)
          const family_key = `_${family}`;
          if (!all_families[family_key]) {

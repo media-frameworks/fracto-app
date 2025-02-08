@@ -46,12 +46,12 @@ export class LeftPaneSplitters extends Component {
       const left_pane_position_str = localStorage.getItem(LS_LEFT_PANE_POSITION);
       let left_pane_position = 500
       if (left_pane_position_str) {
-         left_pane_position = parseInt(left_pane_position_str)
+         left_pane_position = parseInt(left_pane_position_str, 10)
       }
       const upper_pane_position_str = localStorage.getItem(LS_UPPER_PANE_POSITION);
       let upper_pane_position = 500
       if (upper_pane_position_str) {
-         upper_pane_position = parseInt(upper_pane_position_str)
+         upper_pane_position = parseInt(upper_pane_position_str, 10)
       }
       this.change_left_pane_position(left_pane_position)
       this.change_upper_pane_position(upper_pane_position)
