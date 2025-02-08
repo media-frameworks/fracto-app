@@ -15,13 +15,12 @@ const MIN_CACHE = 150
 const AXIOS_CONFIG = {
    responseType: 'blob',
    headers: {
-      'Accept-Encoding': 'gzip, deflate',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Expose-Headers': 'Access-Control-*',
       'Access-Control-Allow-Methods': 'GET,PUT,POST,PATCH,OPTIONS',
    },
-   mode: 'no-cors',
-   crossdomain: true,
+   // mode: 'no-cors',
+   // crossdomain: true,
 }
 
 export class FractoTileCache {
