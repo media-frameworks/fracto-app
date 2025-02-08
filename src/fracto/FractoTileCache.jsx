@@ -15,6 +15,7 @@ const MIN_CACHE = 150
 const AXIOS_CONFIG = {
    responseType: 'blob',
    headers: {
+      'Content-Type': 'application/javascript',
       'Content-Encoding': 'gzip',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Expose-Headers': 'Access-Control-*',
