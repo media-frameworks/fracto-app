@@ -187,7 +187,7 @@ export class FractoIndexedTiles extends Component {
             column_tiles.forEach(tile=> short_codes.push(tile))
          }
       }
-      console.log(`level ${level}, ${short_codes.length} short codes`)
+      // console.log(`level ${level}, ${short_codes.length} short codes`)
       return short_codes
    }
 
@@ -201,7 +201,7 @@ export class FractoIndexedTiles extends Component {
          if (!tiles_in_level.length) {
             continue;
          }
-         // console.log('tiles_in_level', level, tiles_in_level)
+         console.log('tiles_in_level', level, tiles_in_level.length)
          if (tiles_in_level.length > 350) {
             continue;
          }
