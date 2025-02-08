@@ -54,7 +54,7 @@ export class FractoIndexedTiles extends Component {
          console.log('initializing tile sets')
          FractoIndexedTiles.init_tile_sets();
       }
-      console.log(`set_name: ${set_name}, level: ${level}`)
+      // console.log(`set_name: ${set_name}, level: ${level}`)
       return FractoIndexedTiles.tile_set[set_name]
          .find(bin => bin.level === level)
    }
@@ -201,7 +201,7 @@ export class FractoIndexedTiles extends Component {
          if (!tiles_in_level.length) {
             continue;
          }
-         console.log('tiles_in_level', level, tiles_in_level.length)
+         // console.log('tiles_in_level', level, tiles_in_level.length)
          if (tiles_in_level.length > 350) {
             continue;
          }
