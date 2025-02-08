@@ -8,7 +8,9 @@ import CoolSplitter, {
 import {SPLITTER_WIDTH_PX} from "../styles/PageAppStyles";
 
 const LS_LEFT_PANE_POSITION = 'ls_left_pane_position'
+const LS_LEFT_PANE_DEFAULT = 650
 const LS_UPPER_PANE_POSITION = 'ls_upper_pane_position'
+const LS_UPPER_PANE_DEFAULT = 150
 
 export const UPPER_LEFT_WIDTH_KEY = 'upper_left_width'
 export const UPPER_RIGHT_WIDTH_KEY = 'upper_right_width'
@@ -44,12 +46,12 @@ export class LeftPaneSplitters extends Component {
       }, 500)
 
       const left_pane_position_str = localStorage.getItem(LS_LEFT_PANE_POSITION);
-      let left_pane_position = 650
+      let left_pane_position = LS_LEFT_PANE_DEFAULT
       if (left_pane_position_str) {
          left_pane_position = parseInt(left_pane_position_str, 10)
       }
       const upper_pane_position_str = localStorage.getItem(LS_UPPER_PANE_POSITION);
-      let upper_pane_position = 200
+      let upper_pane_position = LS_UPPER_PANE_DEFAULT
       if (upper_pane_position_str) {
          upper_pane_position = parseInt(upper_pane_position_str, 10)
       }

@@ -9,6 +9,8 @@ import {
    MAX_SPLITTER_PX, SPLITTER_WIDTH_PX
 } from '../styles/PageAppStyles'
 
+const DEFAULT_SPLITTER_POSITION = 800
+
 export class AppPageMain extends Component {
 
    static propTypes = {
@@ -29,7 +31,7 @@ export class AppPageMain extends Component {
       window.addEventListener("resize", this.resize_wrapper);
       const position_key = `${app_name}_splitter_position`;
       const position_str = localStorage.getItem(position_key);
-      let splitter_position = 900
+      let splitter_position = DEFAULT_SPLITTER_POSITION
       if (position_str) {
          splitter_position = parseInt(position_str, 10)
       }
