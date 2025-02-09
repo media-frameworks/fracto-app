@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import styled from "styled-components";
 
 import {Scatter} from "react-chartjs-2";
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 
-import {CoolStyles} from "common/ui/CoolImports";
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {KEY_FOCAL_POINT, KEY_HOVER_POINT} from "../../PageSettings";
@@ -13,11 +11,6 @@ import FractoUtil from "fracto/FractoUtil";
 import {render_pattern_block} from "fracto/styles/FractoStyles";
 
 ChartJS.register(CategoryScale, BarController)
-
-const ContentWrapper = styled(CoolStyles.Block)`
-    padding: 0.5rem;
-    background-color: white;
-`
 
 export class CompPatterns extends Component {
    static propTypes = {
