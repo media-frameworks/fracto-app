@@ -49,12 +49,10 @@ export const render_modal_title = (title) => <ModalTitleBar>{title}</ModalTitleB
 
 const PatternBlock = styled(CoolStyles.InlineBlock)`
    ${CoolStyles.monospace}
-   font-size: 1.25rem;
    border: 0.1rem solid #666666;
    border-radius: 0.25rem;
    color: white;
    padding: 0.125rem 0.125rem 0;
-   line-height: 1rem;
 `;
 
 const FRACTO_COLOR_ITERATIONS = 200;

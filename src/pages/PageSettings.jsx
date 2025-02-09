@@ -22,6 +22,8 @@ export const KEY_BAILIWICK_ID = 'bailiwick_id'
 export const KEY_HIGHLIGHTS = 'highlights'
 export const KEY_BAD_TILES = 'bad_tiles'
 export const KEY_CACHE_SIZE = 'cache_size'
+export const KEY_UPDATE_INDEX = 'update_index'
+export const KEY_IN_ANIMATION = 'in_animation'
 
 export class PageSettings {
 

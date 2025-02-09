@@ -33,9 +33,9 @@ export class FractoIndexedTilesLoader extends Component {
    }
 
    componentDidMount() {
-      // setTimeout(()=> {
-      //    this.setState({partial_complete: true});
-      // }, 10000)
+      setTimeout(()=> {
+         this.setState({partial_complete: true});
+      }, 10000)
    }
 
    render() {

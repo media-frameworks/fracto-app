@@ -17,22 +17,22 @@ export class AppHeaderBar extends Component {
    }
 
    componentDidMount() {
-      // const interval = setInterval(() => {
-      //    const tile_loader_pct_str = localStorage.getItem(LS_TILE_LOADER_PROGRESS_PCT);
-      //    if (!tile_loader_pct_str) {
-      //       return;
-      //    }
-      //    if (tile_loader_pct_str === '100') {
-      //       this.setState({tile_loader_pct: 100});
-      //       clearInterval(interval);
-      //    } else {
-      //       const tile_loader_level_str = localStorage.getItem(LS_TILE_LOADER_LEVEL);
-      //       this.setState({
-      //          tile_loader_pct: parseInt(tile_loader_pct_str, 10),
-      //          tile_loader_level: parseInt(tile_loader_level_str, 10)
-      //       });
-      //    }
-      // }, 1000)
+      const interval = setInterval(() => {
+         const tile_loader_pct_str = localStorage.getItem(LS_TILE_LOADER_PROGRESS_PCT);
+         if (!tile_loader_pct_str) {
+            return;
+         }
+         if (tile_loader_pct_str === '100') {
+            this.setState({tile_loader_pct: 100});
+            clearInterval(interval);
+         } else {
+            const tile_loader_level_str = localStorage.getItem(LS_TILE_LOADER_LEVEL);
+            this.setState({
+               tile_loader_pct: parseInt(tile_loader_pct_str, 10),
+               tile_loader_level: parseInt(tile_loader_level_str, 10)
+            });
+         }
+      }, 1000)
    }
 
    render() {
