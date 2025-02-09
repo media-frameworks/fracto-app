@@ -4,15 +4,14 @@ import styled from "styled-components";
 
 import {CoolButton, CoolStyles, CoolTable} from "common/ui/CoolImports";
 import {CELL_ALIGN_CENTER, CELL_TYPE_NUMBER, TABLE_CAN_SELECT} from "common/ui/CoolTable";
-import {KEY_FOCAL_POINT, KEY_IN_ANIMATION, KEY_SCOPE, KEY_UPDATE_INDEX} from "../../PageSettings";
-import {LOWER_HEIGHT_KEY, UPPER_HEIGHT_KEY} from "../../LeftPaneSplitters";
+import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_IN_ANIMATION, KEY_SCOPE, KEY_UPDATE_INDEX} from "../../PageSettings";
 
 const ContentWrapper = styled(CoolStyles.Block)`
     padding: 0.5rem;
     background-color: white;
     text-align: left;
 `
-const FRAMES_PER_STEP = 10
+const FRAMES_PER_STEP = 120
 
 const PATH_STEPS_COLUMNS = [
    {
@@ -111,24 +110,27 @@ export class CompTransit extends Component {
       const frame_list = this.make_frame_list()
       this.select_step(0)
       setTimeout(() => {
-         let current_update_index = page_settings[KEY_UPDATE_INDEX]
+         const starting_update_index = page_settings[KEY_UPDATE_INDEX]
+         let current_update_index = 0
          const interval = setInterval(() => {
             const {page_settings, on_settings_changed} = this.props
-            // if (page_settings[KEY_UPDATE_INDEX] > current_update_index) {
-            //    current_update_index = page_settings[KEY_UPDATE_INDEX]
-               const frame = frame_list.shift()
-               if (!frame) {
+            if (current_update_index <= page_settings[KEY_UPDATE_INDEX]) {
+               current_update_index = page_settings[KEY_UPDATE_INDEX]
+               const frame_index = current_update_index - starting_update_index + 1
+               if (frame_index >= frame_list.length) {
                   clearInterval(interval)
                   return;
                }
+               const frame = frame_list[frame_index]
                let new_settings = {}
                new_settings[KEY_IN_ANIMATION] = true
                new_settings[KEY_FOCAL_POINT] = frame.focal_point
                new_settings[KEY_SCOPE] = frame.scope
+               new_settings[KEY_DISABLED] = false
                on_settings_changed(new_settings)
-            // }
-         }, 1000)
-      }, 3000)
+            }
+         }, 100)
+      }, 1000)
    }
 
    render() {
