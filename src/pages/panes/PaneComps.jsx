@@ -10,9 +10,9 @@ import {PaneCompsStyles as styles} from 'styles/PaneCompsStyles'
 
 import CompAdmin from "./comps/CompAdmin";
 import CompOrbitals from "./comps/CompOrbitals";
-import CompCoverage from "./comps/CompCoverage";
 import CompPatterns from "./comps/CompPatterns";
 import CompMinibrot from "./comps/CompMinibrot";
+import CompTransit from "./comps/CompTransit";
 
 export class PaneComps extends Component {
 
@@ -20,8 +20,9 @@ export class PaneComps extends Component {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
    }
+
    state = {
-      selected_tab: 4,
+      selected_tab: 0,
    }
 
    on_tab_select = (selected_tab) => {
@@ -37,13 +38,6 @@ export class PaneComps extends Component {
          {
             label: 'orbitals',
             content: <CompOrbitals
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-         },
-         {
-            label: 'coverage',
-            content: <CompCoverage
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
@@ -65,6 +59,13 @@ export class PaneComps extends Component {
          {
             label: 'admin',
             content: <CompAdmin
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         },
+         {
+            label: 'transit',
+            content: <CompTransit
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />

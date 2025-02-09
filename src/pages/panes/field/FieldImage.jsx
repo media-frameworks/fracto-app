@@ -18,7 +18,7 @@ import {
    KEY_IMG_X,
    KEY_IMG_Y,
    KEY_BAD_TILES,
-   KEY_CACHE_SIZE,
+   KEY_CACHE_SIZE, KEY_UPDATE_INDEX,
 } from "../../PageSettings";
 
 const IMAGE_SIZE_DELTA = 50
@@ -38,6 +38,10 @@ export class FieldImage extends Component {
    }
 
    componentDidMount() {
+      const {on_settings_changed} = this.props
+      let new_setings = {}
+      new_setings[KEY_UPDATE_INDEX] = 0
+      on_settings_changed(new_setings)
       window.addEventListener('keydown', this.key_listener)
    }
 
@@ -149,13 +153,14 @@ export class FieldImage extends Component {
    }
 
    on_plan_complete = (canvas_buffer, ctx) => {
-      const {on_settings_changed} = this.props
+      const {page_settings, on_settings_changed} = this.props
       let new_setings = {}
       new_setings[KEY_CANVAS_BUFFER] = canvas_buffer
       new_setings[KEY_CTX] = ctx
       new_setings[KEY_DISABLED] = false
       new_setings[KEY_BAD_TILES] = Object.keys(BAD_TILES).length;
       new_setings[KEY_CACHE_SIZE] = Object.keys(CACHED_TILES).length;
+      new_setings[KEY_UPDATE_INDEX] = 1 + page_settings[KEY_UPDATE_INDEX] || 0;
       on_settings_changed(new_setings)
    }
 

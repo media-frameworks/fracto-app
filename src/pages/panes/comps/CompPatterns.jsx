@@ -6,15 +6,17 @@ import {Scatter} from "react-chartjs-2";
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 
 import {CoolStyles} from "common/ui/CoolImports";
+import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
-import {KEY_HOVER_POINT} from "../../PageSettings";
-import FractoUtil from "../../../fracto/FractoUtil";
+import {KEY_FOCAL_POINT, KEY_HOVER_POINT} from "../../PageSettings";
+import FractoUtil from "fracto/FractoUtil";
+import {render_pattern_block} from "fracto/styles/FractoStyles";
 
 ChartJS.register(CategoryScale, BarController)
 
 const ContentWrapper = styled(CoolStyles.Block)`
-   padding: 0.5rem;
-   background-color: white;
+    padding: 0.5rem;
+    background-color: white;
 `
 
 export class CompPatterns extends Component {
@@ -52,25 +54,40 @@ export class CompPatterns extends Component {
       ]
    }
 
-   click_point_data = () => {
+   get_fracto_values = (set1, set2) => {
       const {page_settings} = this.props
-      const click_point = page_settings[KEY_HOVER_POINT]
+      let click_point = page_settings[KEY_HOVER_POINT]
       if (!click_point) {
-         return []
+         click_point = page_settings[KEY_FOCAL_POINT]
       }
-      const fracto_values = FractoFastCalc.calc(click_point.x, click_point.y)
-      console.log('fracto_values.orbital_points', fracto_values.orbital_points)
-      return [
-         `${(fracto_values.orbital_points?.length || 1) - 1} points`,
-         <br />,
-         this.click_point_chart(fracto_values.orbital_points)
-      ]
+      return FractoFastCalc.calc(click_point.x, click_point.y)
+   }
+
+   click_point_data = () => {
+      const fracto_values = this.get_fracto_values()
+      return this.click_point_chart(fracto_values.orbital_points)
+   }
+
+   render_info = () => {
+      const fracto_values = this.get_fracto_values()
+      const current_pattern = (fracto_values.orbital_points?.length || 1) - 1
+      if (current_pattern) {
+         return <styles.InfoBlockWrapper>
+            <styles.PatternBlockWrapper>
+               {render_pattern_block(current_pattern)}
+            </styles.PatternBlockWrapper>
+         </styles.InfoBlockWrapper>
+      }
+      return <styles.InfoPrompt>
+         {'Hover or click to show orbital points'}
+      </styles.InfoPrompt>
    }
 
    render() {
-      return <ContentWrapper>
+      return <styles.ContentWrapper>
          {this.click_point_data()}
-      </ContentWrapper>
+         {this.render_info()}
+      </styles.ContentWrapper>
    }
 }
 

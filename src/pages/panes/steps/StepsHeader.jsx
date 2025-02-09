@@ -2,9 +2,6 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {
-   KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX,
-   KEY_FIELD_WIDTH_PX, KEY_LEGEND_WIDTH_PX,
-   KEY_STEPS_HEIGHT_PX,
    KEY_STEPS_WIDTH_PX, KEY_STEPS_ZOOM
 } from "../../PageSettings";
 import {CoolSlider, CoolStyles} from "../../../common/ui/CoolImports";
@@ -18,6 +15,7 @@ const HeaderZoomWrapper = styled(CoolStyles.Block)`
     color: black !important;
 `
 const LS_STEPS_ZOOM_VALUE = 'LS_STEPS_ZOOM_VALUE'
+const STEPS_ZOOM_DEFAULT = 2.0
 
 export class StepsHeader extends Component {
 
@@ -27,13 +25,13 @@ export class StepsHeader extends Component {
    }
 
    state = {
-      zoom_value: 2.5
+      zoom_value: STEPS_ZOOM_DEFAULT
    }
 
    componentDidMount() {
       const zoom_value_str = localStorage.getItem(LS_STEPS_ZOOM_VALUE);
       if (zoom_value_str) {
-         this.setState({zoom_value: parseFloat});
+         this.setState({zoom_value: parseFloat(zoom_value_str)});
       }
    }
 

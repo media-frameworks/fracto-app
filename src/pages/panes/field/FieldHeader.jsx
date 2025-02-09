@@ -34,12 +34,14 @@ export class FieldHeader extends Component {
       return <styles.HeaderWrapper style={{height: `${height_px}px`}}>
          <styles.MagnifyButton
             style={buttonStyles}
-            onClick={e => this.on_magnify(e,true)}>
+            title={'zoom out (boost w/shift)'}
+            onClick={e => this.on_magnify(e, true)}>
             <styles.ButtonCaret icon={faCaretUp}/>
          </styles.MagnifyButton>
          <styles.MagnifyButton
-            onClick={e => this.on_magnify(e,false)}
-            style={buttonStyles}>
+            style={buttonStyles}
+            title={'zoom in (boost w/shift)'}
+            onClick={e => this.on_magnify(e, false)}>
             <styles.ButtonCaret icon={faCaretDown}/>
          </styles.MagnifyButton>
       </styles.HeaderWrapper>
