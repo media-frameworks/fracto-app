@@ -60,7 +60,9 @@ export class CompOrbitals extends Component {
    }
 
    componentDidMount() {
-      this.fill_pattern_bins()
+      setTimeout(() => {
+         this.fill_pattern_bins()
+      },1000)
    }
 
    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {

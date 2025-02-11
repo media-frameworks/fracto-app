@@ -29,10 +29,15 @@ export class StepsHeader extends Component {
    }
 
    componentDidMount() {
+      const {on_settings_changed} = this.props
+      let zoom_value = STEPS_ZOOM_DEFAULT
       const zoom_value_str = localStorage.getItem(LS_STEPS_ZOOM_VALUE);
       if (zoom_value_str) {
-         this.setState({zoom_value: parseFloat(zoom_value_str)});
+         zoom_value = parseFloat(zoom_value_str);
       }
+      let new_setings = {}
+      new_setings[KEY_STEPS_ZOOM] = zoom_value
+      on_settings_changed(new_setings)
    }
 
    set_value = (e) => {

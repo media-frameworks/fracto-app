@@ -119,6 +119,10 @@ export class CompTransit extends Component {
                const frame_index = current_update_index - starting_update_index + 1
                if (frame_index >= frame_list.length) {
                   clearInterval(interval)
+                  let new_settings = {}
+                  new_settings[KEY_IN_ANIMATION] = false
+                  new_settings[KEY_DISABLED] = false
+                  on_settings_changed(new_settings)
                   return;
                }
                const frame = frame_list[frame_index]
@@ -126,7 +130,7 @@ export class CompTransit extends Component {
                new_settings[KEY_IN_ANIMATION] = true
                new_settings[KEY_FOCAL_POINT] = frame.focal_point
                new_settings[KEY_SCOPE] = frame.scope
-               new_settings[KEY_DISABLED] = false
+               new_settings[KEY_DISABLED] = true
                on_settings_changed(new_settings)
             }
          }, 100)
