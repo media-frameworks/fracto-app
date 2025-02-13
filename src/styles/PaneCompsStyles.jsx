@@ -41,6 +41,14 @@ export class PaneCompsStyles {
       margin-bottom: 0.25rem;
    `;
 
+   static OrbitalsPrompt = styled(CoolStyles.Block)`
+       ${CoolStyles.italic}
+       ${CoolStyles.align_center}
+      color: #888888;
+       margin-top: 1rem;
+      font-size: 1.125rem;
+   `;
+
 }
 
 export default PaneCompsStyles

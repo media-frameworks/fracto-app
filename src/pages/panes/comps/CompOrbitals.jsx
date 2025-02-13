@@ -60,9 +60,11 @@ export class CompOrbitals extends Component {
    }
 
    componentDidMount() {
-      setTimeout(() => {
-         this.fill_pattern_bins()
-      },1000)
+      const interval = setInterval(() => {
+         if (this.fill_pattern_bins()) {
+            clearInterval(interval)
+         }
+      }, 1000)
    }
 
    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
@@ -84,7 +86,7 @@ export class CompOrbitals extends Component {
       const {page_settings} = this.props
       const {canvas_buffer} = page_settings
       if (!canvas_buffer) {
-         return;
+         return false;
       }
       let orbital_bins = {
          total_count: 0,
@@ -111,6 +113,7 @@ export class CompOrbitals extends Component {
          }
       }
       this.setState({orbital_bins: orbital_bins})
+      return true
    }
 
    color_bar = (bin) => {
@@ -133,7 +136,9 @@ export class CompOrbitals extends Component {
       const width_px = page_settings[KEY_COMPS_WIDTH_PX]
       const bin_keys = Object.keys(orbital_bins);
       if (bin_keys.length === 0) {
-         return "no data"
+         return <styles.OrbitalsPrompt>
+            {'Loading orbitals data...'}
+         </styles.OrbitalsPrompt>
       }
       const sorted_bins = bin_keys
          .filter(key => key !== 'total_count')

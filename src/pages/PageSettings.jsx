@@ -7,6 +7,7 @@ export const KEY_COMPS_WIDTH_PX = 'comps_width_px'
 export const KEY_COMPS_HEIGHT_PX = 'comps_height_px'
 export const KEY_LEGEND_WIDTH_PX = 'legend_width_px'
 export const KEY_LEGEND_HEIGHT_PX = 'legend_height_px'
+export const KEY_IMAGE_WIDTH = 'image_width'
 
 export const KEY_FOCAL_POINT = 'focal_point'
 export const KEY_SCOPE = 'scope'
