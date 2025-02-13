@@ -79,7 +79,7 @@ export const render_short_code = (short_code) => {
    return <ShortCodeSpan>{short_code}</ShortCodeSpan>
 }
 
-const NumberSpan = styled.span`
+export const NumberSpan = styled.span`
    ${CoolStyles.monospace}
    ${CoolStyles.deep_blue_text}
    font-size: 0.95rem;

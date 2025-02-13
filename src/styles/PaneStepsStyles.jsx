@@ -15,7 +15,8 @@ export class PaneStepsStyles {
       padding: 0;
    `
    static StepsWrapper = styled(CoolStyles.InlineBlock)`
-      background-color: white;
+       background: linear-gradient(70deg, #999999, #eeeeee);
+       height: 100%;
    `
    static StepFrame = styled(CoolStyles.Block)`
       background-color: #f8f8f8;

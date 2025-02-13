@@ -2,13 +2,12 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {PaneFieldStyles as styles} from 'styles/PaneFieldStyles'
+import {HEADER_HEIGHT_PX} from "styles/PageAppStyles";
 import {faCaretDown, faCaretUp} from "@fortawesome/free-solid-svg-icons";
 import {KEY_DISABLED, KEY_SCOPE} from "../../PageSettings";
 
 export class FieldHeader extends Component {
    static propTypes = {
-      width_px: PropTypes.number.isRequired,
-      height_px: PropTypes.number.isRequired,
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
    }
@@ -26,23 +25,23 @@ export class FieldHeader extends Component {
    }
 
    render() {
-      const {height_px, page_settings} = this.props
+      const {page_settings} = this.props
       const buttonStyles = {
          cursor: page_settings[KEY_DISABLED] ? 'wait' : 'pointer',
-         height: `${height_px - 5}px`
+         height: `${HEADER_HEIGHT_PX - 2}px`
       }
-      return <styles.HeaderWrapper style={{height: `${height_px}px`}}>
+      return <styles.HeaderWrapper>
          <styles.MagnifyButton
             style={buttonStyles}
             title={'zoom out (boost w/shift)'}
             onClick={e => this.on_magnify(e, true)}>
-            <styles.ButtonCaret icon={faCaretUp}/>
+            <styles.ButtonCaretUp icon={faCaretUp}/>
          </styles.MagnifyButton>
          <styles.MagnifyButton
             style={buttonStyles}
             title={'zoom in (boost w/shift)'}
             onClick={e => this.on_magnify(e, false)}>
-            <styles.ButtonCaret icon={faCaretDown}/>
+            <styles.ButtonCaretDown icon={faCaretDown}/>
          </styles.MagnifyButton>
       </styles.HeaderWrapper>
    }

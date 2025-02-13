@@ -12,6 +12,15 @@ import {render_pattern_block} from "fracto/styles/FractoStyles";
 
 ChartJS.register(CategoryScale, BarController)
 
+const GRID_CONFIG = {
+   color: function (context) {
+      return context.tick.value === 0 ? '#aaaaaa' : '#dddddd'
+   },
+   lineWidth: function (context) {
+      return context.tick.value === 0 ? 1.5 : 1
+   }
+};
+
 export class CompPatterns extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
@@ -21,9 +30,8 @@ export class CompPatterns extends Component {
    click_point_chart = (set1) => {
       const options = {
          scales: {
-            x: {
-               type: 'linear',
-            },
+            x: {grid: GRID_CONFIG},
+            y: {grid: GRID_CONFIG}
          },
          animation: false
       }

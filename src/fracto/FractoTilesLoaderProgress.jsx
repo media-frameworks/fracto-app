@@ -15,6 +15,7 @@ const TIMEOUT_MS = 50
 
 export const LS_TILE_LOADER_PROGRESS_PCT = 'LS_TILE_LOADER_PROGRESS_PCT';
 export const LS_TILE_LOADER_LEVEL = 'LS_TILE_LOADER_LEVEL';
+export const LS_INDEXED_TILE_COUNT = 'LS_INDEXED_TILE_COUNT'
 
 const ProgressWrapper = styled(CoolStyles.Block)`
     ${CoolStyles.align_center}
@@ -73,6 +74,7 @@ export class FractoTilesLoaderProgress extends Component {
                 packet_files: manifest.packet_files,
                 tile_count: manifest.tile_count
             })
+            localStorage.setItem(LS_INDEXED_TILE_COUNT, `${manifest.tile_count}`)
             setTimeout(() => {
                 this.load_packet(0)
             }, TIMEOUT_MS)

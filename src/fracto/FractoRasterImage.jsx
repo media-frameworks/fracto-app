@@ -17,7 +17,7 @@ const FractoCanvas = styled.canvas`
 const MAX_LEVEL = 35;
 export var BAD_TILES = {};
 
-const get_tiles = (
+export const get_tiles = (
    width_px,
    focal_point,
    scope,

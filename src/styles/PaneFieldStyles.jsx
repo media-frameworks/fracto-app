@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import {CoolStyles} from '../common/ui/CoolImports'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {HEADER_HEIGHT_PX} from "./PageAppStyles";
 
 export class PaneFieldStyles {
    static HeaderWrapper = styled(CoolStyles.Block)`
        padding: 0 2px;
        border-bottom: 1px solid black;
+       height: ${HEADER_HEIGHT_PX}px;
        background: linear-gradient(70deg, #999999, #eeeeee);
    `
    static FieldWrapper = styled(CoolStyles.InlineBlock)`
@@ -23,13 +25,17 @@ export class PaneFieldStyles {
        float: right;
        width: 2rem;
        border-radius: 0.2rem;
-       border: 0.1rem solid #666666;
+       border: 0.1rem solid #888888;
        background: linear-gradient(70deg, #eeeeee, #999999);
-       margin: 1px 2px 0 0;
-       font-size: 1.125rem;
+       margin: 0 1px 0 0;
+       font-size: 16px;
    `;
 
-   static ButtonCaret = styled(FontAwesomeIcon)`
+   static ButtonCaretUp = styled(FontAwesomeIcon)`
+       color: white;
+       text-shadow: 0.125rem 0.125rem 0.125rem #222222;
+   `;
+   static ButtonCaretDown = styled(FontAwesomeIcon)`
        color: white;
        text-shadow: 0.125rem 0.125rem 0.125rem #222222;
    `;

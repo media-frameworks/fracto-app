@@ -18,7 +18,9 @@ import {
    KEY_IMG_X,
    KEY_IMG_Y,
    KEY_BAD_TILES,
-   KEY_CACHE_SIZE, KEY_UPDATE_INDEX,
+   KEY_CACHE_SIZE,
+   KEY_UPDATE_INDEX,
+   KEY_IMAGE_WIDTH
 } from "../../PageSettings";
 
 const IMAGE_SIZE_DELTA = 50
@@ -29,8 +31,7 @@ const ZOOM_FACTOR_MAJOR = 3.0
 export class FieldImage extends Component {
 
    static propTypes = {
-      page_settings: PropTypes.object.isRequired,
-      on_settings_changed: PropTypes.func.isRequired,
+      page_settings: PropTypes.object.isRequired, on_settings_changed: PropTypes.func.isRequired,
    }
 
    state = {
@@ -65,8 +66,7 @@ export class FieldImage extends Component {
       const focal_point = page_settings[KEY_FOCAL_POINT]
       const scope = page_settings[KEY_SCOPE]
       const inspector_bounds = {
-         left: focal_point.x - scope / 2,
-         top: focal_point.y + scope / 2,
+         left: focal_point.x - scope / 2, top: focal_point.y + scope / 2,
       }
       const image_wrapper = image_ref.current
       if (!image_wrapper) {
@@ -85,8 +85,7 @@ export class FieldImage extends Component {
       const location = this.get_mouse_pos(e)
       let new_setings = {}
       new_setings[KEY_HOVER_POINT] = {
-         x: location.x,
-         y: location.y,
+         x: location.x, y: location.y,
       }
       on_settings_changed(new_setings)
    }
@@ -113,8 +112,7 @@ export class FieldImage extends Component {
       const increment = scope / container_bounds.width
       let settings = {}
       settings[KEY_FOCAL_POINT] = {
-         x: leftmost + increment * img_x,
-         y: topmost - increment * img_y,
+         x: leftmost + increment * img_x, y: topmost - increment * img_y,
       }
       if (e.ctrlKey) {
          settings[KEY_SCOPE] = page_settings[KEY_SCOPE] / ZOOM_FACTOR
@@ -161,6 +159,7 @@ export class FieldImage extends Component {
       new_setings[KEY_BAD_TILES] = Object.keys(BAD_TILES).length;
       new_setings[KEY_CACHE_SIZE] = Object.keys(CACHED_TILES).length;
       new_setings[KEY_UPDATE_INDEX] = 1 + page_settings[KEY_UPDATE_INDEX] || 0;
+      new_setings[KEY_IMAGE_WIDTH] = this.get_image_width()
       on_settings_changed(new_setings)
    }
 
