@@ -27,6 +27,20 @@ export class FractoTileCache {
 
    static error_count = 0;
 
+   static get_tile_url = async (url) => {
+      try {
+         const response = await axios.get(url, AXIOS_CONFIG);
+         const blob = new Blob([response.data], {type: 'application/gzip'});
+         const arrayBuffer = await blob.arrayBuffer();
+         const buffer = Buffer.from(arrayBuffer);
+         const decompressed = decompressSync(buffer);
+         const ascii = Buffer.from(decompressed, 'ascii');
+         return JSON.parse(ascii.toString());
+      } catch (error) {
+         return null
+      }
+   }
+
    static get_tile = async (short_code) => {
       if (CACHED_TILES[short_code]) {
          CACHED_TILES[short_code].last_access = Date.now()
@@ -40,13 +54,7 @@ export class FractoTileCache {
       const naught = level < 10 ? '0' : ''
       const url = `${network["fracto-prod"]}/L${naught}${level}/${short_code}.gz`
       try {
-         const response = await axios.get(url, AXIOS_CONFIG);
-         const blob = new Blob([response.data], {type: 'application/gzip'});
-         const arrayBuffer = await blob.arrayBuffer();
-         const buffer = Buffer.from(arrayBuffer);
-         const decompressed = decompressSync(buffer);
-         const ascii = Buffer.from(decompressed, 'ascii');
-         const uncompressed = JSON.parse(ascii.toString());
+         const uncompressed = FractoTileCache.get_tile_url(url)
          if (uncompressed) {
             CACHED_TILES[short_code] = {
                uncompressed: uncompressed,

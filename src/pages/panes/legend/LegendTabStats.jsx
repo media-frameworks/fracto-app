@@ -46,7 +46,7 @@ export class LegendTabStats extends Component {
          page_settings[KEY_FOCAL_POINT],
          page_settings[KEY_SCOPE],
          1.0)
-      console.log('coverage_data', coverage_data)
+      // console.log('coverage_data', coverage_data)
       const coverage_str = coverage_data
          .sort((a, b) => b.level - a.level)
          .slice(0, 8)
