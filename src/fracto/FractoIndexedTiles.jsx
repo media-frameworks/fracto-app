@@ -195,7 +195,7 @@ export class FractoIndexedTiles extends Component {
       // console.log('get_tile_scopes = (set_name, focal_point, scope)', set_name, focal_point, scope)
       const level_tiles_in_scope = []
       // console.log('FractoIndexedTiles.tile_set[set_name]', set_name, FractoIndexedTiles.tile_set[set_name])
-      for (let level = 2; level < 35; level++) {
+      for (let level = 3; level < 35; level++) {
          const tiles_in_level = FractoIndexedTiles
             .tiles_in_scope(level, focal_point, scope, 1.0, set_name);
          if (!tiles_in_level.length) {

@@ -85,6 +85,12 @@ export const NumberSpan = styled.span`
    font-size: 0.95rem;
 `;
 
+export const SmallNumberSpan = styled.span`
+   ${CoolStyles.monospace}
+   ${CoolStyles.deep_blue_text}
+   font-size: 0.75rem;
+`;
+
 const ItalicSpan = styled.span`
    ${CoolStyles.bold}
    ${CoolStyles.italic}

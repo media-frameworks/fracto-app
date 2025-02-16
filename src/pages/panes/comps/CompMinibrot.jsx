@@ -52,7 +52,7 @@ export class CompMinibrot extends Component {
       const {all_bailiwicks} = this.state
       const {page_settings} = this.props
       const {bailiwick_id, disabled} = page_settings
-      console.log('all_bailiwicks', all_bailiwicks)
+      // console.log('all_bailiwicks', all_bailiwicks)
       const list_style = {
          height: `${page_settings[KEY_COMPS_HEIGHT_PX] - 65}px`,
          width: `${page_settings[KEY_COMPS_WIDTH_PX] - 5}px`,
@@ -66,7 +66,7 @@ export class CompMinibrot extends Component {
             selected_id={bailiwick_id}
             on_select={this.on_select}
             in_wait={page_settings[KEY_DISABLED]}
-         />a
+         />
       </styles.ContentWrapper>
    }
 }

@@ -13,6 +13,7 @@ import CompOrbitals from "./comps/CompOrbitals";
 import CompPatterns from "./comps/CompPatterns";
 import CompMinibrot from "./comps/CompMinibrot";
 import CompTransit from "./comps/CompTransit";
+import CompLatest from "./comps/CompLatest";
 
 export class PaneComps extends Component {
 
@@ -52,6 +53,13 @@ export class PaneComps extends Component {
          {
             label: 'minibrot',
             content: <CompMinibrot
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         },
+         {
+            label: 'nursery',
+            content: <CompLatest
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
