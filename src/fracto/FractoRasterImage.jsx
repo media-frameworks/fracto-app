@@ -200,17 +200,20 @@ export class FractoRasterImage extends Component {
          aspect_ratio,
       } = this.props
       const canvas_increment = scope / width_px
-      const horz_scale = []
-      const leftmost = focal_point.x - scope / 2
-      for (let horz_x = 0; horz_x < width_px; horz_x++) {
-         horz_scale[horz_x] = leftmost + horz_x * canvas_increment
-      }
-      const vert_scale = []
-      const topmost = focal_point.y + scope * aspect_ratio / 2
       const height_px = width_px * aspect_ratio
-      for (let vert_y = 0; vert_y < height_px; vert_y++) {
-         vert_scale[vert_y] = Math.abs(topmost - vert_y * canvas_increment)
+
+      const horz_scale = []
+      // const leftmost = focal_point.x - scope / 2
+      for (let horz_x = 0; horz_x < width_px; horz_x++) {
+         horz_scale[horz_x] = focal_point.x + (horz_x - width_px / 2) * canvas_increment
       }
+
+      const vert_scale = []
+      // const topmost = focal_point.y + scope * aspect_ratio / 2
+      for (let vert_y = 0; vert_y < height_px; vert_y++) {
+         vert_scale[vert_y] = Math.abs(focal_point.y - (vert_y - height_px / 2) * canvas_increment)
+      }
+
       for (let canvas_x = 0; canvas_x < width_px; canvas_x++) {
          const x = horz_scale[canvas_x]
          for (let canvas_y = 0; canvas_y < height_px; canvas_y++) {

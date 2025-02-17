@@ -331,14 +331,16 @@ export class FractoUtil {
          left: `${box_left + wrapper_bounds.left}px`,
          top: `${box_top + wrapper_bounds.top}px`,
          width: `${box_right - box_left}px`,
-         height: `${box_bottom - box_top}px`
+         height: `${box_bottom - box_top}px`,
+         zIndex: 1000,
       };
       const black_border = {
          border: `2px dashed ${color === 'white' ? '#888888' : '#444444'}`,
          left: `${box_left + wrapper_bounds.left - 2}px`,
          top: `${box_top + wrapper_bounds.top - 2}px`,
          width: `${box_right - box_left + 4}px`,
-         height: `${box_bottom - box_top + 4}px`
+         height: `${box_bottom - box_top + 4}px`,
+         zIndex: 1000,
       };
       return [
          <SelectedTileBoxOutline key={"outline-1"} style={black_border}/>,
