@@ -33,7 +33,8 @@ import {
    KEY_BAD_TILES,
    KEY_CACHE_SIZE,
    KEY_STEPS_ZOOM,
-   KEY_UPDATE_INDEX, KEY_IMAGE_WIDTH,
+   KEY_UPDATE_INDEX,
+   KEY_IMAGE_WIDTH, KEY_MODAL,
 } from "./PageSettings";
 
 const ALL_PANE_DIMENSIONS = [
@@ -61,6 +62,7 @@ const ALL_OPERATIVES = [
    KEY_CACHE_SIZE,
    KEY_STEPS_ZOOM,
    KEY_UPDATE_INDEX,
+   KEY_MODAL,
 ]
 
 export class PageMain extends Component {
@@ -118,7 +120,7 @@ export class PageMain extends Component {
          new_state.page_settings[KEY_FIELD_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
       }
       if (new_settings[LOWER_HEIGHT_KEY]) {
-         new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = Math.abs( new_settings[LOWER_HEIGHT_KEY])
+         new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = Math.abs(new_settings[LOWER_HEIGHT_KEY])
       }
       if (new_settings[UPPER_LEFT_WIDTH_KEY]) {
          new_state.page_settings[KEY_STEPS_WIDTH_PX] = new_settings[UPPER_LEFT_WIDTH_KEY]
@@ -183,6 +185,7 @@ export class PageMain extends Component {
          pane_legend={pane_legend}
          on_settings_changed={this.on_settings_changed}
       />
+      const modal = page_settings[KEY_MODAL] || []
       return <div
          ref={main_ref}>
          <AppPageMain
@@ -191,6 +194,7 @@ export class PageMain extends Component {
             content_left={left_pane}
             content_right={pane_comps}
          />
+         {modal}
       </div>
    }
 }

@@ -14,6 +14,7 @@ import CompPatterns from "./comps/CompPatterns";
 import CompMinibrot from "./comps/CompMinibrot";
 import CompTransit from "./comps/CompTransit";
 import CompLatest from "./comps/CompLatest";
+import CompSnapshot from "./comps/CompSnapshot";
 
 export class PaneComps extends Component {
 
@@ -46,6 +47,13 @@ export class PaneComps extends Component {
          {
             label: 'patterns',
             content: <CompPatterns
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         },
+         {
+            label: 'snapshot',
+            content: <CompSnapshot
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />

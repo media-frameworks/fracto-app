@@ -1,16 +1,18 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import network from "common/config/network.json";
 
 import FractoTileCache from "fracto/FractoTileCache";
 import FractoTileRender from "fracto/FractoTileRender";
 import FractoUtil from "fracto/FractoUtil";
+import CoolStyles from "common/ui/styles/CoolStyles";
 
 export class LatestTileBlock extends Component {
    static propTypes = {
       short_code: PropTypes.string.isRequired,
       timecode: PropTypes.number.isRequired,
       size_px: PropTypes.number.isRequired,
+      on_settings_changed: PropTypes.func.isRequired,
    }
 
    state = {
@@ -35,11 +37,14 @@ export class LatestTileBlock extends Component {
          short_code: short_code,
          bounds: FractoUtil.bounds_from_short_code(short_code)
       }
-      return <FractoTileRender
-         width_px={size_px}
-         tile_data={tile_data}
-         tile={tile}
-      />
+      return <CoolStyles.InlineBlock
+         style={{cursor: "pointer"}}>
+         <FractoTileRender
+            width_px={size_px}
+            tile_data={tile_data}
+            tile={tile}
+         />
+      </CoolStyles.InlineBlock>
    }
 }
 

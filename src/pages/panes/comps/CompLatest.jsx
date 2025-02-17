@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import network from "common/config/network.json";
 
@@ -8,6 +8,8 @@ import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolStyles} from "common/ui/CoolImports";
 import LatestTileBlock from "./latest/LatestTileBlock";
 import {NumberSpan, SmallNumberSpan} from "fracto/styles/FractoStyles";
+import {KEY_MODAL} from "../../PageSettings";
+import LatestTileDetail from "./latest/TileDetailModal";
 
 const TILE_COUNT = 25;
 
@@ -50,24 +52,36 @@ export class CompLatest extends Component {
       }, 15000)
    }
 
+   tile_detail = (short_code) => {
+      const {on_settings_changed} = this.props
+      let new_settings = {}
+      new_settings[KEY_MODAL] = <LatestTileDetail
+         short_code={short_code}
+         on_settings_changed={on_settings_changed}
+      />
+      on_settings_changed(new_settings)
+   }
+
    render() {
       const {tile_blocks, update_counter} = this.state
+      const {on_settings_changed} = this.props
       const item_keys = Object.keys(tile_blocks)
       const new_tile_list = item_keys
          .sort((a, b) => tile_blocks[b] - tile_blocks[a])
          .slice(0, TILE_COUNT)
          .map((short_code, i) => {
             const date = new Date(tile_blocks[short_code] * 1000);
-            console.log('date.toLocaleDateString()', date)
             const title = i === 0
                ? <NumberSpan>{short_code}</NumberSpan>
                : <SmallNumberSpan>{short_code}</SmallNumberSpan>
-            return <styles.TileBlockWrapper>
+            return <styles.TileBlockWrapper
+               onClick={()=>this.tile_detail(short_code)}>
                <LatestTileBlock
                   key={`recent-${short_code}`}
                   short_code={short_code}
                   size_px={i === 0 ? 300 : 128}
                   timecode={tile_blocks[short_code]}
+                  on_settings_changed={on_settings_changed}
                />
                <CoolStyles.Block
                   style={{textAlign: 'center'}}>
