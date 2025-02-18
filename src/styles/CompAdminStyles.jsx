@@ -27,6 +27,12 @@ export class CompAdminStyles {
        font-size: 0.95rem;
        margin-left: 0.5rem;
    `
+   static Spacer = styled(CoolStyles.InlineBlock)`
+       margin-left: 1rem;
+   `
+   static CenteredBlock = styled(CoolStyles.Block)`
+       ${CoolStyles.align_center}
+   `
 }
 
 export default CompAdminStyles

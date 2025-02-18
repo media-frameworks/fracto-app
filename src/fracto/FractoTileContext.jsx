@@ -16,7 +16,12 @@ export class FractoTileContext extends Component {
    static propTypes = {
       tile: PropTypes.object.isRequired,
       width_px: PropTypes.number.isRequired,
-      on_context_rendered: PropTypes.func
+      on_context_rendered: PropTypes.func,
+      scope_factor: PropTypes.number,
+   }
+
+   static defaultProps = {
+      scope_factor: 6,
    }
 
    state = {
@@ -30,12 +35,12 @@ export class FractoTileContext extends Component {
 
    render() {
       const {wrapper_ref, preview_ready} = this.state
-      const {tile, width_px, on_context_rendered} = this.props;
+      const {tile, width_px, on_context_rendered, scope_factor} = this.props;
       const wrapper_style = {
          width: `${width_px}px`,
          height: `${width_px}px`,
       }
-      const context_scope = 6 * (tile.bounds.right - tile.bounds.left);
+      const context_scope = scope_factor * (tile.bounds.right - tile.bounds.left);
       const focal_point = {
          x: (tile.bounds.right + tile.bounds.left) / 2,
          y: (tile.bounds.top + tile.bounds.bottom) / 2

@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolButton, CoolSelect} from "common/ui/CoolImports";
-import FractoRasterImage from "../../../fracto/FractoRasterImage";
+import FractoRasterImage, {get_tiles} from "../../../fracto/FractoRasterImage";
 import {KEY_FOCAL_POINT, KEY_SCOPE} from "../../PageSettings";
 import CoolStyles from "../../../common/ui/styles/CoolStyles";
+import {NumberSpan} from "../../../fracto/styles/FractoStyles";
 
 const RESOLUTIONS = [
    {label: '1200', value: 1200, help: 'small',},
@@ -46,6 +47,7 @@ export class CompSnapshot extends Component {
 
    render() {
       const {current_image, current_size} = this.state
+      const {page_settings} = this.props
       const image = current_image
          ? <CoolStyles.Block>
             <FractoRasterImage
@@ -55,6 +57,18 @@ export class CompSnapshot extends Component {
             />
          </CoolStyles.Block>
          : []
+      const coverage_data = get_tiles(
+         current_size,
+         page_settings[KEY_FOCAL_POINT],
+         page_settings[KEY_SCOPE],
+         1.0)
+      // console.log('coverage_data', coverage_data)
+      const coverage_str = coverage_data
+         .sort((a, b) => b.level - a.level)
+         .slice(0, 8)
+         .map((item) => {
+            return `${item.level}:${item.level_tiles.length}`
+         }).join(', ')
       return <styles.ContentWrapper style={{overflow: 'auto'}}>
          <CoolButton
             content={'When you have adjusted the view to your liking, click here'}
@@ -65,6 +79,8 @@ export class CompSnapshot extends Component {
             value={current_size}
             on_change={this.change_resolution}
          />
+         <styles.Spacer/>
+         <NumberSpan>{coverage_str}</NumberSpan>
          {image}
       </styles.ContentWrapper>
    }
