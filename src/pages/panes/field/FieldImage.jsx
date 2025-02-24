@@ -205,7 +205,7 @@ export class FieldImage extends Component {
                aspect_ratio={1.0}
                on_plan_complete={this.on_plan_complete}
                disabled={disabled}
-               color_handler={this.color_handler}
+               // color_handler={this.color_handler}
                update_counter={page_settings[KEY_UPDATE_INDEX]}
             />
          </styles.ImageWrapper>
