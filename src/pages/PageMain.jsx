@@ -34,7 +34,7 @@ import {
    KEY_CACHE_SIZE,
    KEY_STEPS_ZOOM,
    KEY_UPDATE_INDEX,
-   KEY_IMAGE_WIDTH, KEY_MODAL,
+   KEY_IMAGE_WIDTH, KEY_MODAL, KEY_LIT_TYPE, KEY_COLOR_PHASE,
 } from "./PageSettings";
 
 const ALL_PANE_DIMENSIONS = [
@@ -62,7 +62,9 @@ const ALL_OPERATIVES = [
    KEY_CACHE_SIZE,
    KEY_STEPS_ZOOM,
    KEY_UPDATE_INDEX,
+   KEY_LIT_TYPE,
    KEY_MODAL,
+   KEY_COLOR_PHASE,
 ]
 
 export class PageMain extends Component {

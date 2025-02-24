@@ -71,12 +71,13 @@ export class TileDetailStyles {
        color: #888888;
        width: 100px;
        font-size: 1.125rem;
+       float: right;
        padding-right: 0.25rem;
    `
    static AttributeContent = styled(CoolStyles.InlineBlock)`
-       overflow: hidden;
-       word-break: break-word;
-       width: fit-content;
+       ${CoolStyles.italic}
+       float: left;
+       width: 500px;
    `
    static ModalWrapper = styled(CoolStyles.Block)`
        padding: 0.5rem;

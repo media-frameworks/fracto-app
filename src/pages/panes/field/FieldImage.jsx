@@ -20,8 +20,11 @@ import {
    KEY_BAD_TILES,
    KEY_CACHE_SIZE,
    KEY_UPDATE_INDEX,
-   KEY_IMAGE_WIDTH
+   KEY_IMAGE_WIDTH,
+   KEY_LIT_TYPE, KEY_COLOR_PHASE,
 } from "../../PageSettings";
+import FractoUtil from "fracto/FractoUtil";
+import {LIT_TYPE_OUTSIDE} from "../comps/CompColors";
 
 const IMAGE_SIZE_DELTA = 50
 const ZOOM_FACTOR = 1.5
@@ -163,13 +166,29 @@ export class FieldImage extends Component {
       on_settings_changed(new_setings)
    }
 
+   color_handler = (pattern, iterations) => {
+      const {page_settings} = this.props
+      if (page_settings[KEY_LIT_TYPE] !== LIT_TYPE_OUTSIDE) {
+         const [h, s, l] = FractoUtil.fracto_pattern_color_hsl(pattern, iterations)
+         const offset = page_settings[KEY_COLOR_PHASE]
+            ? page_settings[KEY_COLOR_PHASE] : 0
+         return [h + offset, s, l]
+      } else {
+         if (pattern > 0) {
+            return [0, 0, 0]
+         }
+         return [44, 55, 66]
+      }
+   }
+
    render() {
       const {image_ref} = this.state
       const {page_settings} = this.props
-      const {focal_point, scope, disabled} = page_settings
+      const {focal_point, scope, disabled, update_index} = page_settings
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
       const field_height = page_settings[KEY_FIELD_HEIGHT_PX] - HEADER_HEIGHT_PX
+      console.log('update_index', update_index)
       return <styles.FieldWrapper
          style={{width: field_width, height: field_height}}>
          <styles.ImageWrapper
@@ -186,6 +205,8 @@ export class FieldImage extends Component {
                aspect_ratio={1.0}
                on_plan_complete={this.on_plan_complete}
                disabled={disabled}
+               color_handler={this.color_handler}
+               update_counter={page_settings[KEY_UPDATE_INDEX]}
             />
          </styles.ImageWrapper>
       </styles.FieldWrapper>

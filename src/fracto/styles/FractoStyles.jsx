@@ -86,7 +86,8 @@ export const NumberSpan = styled.span`
 `;
 
 export const SmallNumberSpan = styled.span`
-   ${CoolStyles.monospace}
+    ${CoolStyles.monospace}
+    ${CoolStyles.ellipsis}
    ${CoolStyles.deep_blue_text}
    font-size: 0.75rem;
 `;

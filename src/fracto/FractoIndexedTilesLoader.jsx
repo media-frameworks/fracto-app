@@ -11,7 +11,7 @@ const TitleBar = styled(CoolStyles.Block)`
    ${CoolStyles.uppercase}
    ${CoolStyles.align_center}
    ${CoolStyles.narrow_text_shadow}
-   font-size: 1.25rem;
+   font-size: 2.0rem;
    margin: 1rem auto;
    letter-spacing: 1.5rem;
    color: #999999;

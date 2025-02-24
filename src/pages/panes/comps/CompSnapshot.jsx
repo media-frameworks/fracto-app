@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolButton, CoolSelect} from "common/ui/CoolImports";
 import FractoRasterImage, {get_tiles} from "../../../fracto/FractoRasterImage";
-import {KEY_FOCAL_POINT, KEY_SCOPE} from "../../PageSettings";
+import {KEY_COLOR_PHASE, KEY_FOCAL_POINT, KEY_LIT_TYPE, KEY_SCOPE} from "../../PageSettings";
 import CoolStyles from "../../../common/ui/styles/CoolStyles";
 import {NumberSpan} from "../../../fracto/styles/FractoStyles";
+import {LIT_TYPE_OUTSIDE} from "./CompColors";
+import FractoUtil from "../../../fracto/FractoUtil";
 
 const RESOLUTIONS = [
    {label: '1200', value: 1200, help: 'small',},
@@ -45,6 +47,21 @@ export class CompSnapshot extends Component {
       })
    }
 
+   color_handler = (pattern, iterations) => {
+      const {page_settings} = this.props
+      if (page_settings[KEY_LIT_TYPE] !== LIT_TYPE_OUTSIDE) {
+         const [h, s, l] = FractoUtil.fracto_pattern_color_hsl(pattern, iterations)
+         const offset = page_settings[KEY_COLOR_PHASE]
+            ? page_settings[KEY_COLOR_PHASE] : 0
+         return [h + offset, s, l]
+      } else {
+         if (pattern > 0) {
+            return [0, 0, 0]
+         }
+         return [44, 55, 66]
+      }
+   }
+
    render() {
       const {current_image, current_size} = this.state
       const {page_settings} = this.props
@@ -54,6 +71,7 @@ export class CompSnapshot extends Component {
                width_px={current_size}
                focal_point={current_image.focal_point}
                scope={current_image.scope}
+               color_handler={this.color_handler}
             />
          </CoolStyles.Block>
          : []
@@ -79,8 +97,7 @@ export class CompSnapshot extends Component {
             value={current_size}
             on_change={this.change_resolution}
          />
-         <styles.Spacer/>
-         <NumberSpan>{coverage_str}</NumberSpan>
+         <CoolStyles.Block><NumberSpan>{coverage_str}</NumberSpan></CoolStyles.Block>
          {image}
       </styles.ContentWrapper>
    }
