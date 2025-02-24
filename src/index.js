@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import PageMain from "pages/PageMain";
 import FractoIndexedTilesLoader from "./fracto/FractoIndexedTilesLoader";
 
-const APP_NAME = 'fracto-app'
+const APP_NAME = 'fracto'
 const page_main = <PageMain key={'page-main'} app_name={APP_NAME}/>
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

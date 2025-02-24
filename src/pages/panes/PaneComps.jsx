@@ -12,9 +12,9 @@ import CompAdmin from "./comps/CompAdmin";
 import CompOrbitals from "./comps/CompOrbitals";
 import CompPatterns from "./comps/CompPatterns";
 import CompMinibrot from "./comps/CompMinibrot";
-import CompTransit from "./comps/CompTransit";
-import CompLatest from "./comps/CompLatest";
+import CompNursery from "./comps/CompNursery";
 import CompSnapshot from "./comps/CompSnapshot";
+import CompColors from "./comps/CompColors";
 
 export class PaneComps extends Component {
 
@@ -66,8 +66,15 @@ export class PaneComps extends Component {
             />
          },
          {
+            label: 'colors',
+            content: <CompColors
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         },
+         {
             label: 'nursery',
-            content: <CompLatest
+            content: <CompNursery
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
@@ -75,13 +82,6 @@ export class PaneComps extends Component {
          {
             label: 'admin',
             content: <CompAdmin
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-         },
-         {
-            label: 'transit',
-            content: <CompTransit
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />

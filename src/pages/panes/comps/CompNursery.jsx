@@ -13,7 +13,7 @@ import LatestTileDetail from "./latest/TileDetailModal";
 
 const TILE_COUNT = 25;
 
-export class CompLatest extends Component {
+export class CompNursery extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
@@ -75,9 +75,9 @@ export class CompLatest extends Component {
                ? <NumberSpan>{short_code}</NumberSpan>
                : <SmallNumberSpan>{short_code}</SmallNumberSpan>
             return <styles.TileBlockWrapper
+               key={`recent-${short_code}`}
                onClick={()=>this.tile_detail(short_code)}>
                <LatestTileBlock
-                  key={`recent-${short_code}`}
                   short_code={short_code}
                   size_px={i === 0 ? 300 : 128}
                   timecode={tile_blocks[short_code]}
@@ -105,4 +105,4 @@ export class CompLatest extends Component {
    }
 }
 
-export default CompLatest
+export default CompNursery

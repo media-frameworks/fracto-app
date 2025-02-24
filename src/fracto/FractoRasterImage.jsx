@@ -59,6 +59,7 @@ export class FractoRasterImage extends Component {
       disabled: PropTypes.bool,
       update_counter: PropTypes.number,
       filter_level: PropTypes.number,
+      color_handler: PropTypes.func,
    }
 
    static defaultProps = {
@@ -104,9 +105,9 @@ export class FractoRasterImage extends Component {
       const focal_point_x_changed = prevProps.focal_point.x !== this.props.focal_point.x;
       const focal_point_y_changed = prevProps.focal_point.y !== this.props.focal_point.y;
       const scope_changed = prevProps.scope !== this.props.scope;
-      const disabled_changed = false// prevProps.disabled !== this.props.disabled;
+      const disabled_changed = prevProps.disabled !== this.props.disabled;
       const filter_level_changed = this.props.filter_level && prevProps.filter_level !== this.props.filter_level;
-      const update_counter_changed = false// this.props.update_counter && prevProps.update_counter !== this.props.update_counter;
+      const update_counter_changed = false //this.props.update_counter && prevProps.update_counter !== this.props.update_counter;
       let canvas_buffer = this.state.canvas_buffer
       if (this.state.loading_tiles) {
          return;
@@ -198,6 +199,7 @@ export class FractoRasterImage extends Component {
          focal_point,
          scope,
          aspect_ratio,
+         color_handler,
       } = this.props
       const canvas_increment = scope / width_px
       const height_px = width_px * aspect_ratio
@@ -250,7 +252,12 @@ export class FractoRasterImage extends Component {
                   if (canvas_buffer && canvas_buffer[canvas_x] && canvas_buffer[canvas_x][canvas_y]) {
                      canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
                   }
-                  const [hue, sat_pct, lum_pct] = FractoUtil.fracto_pattern_color_hsl(pattern, iteration)
+                  let hue, sat_pct, lum_pct
+                  if (color_handler) {
+                     [hue, sat_pct, lum_pct] = color_handler(pattern, iteration)
+                  } else {
+                     [hue, sat_pct, lum_pct] = FractoUtil.fracto_pattern_color_hsl(pattern, iteration)
+                  }
                   ctx.fillStyle = `hsl(${hue}, ${sat_pct}%, ${lum_pct}%)`
                   ctx.fillRect(canvas_x, canvas_y, 2, 2);
                   found_point = true
