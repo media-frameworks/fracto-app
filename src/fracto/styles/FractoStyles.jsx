@@ -85,11 +85,24 @@ export const NumberSpan = styled.span`
    font-size: 0.95rem;
 `;
 
+export const NumberInline = styled(CoolStyles.InlineBlock)`
+   ${CoolStyles.monospace}
+   ${CoolStyles.deep_blue_text}
+   font-size: 0.95rem;
+`;
+
 export const SmallNumberSpan = styled.span`
     ${CoolStyles.monospace}
     ${CoolStyles.ellipsis}
    ${CoolStyles.deep_blue_text}
    font-size: 0.75rem;
+`;
+
+export const SmallNumberInline = styled(CoolStyles.InlineBlock)`
+    ${CoolStyles.monospace}
+    ${CoolStyles.ellipsis}
+    ${CoolStyles.deep_blue_text}
+    font-size: 0.75rem;
 `;
 
 const ItalicSpan = styled.span`

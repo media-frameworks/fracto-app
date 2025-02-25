@@ -7,7 +7,7 @@ export class PaneCompsStyles {
    static TabsWrapper = styled(CoolStyles.Block)`
       padding: 0;
       background-color: #fcfcfc;
-      overflow: hidden;
+      overflow: auto;
    `
    static BinsWrapper = styled(CoolStyles.Block)`
       background-color: white;

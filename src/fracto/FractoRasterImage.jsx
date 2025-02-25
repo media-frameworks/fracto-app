@@ -130,11 +130,11 @@ export class FractoRasterImage extends Component {
    }
 
    init_canvas_buffer = () => {
-      const {canvas_buffer, ctx} = this.state
+      const {canvas_buffer} = this.state
       const {width_px, aspect_ratio} = this.props
       if (canvas_buffer) {
-         ctx.fillStyle = '#eeeeee'
-         ctx.fillRect(0, 0, width_px, width_px);
+         // ctx.fillStyle = '#eeeeee'
+         // ctx.fillRect(0, 0, width_px, width_px);
          return (canvas_buffer)
       }
       if (!width_px || isNaN(width_px)) {
