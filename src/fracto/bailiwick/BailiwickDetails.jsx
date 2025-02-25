@@ -5,6 +5,20 @@ import {BailiwickStyles as styles} from '../styles/BailiwickStyles'
 import {CoolStyles} from 'common/ui/CoolImports';
 import FractoUtil from "fracto/FractoUtil";
 import {render_coordinates} from "fracto/styles/FractoStyles";
+import {Scatter} from "react-chartjs-2";
+import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
+import FractoFastCalc from "../FractoFastCalc";
+
+ChartJS.register(CategoryScale, BarController)
+
+const GRID_CONFIG = {
+   color: function (context) {
+      return context.tick.value === 0 ? '#aaaaaa' : '#dddddd'
+   },
+   lineWidth: function (context) {
+      return context.tick.value === 0 ? 1.5 : 1
+   }
+};
 
 export class BailiwickDetails extends Component {
 
@@ -53,6 +67,41 @@ export class BailiwickDetails extends Component {
       </CoolStyles.Block>
    }
 
+   click_point_chart = () => {
+      const {selected_bailiwick} = this.props;
+      const core_point_data = typeof selected_bailiwick.core_point === 'string'
+         ? JSON.parse(selected_bailiwick.core_point)
+         : selected_bailiwick.core_point
+      const fracto_values = FractoFastCalc.calc(core_point_data.x, core_point_data.y)
+      const set1 = fracto_values.orbital_points
+      console.log(set1)
+      const options = {
+         scales: {
+            x: {grid: GRID_CONFIG},
+            y: {grid: GRID_CONFIG}
+         },
+         animation: true
+      }
+      const cardinality = set1?.length - 1 || 0
+      const data_dataset = {
+         datasets: [
+            {
+               Id: 1,
+               label: `${cardinality || '?'}-point orbital`,
+               data: set1,
+               backgroundColor: FractoUtil.fracto_pattern_color(cardinality || 0),
+               showLine: true
+            },
+         ]
+      }
+      return [
+         <Scatter
+            datasetIdKey='id1'
+            data={data_dataset} options={options}
+         />
+      ]
+   }
+
    render() {
       const {selected_bailiwick} = this.props;
       const bailiwick_name = selected_bailiwick?.name || ''
@@ -71,7 +120,10 @@ export class BailiwickDetails extends Component {
          </CoolStyles.Block>,
          <styles.LowerWrapper>
             {this.render_magnitude()}
-         </styles.LowerWrapper>
+         </styles.LowerWrapper>,
+         <styles.ChartWrapper>
+            {this.click_point_chart(selected_bailiwick.core_point)}a
+         </styles.ChartWrapper>
       ]
    }
 }

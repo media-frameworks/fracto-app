@@ -3,7 +3,7 @@ import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompMinibrotStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
-      overflow-y: scroll;
+      overflow-x: hidden;
    `
 }
 
