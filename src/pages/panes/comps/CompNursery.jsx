@@ -7,11 +7,12 @@ import ReactTimeAgo from "react-time-ago";
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolStyles} from "common/ui/CoolImports";
 import LatestTileBlock from "./latest/LatestTileBlock";
-import {NumberSpan, SmallNumberSpan} from "fracto/styles/FractoStyles";
-import {KEY_MODAL} from "../../PageSettings";
+import {NumberInline, SmallNumberInline} from "fracto/styles/FractoStyles";
+import {KEY_COMPS_WIDTH_PX, KEY_MODAL} from "../../PageSettings";
 import LatestTileDetail from "./latest/TileDetailModal";
 
-const TILE_COUNT = 25;
+const TILE_COUNT = 24;
+const PAGE_REFRESH_TIME_MS = 3000;
 
 export class CompNursery extends Component {
    static propTypes = {
@@ -24,7 +25,6 @@ export class CompNursery extends Component {
       updated_tiles: [],
       interval: null,
       tile_blocks: {},
-      update_counter: 0,
    }
 
    componentDidMount() {
@@ -32,7 +32,7 @@ export class CompNursery extends Component {
    }
 
    get_recents = async () => {
-      const {tile_blocks, update_counter} = this.state
+      const {tile_blocks} = this.state
       let url = `${network["fracto-prod"]}/recent_tiles.php`
       const fetched = await fetch(url)
       const recent_tiles = await fetched.json()
@@ -45,11 +45,10 @@ export class CompNursery extends Component {
          new_tiles: recent_tiles.new,
          updated_tiles: recent_tiles.updated,
          tile_blocks,
-         update_counter: update_counter + 1
       })
       setTimeout(() => {
          this.get_recents()
-      }, 15000)
+      }, PAGE_REFRESH_TIME_MS)
    }
 
    tile_detail = (short_code) => {
@@ -63,23 +62,29 @@ export class CompNursery extends Component {
    }
 
    render() {
-      const {tile_blocks, update_counter} = this.state
-      const {on_settings_changed} = this.props
+      const {tile_blocks} = this.state
+      const {page_settings, on_settings_changed} = this.props
+      const frame_width = page_settings[KEY_COMPS_WIDTH_PX] - 25
+      const margin = frame_width / 80
+      const large_width = (frame_width - 4 * margin) / 3
+      const small_width = (frame_width - 8 * margin) / 7
       const item_keys = Object.keys(tile_blocks)
       const new_tile_list = item_keys
          .sort((a, b) => tile_blocks[b] - tile_blocks[a])
          .slice(0, TILE_COUNT)
          .map((short_code, i) => {
             const date = new Date(tile_blocks[short_code] * 1000);
-            const title = i === 0
-               ? <NumberSpan>{short_code}</NumberSpan>
-               : <SmallNumberSpan>{short_code}</SmallNumberSpan>
+            const top_row = i < 3
+            const title = top_row
+               ? <NumberInline style={{width: `${large_width}px`}}>{short_code}</NumberInline>
+               : <SmallNumberInline style={{width: `${small_width}px`}}>{short_code}</SmallNumberInline>
             return <styles.TileBlockWrapper
+               style={{marginLeft: `${margin}px`}}
                key={`recent-${short_code}`}
-               onClick={()=>this.tile_detail(short_code)}>
+               onClick={() => this.tile_detail(short_code)}>
                <LatestTileBlock
                   short_code={short_code}
-                  size_px={i === 0 ? 300 : 128}
+                  size_px={top_row ? large_width : small_width}
                   timecode={tile_blocks[short_code]}
                   on_settings_changed={on_settings_changed}
                />
@@ -96,8 +101,8 @@ export class CompNursery extends Component {
             </styles.TileBlockWrapper>
          })
       const preamble = 'Let\'s give a hearty welcome to the latest members of the Tile Matrix family!'
-      const sub_preamble = "new tiles will be integrated twice daily -- click on any tile for more info"
-      return <styles.ContentWrapper key={`wrapper-${update_counter}`}>
+      const sub_preamble = "New tiles will be integrated twice daily -- click on any tile for more info"
+      return <styles.ContentWrapper>
          <styles.PreambleWrapper>{preamble}</styles.PreambleWrapper>
          <styles.SubPreambleWrapper>{sub_preamble}</styles.SubPreambleWrapper>
          {new_tile_list}
