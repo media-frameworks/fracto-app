@@ -62,7 +62,7 @@ export class CompMinibrot extends Component {
       const {bailiwick_id, disabled} = page_settings
       // console.log('all_bailiwicks', all_bailiwicks)
       const list_style = {
-         height: `${page_settings[KEY_COMPS_HEIGHT_PX] - 65}px`,
+         height: `${page_settings[KEY_COMPS_HEIGHT_PX] - 60}px`,
          width: `${page_settings[KEY_COMPS_WIDTH_PX] - 5}px`,
          marginTop: '20px',
          cursor: disabled ? 'wait' : 'pointer'

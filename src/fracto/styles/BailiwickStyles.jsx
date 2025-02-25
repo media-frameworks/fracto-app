@@ -101,6 +101,12 @@ export class BailiwickStyles {
        vertical-align: bottom;
    `;
 
+   static ChartWrapper = styled(CoolStyles.Block)`
+       background-color: white;
+       margin:1rem;
+   `;
+
+
 
 }
 
