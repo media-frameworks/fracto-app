@@ -6,7 +6,6 @@ import {CoolColors, CoolStyles} from "common/ui/CoolImports";
 import {render_pattern_block} from "../styles/FractoStyles";
 import BailiwickDetails from "./BailiwickDetails";
 import {BailiwickStyles as styles} from '../styles/BailiwickStyles'
-import ReactTimeAgo from "react-time-ago";
 
 export class BailiwickList extends Component {
    static propTypes = {
@@ -53,7 +52,6 @@ export class BailiwickList extends Component {
                cursor: in_wait ? "wait" : "pointer"
             }
             const highest_level = Math.round(100 * (Math.log(32 / item.magnitude) / Math.log(2))) / 100
-            const updated_at = <ReactTimeAgo date={item.updated_at}/>
             const size = this.render_magnitude(item)
             const row_content = selected
                ? <BailiwickDetails
@@ -63,8 +61,7 @@ export class BailiwickList extends Component {
                : [
                   <styles.BlockWrapper key={`pattern_${i}`}>{pattern_block}</styles.BlockWrapper>,
                   <styles.SizeWrapper key={`size_${i}`}>{size}</styles.SizeWrapper>,
-                  <styles.UpdatedWrapper key={`updated_${i}`}>{updated_at},</styles.UpdatedWrapper>,
-                  <styles.UpdatedWrapper key={`index_${i}`}>{`#${item.free_ordinal + 1} in size`}</styles.UpdatedWrapper>,
+                  <styles.UpdatedWrapper key={`index_${i}`}>{`#${i + 1} in size`}</styles.UpdatedWrapper>,
                ]
             return <styles.RowWrapper
                ref={selected ? scroll_ref : null}

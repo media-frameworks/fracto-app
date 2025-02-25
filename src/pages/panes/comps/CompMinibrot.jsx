@@ -1,14 +1,25 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
+import axios from "axios";
+import network from "common/config/network.json";
 
 import {
    KEY_BAILIWICK_ID,
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX, KEY_DISABLED, KEY_FOCAL_POINT, KEY_SCOPE
 } from "../../PageSettings";
-import BailiwickData from "fracto/bailiwick/BailiwickData";
-import BailiwickList from "../../../fracto/bailiwick/BailiwickList";
-import {CompMinibrotStyles as styles} from '../../../styles/CompMinibrotStyles';
+import BailiwickList from "fracto/bailiwick/BailiwickList";
+import {CompMinibrotStyles as styles} from 'styles/CompMinibrotStyles';
+
+const AXIOS_CONFIG = {
+   headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Expose-Headers': 'Access-Control-*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+   },
+   mode: 'no-cors',
+   crossdomain: true,
+}
 
 export class CompMinibrot extends Component {
    static propTypes = {
@@ -24,14 +35,11 @@ export class CompMinibrot extends Component {
       this.fetch_bailiwicks()
    }
 
-   fetch_bailiwicks = () => {
-      BailiwickData.fetch_bailiwicks(all_bailiwicks => {
-         const sorted = all_bailiwicks
-            .sort((a, b) => a.updated_at > b.updated_at ? 1 : -1)
-         this.setState({
-            all_bailiwicks: sorted,
-         })
-      })
+   fetch_bailiwicks = async () => {
+      const url = `${network["fracto-prod"]}/manifest/all_bailiwicks.json`
+      const bailiwick_data = await axios.get(url, AXIOS_CONFIG)
+      this.setState({all_bailiwicks: bailiwick_data.data})
+      console.log('bailiwick_data', bailiwick_data)
    }
 
    on_select = (item) => {
@@ -62,7 +70,7 @@ export class CompMinibrot extends Component {
       return <styles.ContentWrapper
          style={list_style}>
          <BailiwickList
-            bailiwick_list={all_bailiwicks}
+            bailiwick_list={all_bailiwicks.sort((a, b) => b.magnitude - a.magnitude)}
             selected_id={bailiwick_id}
             on_select={this.on_select}
             in_wait={page_settings[KEY_DISABLED]}
