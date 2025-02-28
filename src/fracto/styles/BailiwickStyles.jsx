@@ -108,9 +108,9 @@ export class BailiwickStyles {
        vertical-align: bottom;
    `;
 
-   static ChartWrapper = styled(CoolStyles.Block)`
+   static ChartWrapper = styled(CoolStyles.InlineBlock)`
        background-color: white;
-       margin: 1rem;
+       margin: 0.5rem;
    `;
 
    static CloseButton = styled(CoolStyles.InlineBlock)`

@@ -62,6 +62,7 @@ export class BailiwickList extends Component {
             const row_content = selected
                ? <CoolStyles.Block>
                   <BailiwickDetails
+                     width_px={width_px}
                      freeform_index={item.free_ordinal}
                      highest_level={highest_level}
                      on_close={() => on_select(null)}

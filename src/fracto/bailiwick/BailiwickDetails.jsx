@@ -8,6 +8,7 @@ import {render_big_pattern_block, render_coordinates} from "fracto/styles/Fracto
 import {Scatter} from "react-chartjs-2";
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 import FractoFastCalc from "../FractoFastCalc";
+import FractoTileContext from "../FractoTileContext";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -20,18 +21,35 @@ const GRID_CONFIG = {
    }
 };
 
+const EXPANSION_FACTOR = 1.08
+const CONTRACTION_FACTOR = 1 / EXPANSION_FACTOR
+const MIN_CONTEXT_SCOPE = 1
+const ZOOM_REFRESH_MS = 50
+
 export class BailiwickDetails extends Component {
 
    static propTypes = {
+      width_px: PropTypes.number.isRequired,
       selected_bailiwick: PropTypes.object.isRequired,
       highest_level: PropTypes.number.isRequired,
       freeform_index: PropTypes.number.isRequired,
       on_close: PropTypes.func.isRequired
    }
 
-   state = {}
+   state = {
+      details_ref: React.createRef(),
+      context_scope: 6,
+      scope_factor: 1.618,
+      display_settings: {},
+   }
 
    componentDidMount() {
+      const {details_ref} = this.state
+      const {selected_bailiwick} = this.props
+      details_ref.current.scrollIntoView({behavior: "smooth", block: "center"})
+      const display_settings = typeof selected_bailiwick.display_settings === 'string'
+         ? JSON.parse(selected_bailiwick.display_settings) : selected_bailiwick.display_settings
+      this.setState({display_settings})
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
@@ -75,13 +93,12 @@ export class BailiwickDetails extends Component {
          : selected_bailiwick.core_point
       const fracto_values = FractoFastCalc.calc(core_point_data.x, core_point_data.y)
       const set1 = fracto_values.orbital_points
-      console.log(set1)
       const options = {
          scales: {
             x: {grid: GRID_CONFIG},
             y: {grid: GRID_CONFIG}
          },
-         animation: true
+         animation: true,
       }
       const cardinality = set1?.length - 1 || 0
       const data_dataset = {
@@ -103,10 +120,50 @@ export class BailiwickDetails extends Component {
       ]
    }
 
+   on_context_rendered = () => {
+      setTimeout(() => {
+         const {context_scope, scope_factor, display_settings} = this.state
+         const tile_scope = display_settings.scope
+         if (tile_scope) {
+            if (context_scope < MIN_CONTEXT_SCOPE) {
+               this.setState({
+                  context_scope: MIN_CONTEXT_SCOPE,
+                  scope_factor: EXPANSION_FACTOR,
+               })
+            } else if (context_scope * tile_scope > 3) {
+               this.setState({
+                  context_scope: 3 / tile_scope,
+                  scope_factor: CONTRACTION_FACTOR,
+               })
+            } else {
+               this.setState({
+                  context_scope: context_scope * scope_factor,
+               })
+            }
+         }
+      }, ZOOM_REFRESH_MS)
+   }
+
    render() {
-      const {selected_bailiwick, on_close} = this.props;
+      const {details_ref, context_scope, display_settings} = this.state
+      const {selected_bailiwick, on_close, width_px} = this.props;
       const bailiwick_name = selected_bailiwick?.name || ''
       const close_btn = <styles.CloseButton onClick={on_close}>X</styles.CloseButton>
+      const width_chart_px = Math.round(0.72 * width_px)
+      const width_context_px = Math.round(0.20 * width_px)
+      const {focal_point, scope} = display_settings
+      const tile_bounds = focal_point ? {
+         left: focal_point.x - scope / 2,
+         right: focal_point.x + scope / 2,
+         top: focal_point.y + scope / 2,
+         bottom: focal_point.y - scope / 2,
+      } : null
+      const context_zoom = focal_point ? <FractoTileContext
+         tile={{scope: context_scope, bounds: tile_bounds}}
+         width_px={width_context_px}
+         on_context_rendered={this.on_context_rendered}
+         scope_factor={context_scope}
+      /> : ''
       return [
          <CoolStyles.Block style={{margin: '0.25rem'}}>
             {close_btn}
@@ -119,8 +176,11 @@ export class BailiwickDetails extends Component {
          <styles.LowerWrapper>
             {this.render_magnitude()}
          </styles.LowerWrapper>,
-         <styles.ChartWrapper>
+         <styles.ChartWrapper ref={details_ref} style={{width: `${width_chart_px}px`}}>
             {this.click_point_chart(selected_bailiwick.core_point)}
+         </styles.ChartWrapper>,
+         <styles.ChartWrapper style={{width: `${width_context_px}px`}}>
+            {context_zoom}
          </styles.ChartWrapper>
       ]
    }
