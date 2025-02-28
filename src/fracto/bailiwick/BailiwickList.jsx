@@ -60,7 +60,7 @@ export class BailiwickList extends Component {
             const highest_level = Math.round(100 * (Math.log(32 / item.magnitude) / Math.log(2))) / 100
             const size = this.render_magnitude(item)
             const row_content = selected
-               ? <CoolStyles.Block>a
+               ? <CoolStyles.Block>
                   <BailiwickDetails
                      freeform_index={item.free_ordinal}
                      highest_level={highest_level}
