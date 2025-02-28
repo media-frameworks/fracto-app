@@ -10,8 +10,6 @@ import {
 import {PaneStepsStyles as styles} from 'styles/PaneStepsStyles'
 import FractoRasterImage from "../../../fracto/FractoRasterImage";
 
-const STEP_SCOPE_FACTOR = 10
-
 const create_step_entry = (step_scope) => {
    return {
       scope: step_scope,
@@ -64,7 +62,9 @@ export class StepsList extends Component {
       const step_entry = create_step_entry(3.0)
       new_steps.push(step_entry)
       // console.log('new_steps', new_steps)
-      this.setState({all_steps: new_steps})
+      setTimeout(()=>{
+         this.setState({all_steps: new_steps})
+      }, 250)
    }
 
    click_step = (step) => {
