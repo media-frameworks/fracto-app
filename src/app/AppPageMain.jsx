@@ -18,6 +18,8 @@ export class AppPageMain extends Component {
       on_resize: PropTypes.func.isRequired,
       content_left: PropTypes.array.isRequired,
       content_right: PropTypes.array.isRequired,
+      page_settings: PropTypes.object.isRequired,
+      on_settings_changed: PropTypes.func.isRequired,
    }
 
    state = {

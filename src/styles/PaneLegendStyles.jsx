@@ -86,6 +86,15 @@ export class PaneLegendStyles {
            opacity: 1.0;
        }
    `
+
+   static StatsTitle = styled(CoolStyles.Block)`
+       ${CoolStyles.align_center}
+       ${CoolStyles.uppercase}
+       color: #666666;
+       letter-spacing: 16px;
+       font-size: 1.05rem;
+       background-color: white;
+   `
 }
 
 export default PaneLegendStyles

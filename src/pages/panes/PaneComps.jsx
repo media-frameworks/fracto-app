@@ -13,7 +13,7 @@ import CompOrbitals from "./comps/CompOrbitals";
 import CompPatterns from "./comps/CompPatterns";
 import CompMinibrot from "./comps/CompMinibrot";
 import CompNursery from "./comps/CompNursery";
-import CompSnapshot from "./comps/CompSnapshot";
+import CompCapture from "./comps/CompCapture";
 import CompColors from "./comps/CompColors";
 
 export class PaneComps extends Component {
@@ -52,8 +52,8 @@ export class PaneComps extends Component {
             />
          },
          {
-            label: 'snapshot',
-            content: <CompSnapshot
+            label: 'capture',
+            content: <CompCapture
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />

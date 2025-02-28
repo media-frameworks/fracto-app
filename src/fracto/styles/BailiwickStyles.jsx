@@ -1,44 +1,43 @@
 import styled from "styled-components";
 import {CoolStyles} from "../../common/ui/CoolImports";
 
+const MINI_BLOCK_WIDTH_PX = 100
+
 export class BailiwickStyles {
 
-   static RowWrapper = styled(CoolStyles.Block)`
-       vertical-align: center;
-       padding: 0.125rem;
+   static RowWrapper = styled(CoolStyles.InlineBlock)`
+       border-radius: 0.5rem;
 
-       &: hover {
+       &:hover {
            background-color: #eeeeee;
        }
    `;
 
-   static BlockWrapper = styled(CoolStyles.InlineBlock)`
+   static BlockWrapper = styled(CoolStyles.Block)`
        ${CoolStyles.align_center}
-       width: 2.5rem;
-       vertical-align: center;
-       font-size: 1.25rem;
+       min-width: 3rem;
+       vertical-align: middle;
+       font-size: 2.0rem;
    `;
 
    static SizeWrapper = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.bold}
        ${CoolStyles.italic}
-       ${CoolStyles.ellipsis}
-       line-height: 1.5rem;
+       ${CoolStyles.align_center}
+       line-height: 1.25rem;
        letter-spacing: 0.1rem;
-       font-size: 0.9rem;
-       margin-left: 0.5rem;
+       font-size: 0.8rem;
        color: #666666;
-       width: 7rem;
+       vertical-align: middle;
    `;
 
    static UpdatedWrapper = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.italic}
-       line-height: 1.5rem;
+       ${CoolStyles.align_center}
        letter-spacing: 0.1rem;
-       font-size: 0.9rem;
-       margin-left: 0.5rem;
+       font-size: 0.75rem;
        color: #666666;
-       width: 8rem;
+       width: ${MINI_BLOCK_WIDTH_PX - 2}px;
    `;
 
    static StatLabel = styled(CoolStyles.InlineBlock)`
@@ -58,8 +57,14 @@ export class BailiwickStyles {
        line-height: 1.25rem;
    `;
 
+   static MuStyle = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.bold}
+       font-size: 0.95rem;
+   `;
+
    static InlineWrapper = styled(CoolStyles.InlineBlock)`
-       margin-left: 0.25rem;
+       ${CoolStyles.align_center}
+       margin: 0;
    `;
 
    static LowerWrapper = styled(CoolStyles.Block)`
@@ -72,6 +77,7 @@ export class BailiwickStyles {
    `
    static BailiwickNameBlock = styled(CoolStyles.InlineBlock)`
        margin-bottom: 0.25rem;
+       padding-left: 1.0rem;
    `;
 
    static BailiwickNameSpan = styled(CoolStyles.InlineBlock)`
@@ -82,7 +88,6 @@ export class BailiwickStyles {
    `;
 
    static BigColorBox = styled(CoolStyles.InlineBlock)`
-       ${CoolStyles.narrow_border_radius}
        ${CoolStyles.narrow_text_shadow}
        ${CoolStyles.monospace}
        ${CoolStyles.bold}
@@ -90,7 +95,9 @@ export class BailiwickStyles {
        border: 0.1rem solid #555555;
        color: white;
        margin-right: 0.5rem;
-       font-size: 2.5rem;
+       font-size: 2.0rem;
+       border-radius: 0.125rem;
+       min-width: 3rem;
    `;
 
    static StatsWrapper = styled(CoolStyles.Block)`
@@ -103,10 +110,21 @@ export class BailiwickStyles {
 
    static ChartWrapper = styled(CoolStyles.Block)`
        background-color: white;
-       margin:1rem;
+       margin: 1rem;
    `;
 
+   static CloseButton = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.pointer}
+       ${CoolStyles.bold}
+       float: right;
+       margin-right: 0.5rem;
+   `;
 
+   static MiniBlock = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.align_center}
+       width: ${MINI_BLOCK_WIDTH_PX}px;
+       margin: 0.5rem;
+   `;
 
 }
 

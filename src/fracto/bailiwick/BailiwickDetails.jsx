@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {BailiwickStyles as styles} from '../styles/BailiwickStyles'
 import {CoolStyles} from 'common/ui/CoolImports';
 import FractoUtil from "fracto/FractoUtil";
-import {render_coordinates} from "fracto/styles/FractoStyles";
+import {render_big_pattern_block, render_coordinates} from "fracto/styles/FractoStyles";
 import {Scatter} from "react-chartjs-2";
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 import FractoFastCalc from "../FractoFastCalc";
@@ -25,7 +25,8 @@ export class BailiwickDetails extends Component {
    static propTypes = {
       selected_bailiwick: PropTypes.object.isRequired,
       highest_level: PropTypes.number.isRequired,
-      freeform_index: PropTypes.number.isRequired
+      freeform_index: PropTypes.number.isRequired,
+      on_close: PropTypes.func.isRequired
    }
 
    state = {}
@@ -103,16 +104,13 @@ export class BailiwickDetails extends Component {
    }
 
    render() {
-      const {selected_bailiwick} = this.props;
+      const {selected_bailiwick, on_close} = this.props;
       const bailiwick_name = selected_bailiwick?.name || ''
-      const block_color = FractoUtil.fracto_pattern_color(
-         selected_bailiwick?.pattern || 0, 1000)
+      const close_btn = <styles.CloseButton onClick={on_close}>X</styles.CloseButton>
       return [
          <CoolStyles.Block style={{margin: '0.25rem'}}>
-            <styles.BigColorBox
-               style={{backgroundColor: block_color}}>
-               {selected_bailiwick?.pattern || 0}
-            </styles.BigColorBox>
+            {close_btn}
+            {render_big_pattern_block(selected_bailiwick?.pattern)}
             <styles.BailiwickNameBlock>
                <styles.BailiwickNameSpan>{bailiwick_name}</styles.BailiwickNameSpan>
                <styles.StatsWrapper>{this.render_core_point()}</styles.StatsWrapper>
@@ -122,7 +120,7 @@ export class BailiwickDetails extends Component {
             {this.render_magnitude()}
          </styles.LowerWrapper>,
          <styles.ChartWrapper>
-            {this.click_point_chart(selected_bailiwick.core_point)}a
+            {this.click_point_chart(selected_bailiwick.core_point)}
          </styles.ChartWrapper>
       ]
    }

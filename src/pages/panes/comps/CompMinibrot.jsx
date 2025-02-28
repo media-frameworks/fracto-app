@@ -48,30 +48,35 @@ export class CompMinibrot extends Component {
          return;
       }
       const new_settings = {}
-      page_settings[KEY_BAILIWICK_ID] = item.id
-      const display_settings = JSON.parse(item.display_settings)
-      new_settings[KEY_FOCAL_POINT] = display_settings.focal_point
-      new_settings[KEY_SCOPE] = display_settings.scope
-      new_settings[KEY_DISABLED] = true
+      if (item === null) {
+         console.log('closing details now')
+         page_settings[KEY_BAILIWICK_ID] = -1
+      } else {
+         page_settings[KEY_BAILIWICK_ID] = item.id
+         const display_settings = JSON.parse(item.display_settings)
+         new_settings[KEY_FOCAL_POINT] = display_settings.focal_point
+         new_settings[KEY_SCOPE] = display_settings.scope
+         new_settings[KEY_DISABLED] = true
+      }
       on_settings_changed(new_settings)
    }
 
    render() {
       const {all_bailiwicks} = this.state
       const {page_settings} = this.props
-      const {bailiwick_id, disabled} = page_settings
       // console.log('all_bailiwicks', all_bailiwicks)
       const list_style = {
          height: `${page_settings[KEY_COMPS_HEIGHT_PX] - 60}px`,
          width: `${page_settings[KEY_COMPS_WIDTH_PX] - 5}px`,
          marginTop: '20px',
-         cursor: disabled ? 'wait' : 'pointer'
+         cursor: page_settings[KEY_DISABLED] ? 'wait' : 'default'
       }
       return <styles.ContentWrapper
          style={list_style}>
          <BailiwickList
+            width_px={page_settings[KEY_COMPS_WIDTH_PX]}
             bailiwick_list={all_bailiwicks.sort((a, b) => b.magnitude - a.magnitude)}
-            selected_id={bailiwick_id}
+            selected_id={page_settings[KEY_BAILIWICK_ID]}
             on_select={this.on_select}
             in_wait={page_settings[KEY_DISABLED]}
          />

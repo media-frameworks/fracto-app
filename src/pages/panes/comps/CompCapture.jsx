@@ -11,13 +11,16 @@ import {LIT_TYPE_OUTSIDE} from "./CompColors";
 import FractoUtil from "../../../fracto/FractoUtil";
 
 const RESOLUTIONS = [
+   {label: '150', value: 150, help: 'thumbnail',},
+   {label: '300', value: 300, help: 'snapshot',},
+   {label: '600', value: 600, help: 'tiny',},
    {label: '1200', value: 1200, help: 'small',},
    {label: '2400', value: 2400, help: 'medium',},
    {label: '3600', value: 3600, help: 'large',},
    {label: '4800', value: 4800, help: 'larger',},
 ]
 
-export class CompSnapshot extends Component {
+export class CompCapture extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
@@ -103,4 +106,4 @@ export class CompSnapshot extends Component {
    }
 }
 
-export default CompSnapshot
+export default CompCapture

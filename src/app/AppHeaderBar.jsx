@@ -9,6 +9,8 @@ export class AppHeaderBar extends Component {
 
    static propTypes = {
       app_name: PropTypes.string.isRequired,
+      page_settings: PropTypes.object.isRequired,
+      on_settings_changed: PropTypes.func.isRequired,
    }
 
    state = {
