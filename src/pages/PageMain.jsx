@@ -34,7 +34,11 @@ import {
    KEY_CACHE_SIZE,
    KEY_STEPS_ZOOM,
    KEY_UPDATE_INDEX,
-   KEY_IMAGE_WIDTH, KEY_MODAL, KEY_LIT_TYPE, KEY_COLOR_PHASE,
+   KEY_IMAGE_WIDTH,
+   KEY_MODAL,
+   KEY_LIT_TYPE,
+   KEY_COLOR_PHASE,
+   KEY_BAILIWICK_ID,
 } from "./PageSettings";
 
 const ALL_PANE_DIMENSIONS = [
@@ -65,6 +69,7 @@ const ALL_OPERATIVES = [
    KEY_LIT_TYPE,
    KEY_MODAL,
    KEY_COLOR_PHASE,
+   KEY_BAILIWICK_ID,
 ]
 
 export class PageMain extends Component {
@@ -195,6 +200,8 @@ export class PageMain extends Component {
             on_resize={this.on_resize}
             content_left={left_pane}
             content_right={pane_comps}
+            page_settings={page_settings}
+            on_settings_changed={this.on_settings_changed}
          />
          {modal}
       </div>

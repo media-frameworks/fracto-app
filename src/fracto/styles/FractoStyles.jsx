@@ -55,6 +55,17 @@ const PatternBlock = styled(CoolStyles.InlineBlock)`
    padding: 0.125rem 0.125rem 0;
 `;
 
+const BigPatternBlock = styled(CoolStyles.InlineBlock)`
+    ${CoolStyles.monospace}
+    ${CoolStyles.align_center}
+    border: 0.1rem solid #666666;
+    border-radius: 0.5rem;
+    color: white;
+    padding: 0.125rem 0.25rem 0;
+    min-width: 2.5rem;
+    font-size: 1.75rem;
+`;
+
 const FRACTO_COLOR_ITERATIONS = 200;
 
 export const render_pattern_block = (pattern) => {
@@ -63,6 +74,14 @@ export const render_pattern_block = (pattern) => {
       style={{backgroundColor: pattern_color}}>
       {pattern}
    </PatternBlock>
+}
+
+export const render_big_pattern_block = (pattern) => {
+   const pattern_color = FractoUtil.fracto_pattern_color(pattern, FRACTO_COLOR_ITERATIONS);
+   return <BigPatternBlock
+      style={{backgroundColor: pattern_color}}>
+      {pattern}
+   </BigPatternBlock>
 }
 
 const ShortCodeSpan = styled.span`
