@@ -23,9 +23,10 @@ export class BailiwickList extends Component {
    select_bailiwick = (item, i) => {
       const {on_select, in_wait} = this.props
       if (!item || in_wait) {
+         console.log('select_bailiwick: !item || in_wait')
          return;
       }
-      localStorage.setItem('selected_bailiwick', String(i))
+      // localStorage.setItem('selected_bailiwick', String(i))
       let item_copy = JSON.parse(JSON.stringify(item))
       on_select(item_copy, i)
    }
@@ -42,9 +43,19 @@ export class BailiwickList extends Component {
       </CoolStyles.Block>
    }
 
+   render_image_block = (item) => {
+      const wrapper_style = {
+         backgroundImage: `url('/bailiwicks/${item.thumbnail_name}')`,
+      }
+      return <styles.ThumbnailWrapper style={wrapper_style}>
+         <styles.PatternNumber>{item.pattern}</styles.PatternNumber>
+      </styles.ThumbnailWrapper>
+   }
+
    render() {
       const {scroll_ref} = this.state
       const {bailiwick_list, selected_id, in_wait, on_select, width_px} = this.props
+      // console.log('selected_id',selected_id)
       return bailiwick_list
          .map((item, i) => {
             const pattern_block = render_big_pattern_block(item.pattern)
@@ -54,11 +65,13 @@ export class BailiwickList extends Component {
                borderRadius: `0.25rem`,
                backgroundColor: "#cccccc",
                color: "white",
-               cursor: in_wait ? "wait" : "pointer",
+               cursor: in_wait ? "wait" : "default",
                width: selected ? `${(width_px - 25)}px` : `${(width_px - 25) / 2}px`
             }
             const highest_level = Math.round(100 * (Math.log(32 / item.magnitude) / Math.log(2))) / 100
             const size = this.render_magnitude(item)
+            const block_render = item.thumbnail_name && item.thumbnail_name.indexOf('.png') > 0
+               ? this.render_image_block(item) : pattern_block
             const row_content = selected
                ? <CoolStyles.Block>
                   <BailiwickDetails
@@ -69,8 +82,8 @@ export class BailiwickList extends Component {
                      selected_bailiwick={item}
                   />
                </CoolStyles.Block>
-               :<styles.MiniBlock>
-                  <styles.BlockWrapper key={`pattern_${i}`}>{pattern_block}</styles.BlockWrapper>
+               : <styles.MiniBlock>
+                  <styles.BlockWrapper key={`pattern_${i}`}>{block_render}</styles.BlockWrapper>
                   <styles.SizeWrapper key={`size_${i}`}>{size}</styles.SizeWrapper>
                   <styles.UpdatedWrapper key={`index_${i}`}>{`#${i + 1} in size`}</styles.UpdatedWrapper>
                </styles.MiniBlock>

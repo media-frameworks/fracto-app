@@ -158,7 +158,9 @@ export class PageMain extends Component {
          }
       })
       ALL_OPERATIVES.forEach(operative => {
+         // console.log(`testing operative ${operative} to ${new_settings[operative]}`)
          if (new_settings[operative] !== undefined) {
+            // console.log(`setting operative ${operative} to ${new_settings[operative]}`)
             new_state.page_settings[operative] = new_settings[operative]
          }
       })
