@@ -23,7 +23,7 @@ const GRID_CONFIG = {
 
 const EXPANSION_FACTOR = 1.08
 const CONTRACTION_FACTOR = 1 / EXPANSION_FACTOR
-const MIN_CONTEXT_SCOPE = 1
+const MIN_CONTEXT_SCOPE = 1.5
 const ZOOM_REFRESH_MS = 50
 
 export class BailiwickDetails extends Component {
