@@ -125,6 +125,22 @@ export class BailiwickStyles {
        width: ${MINI_BLOCK_WIDTH_PX}px;
        margin: 0.5rem;
    `;
+   static ThumbnailWrapper = styled(CoolStyles.Block)`
+       ${CoolStyles.narrow_text_shadow}
+       ${CoolStyles.monospace}
+       ${CoolStyles.bold}
+       ${CoolStyles.pointer}
+       border: 0.1rem solid #555555;
+       color: white;
+       font-size: 2.0rem;
+       border-radius: 1.0rem;
+       overflow: hidden;
+       height: 100px;
+   `;
+
+   static PatternNumber = styled(CoolStyles.InlineBlock)`
+       margin: auto;
+   `
 
 }
 

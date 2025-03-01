@@ -44,27 +44,29 @@ export class CompMinibrot extends Component {
 
    on_select = (item) => {
       const {page_settings, on_settings_changed} = this.props
-      if (page_settings[KEY_DISABLED]) {
-         return;
-      }
       const new_settings = {}
-      if (item === null) {
+      if (!item) {
          console.log('closing details now')
-         page_settings[KEY_BAILIWICK_ID] = -1
+         new_settings[KEY_BAILIWICK_ID] = -1
       } else {
+         if (page_settings[KEY_DISABLED]) {
+            return;
+         }
          page_settings[KEY_BAILIWICK_ID] = item.id
          const display_settings = JSON.parse(item.display_settings)
          new_settings[KEY_FOCAL_POINT] = display_settings.focal_point
          new_settings[KEY_SCOPE] = display_settings.scope
          new_settings[KEY_DISABLED] = true
       }
-      on_settings_changed(new_settings)
+      setTimeout(()=>{
+         on_settings_changed(new_settings)
+      },250)
    }
 
    render() {
       const {all_bailiwicks} = this.state
       const {page_settings} = this.props
-      // console.log('all_bailiwicks', all_bailiwicks)
+      console.log('CompMinibrot page_settings[KEY_BAILIWICK_ID]', page_settings[KEY_BAILIWICK_ID])
       const list_style = {
          height: `${page_settings[KEY_COMPS_HEIGHT_PX] - 60}px`,
          width: `${page_settings[KEY_COMPS_WIDTH_PX] - 5}px`,
