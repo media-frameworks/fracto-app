@@ -25,6 +25,7 @@ const EXPANSION_FACTOR = 1.08
 const CONTRACTION_FACTOR = 1 / EXPANSION_FACTOR
 const MIN_CONTEXT_SCOPE = 1.5
 const ZOOM_REFRESH_MS = 50
+const ZOOM_REFRESH_PAUSE_MS = 3000
 
 export class BailiwickDetails extends Component {
 
@@ -39,7 +40,7 @@ export class BailiwickDetails extends Component {
    state = {
       details_ref: React.createRef(),
       context_scope: 6,
-      scope_factor: 1.618,
+      scope_factor: CONTRACTION_FACTOR,
       display_settings: {},
    }
 
@@ -121,9 +122,13 @@ export class BailiwickDetails extends Component {
    }
 
    on_context_rendered = () => {
+      const {context_scope, display_settings} = this.state
+      const tile_scope = display_settings.scope
+      const refresh_time_ms =
+         context_scope < MIN_CONTEXT_SCOPE || context_scope * tile_scope > 3
+         ? ZOOM_REFRESH_PAUSE_MS : ZOOM_REFRESH_MS
       setTimeout(() => {
-         const {context_scope, scope_factor, display_settings} = this.state
-         const tile_scope = display_settings.scope
+         const {context_scope, scope_factor} = this.state
          if (tile_scope) {
             if (context_scope < MIN_CONTEXT_SCOPE) {
                this.setState({
@@ -141,7 +146,7 @@ export class BailiwickDetails extends Component {
                })
             }
          }
-      }, ZOOM_REFRESH_MS)
+      }, refresh_time_ms)
    }
 
    render() {
