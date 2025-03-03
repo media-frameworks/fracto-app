@@ -20,8 +20,10 @@ import {
    HEADER_HEIGHT_PX
 } from 'styles/PaneLegendStyles'
 import {get_tiles} from "fracto/FractoRasterImage";
-import CoolStyles from "../../../common/ui/styles/CoolStyles";
-import {LS_INDEXED_TILE_COUNT} from "../../../fracto/FractoTilesLoaderProgress";
+import CoolStyles from "common/ui/styles/CoolStyles";
+import {LS_INDEXED_TILE_COUNT} from "fracto/FractoTilesLoaderProgress";
+import FractoTileCache from "fracto/FractoTileCache";
+import BailiwickList from "fracto/bailiwick/BailiwickList";
 
 export class LegendTabStats extends Component {
 
@@ -33,6 +35,10 @@ export class LegendTabStats extends Component {
    state = {}
 
    componentDidMount() {
+   }
+
+   reduce_cache = (amount_ms=30*1000) =>{
+      FractoTileCache.trim_cache(amount_ms);
    }
 
    render_stats = () => {
@@ -61,6 +67,10 @@ export class LegendTabStats extends Component {
       if (tile_count) {
          tile_count_str = parseInt(tile_count, 10).toLocaleString()
       }
+      const scope_value = [
+         BailiwickList.render_magnitude(page_settings[KEY_SCOPE]),
+         ` (${page_settings[KEY_SCOPE]})`
+      ]
       const tab_content = [
          {
             label: 'mode',
@@ -77,7 +87,7 @@ export class LegendTabStats extends Component {
          },
          {
             label: 'scope',
-            content: <NumberSpan>{page_settings[KEY_SCOPE]}</NumberSpan>,
+            content: <NumberSpan>{scope_value}</NumberSpan>,
          },
          {
             label: 'coverage',
@@ -93,7 +103,7 @@ export class LegendTabStats extends Component {
          },
          {
             label: 'tiles in cache',
-            content: <NumberSpan>{page_settings[KEY_CACHE_SIZE]}</NumberSpan>,
+            content: <NumberSpan onClick={this.reduce_cache}>{page_settings[KEY_CACHE_SIZE]}</NumberSpan>,
          },
       ].map((stat, i) => {
          const content_style = {
