@@ -31,8 +31,8 @@ export class BailiwickList extends Component {
       on_select(item_copy, i)
    }
 
-   render_magnitude = (item) => {
-      const rounded = Math.round(item.magnitude * 100000000) / 100
+   static render_magnitude = (magnitude) => {
+      const rounded = Math.round(magnitude * 100000000) / 100
       const mu = <i>{'\u03BC'}</i>
       return <CoolStyles.Block>
          <styles.InlineWrapper>
@@ -69,7 +69,7 @@ export class BailiwickList extends Component {
                width: selected ? `${(width_px - 25)}px` : `${(width_px - 25) / 2}px`
             }
             const highest_level = Math.round(100 * (Math.log(32 / item.magnitude) / Math.log(2))) / 100
-            const size = this.render_magnitude(item)
+            const size = BailiwickList.render_magnitude(item.magnitude)
             const block_render = item.thumbnail_name && item.thumbnail_name.indexOf('.png') > 0
                ? this.render_image_block(item) : pattern_block
             const row_content = selected

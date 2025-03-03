@@ -3,15 +3,21 @@ import ReactDOM from 'react-dom/client';
 
 import PageMain from "pages/PageMain";
 import FractoIndexedTilesLoader from "./fracto/FractoIndexedTilesLoader";
+import AppLoginPage from "./common/app/AppLoginPage";
 
 const APP_NAME = 'FRACTO'
-const page_main = <PageMain key={'page-main'} app_name={APP_NAME}/>
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-   <FractoIndexedTilesLoader
-      app_name={APP_NAME}
-      app_page={[page_main]}
-   />
-);
 
+const logged_in = localStorage.getItem('logged_in');
+if (!logged_in) {
+   const page_main = <PageMain key={'page-main'} app_name={APP_NAME}/>
+   root.render(
+      <FractoIndexedTilesLoader
+         app_name={APP_NAME}
+         app_page={[page_main]}
+      />
+   );
+} else {
+   root.render(<AppLoginPage />)
+}

@@ -94,6 +94,8 @@ export class PaneLegendStyles {
        letter-spacing: 16px;
        font-size: 1.05rem;
        background-color: white;
+       padding-top: 0.5rem;
+       border-bottom: 1px solid #cccccc;
    `
 }
 

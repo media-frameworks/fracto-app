@@ -72,14 +72,14 @@ export class FractoTileCache {
       }
    }
 
-   static trim_cache() {
+   static trim_cache(extra_ms = 0) {
       const short_codes = Object.keys(CACHED_TILES)
       if (short_codes.length < MIN_CACHE) {
          return;
       }
       let delete_count = 0
       short_codes.forEach((short_code) => {
-         if (CACHED_TILES[short_code].last_access < Date.now() - CACHE_TIMEOUT) {
+         if (CACHED_TILES[short_code].last_access < Date.now() - CACHE_TIMEOUT + extra_ms) {
             // console.log(`deleting ${short_code} from cache`)
             delete_count++
             delete CACHED_TILES[short_code]
