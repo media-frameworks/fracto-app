@@ -177,7 +177,7 @@ export class FieldImage extends Component {
          if (pattern > 0) {
             return [0, 0, 0]
          }
-         return [44, 55, 66]
+         return [3+ iterations % 234, 12+iterations % 88,13+ iterations % 88]
       }
    }
 
@@ -205,7 +205,7 @@ export class FieldImage extends Component {
                aspect_ratio={1.0}
                on_plan_complete={this.on_plan_complete}
                disabled={disabled}
-               // color_handler={this.color_handler}
+               color_handler={this.color_handler}
                update_counter={page_settings[KEY_UPDATE_INDEX]}
             />
          </styles.ImageWrapper>

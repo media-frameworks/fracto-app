@@ -61,7 +61,7 @@ export class CompCapture extends Component {
          if (pattern > 0) {
             return [0, 0, 0]
          }
-         return [44, 55, 66]
+         return [3+ iterations % 234, 12+iterations % 88,13+ iterations % 88]
       }
    }
 
