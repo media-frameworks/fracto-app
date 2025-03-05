@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {CompColorsStyles as styles} from 'styles/CompColorsStyles';
 import {KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX, KEY_LIT_TYPE, KEY_UPDATE_INDEX} from "../../PageSettings";
 import FractoColorWheel from 'fracto/FractoColorWheel';
+import ColorsLitInside from "./colors/ColorsLitInside";
+import ColorsLitOutside from "./colors/ColorsLitOutside";
 
 export const LIT_TYPE_INSIDE = 'lit_type_inside'
 export const LIT_TYPE_OUTSIDE = 'lit_type_outside'
@@ -65,9 +67,17 @@ export class CompColors extends Component {
          page_settings={page_settings}
          on_settings_changed={on_settings_changed}
       />
+      const lit_type = page_settings[KEY_LIT_TYPE] || LIT_TYPE_INSIDE
+      const lit_content = lit_type === LIT_TYPE_INSIDE
+         ? <ColorsLitInside
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}/>
+         : <ColorsLitOutside
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}/>
       return <styles.ContentWrapper>
          {lit_row}
-         {color_wheel}
+         {lit_content}
       </styles.ContentWrapper>
    }
 }
