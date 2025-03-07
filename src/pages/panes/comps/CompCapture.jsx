@@ -61,7 +61,8 @@ export class CompCapture extends Component {
          if (pattern > 0) {
             return [0, 0, 0]
          }
-         return [3+ iterations % 234, 12+iterations % 88,13+ iterations % 88]
+         const log_iterations = Math.log(iterations)
+         return [12 + 112 *  log_iterations, 1 +  2 * log_iterations, 1 + 15 * log_iterations]
       }
    }
 
