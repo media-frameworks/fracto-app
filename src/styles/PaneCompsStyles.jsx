@@ -5,9 +5,9 @@ const ROW_HEIGHT_PX = 15;
 
 export class PaneCompsStyles {
    static TabsWrapper = styled(CoolStyles.Block)`
-      padding: 0;
+      padding: 0 1rem;
       background-color: #fcfcfc;
-      overflow: hidden;
+      overflow-y: scroll;
    `
    static BinsWrapper = styled(CoolStyles.Block)`
       background-color: white;

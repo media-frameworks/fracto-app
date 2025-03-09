@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import OrbitalsColorChart from "./orbitals/OrbitalsColorChart";
 import OrbitalsHistogram from "./orbitals/OrbitalsHistogram";
+import {CompOrbitalStyles as styles} from "styles/CompOrbitalStyles"
 
 export class CompOrbitals extends Component {
    static propTypes = {
@@ -15,7 +16,7 @@ export class CompOrbitals extends Component {
 
    render() {
       const {page_settings, on_settings_changed} = this.props
-      return [
+      const elements = [
          <OrbitalsColorChart
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
@@ -25,6 +26,9 @@ export class CompOrbitals extends Component {
             on_settings_changed={on_settings_changed}
          />
       ]
+      return <styles.ContentWrapper>
+         {elements}
+      </styles.ContentWrapper>
    }
 }
 

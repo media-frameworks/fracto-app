@@ -1,6 +1,27 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {KEY_CANVAS_BUFFER} from "../../../PageSettings";
+import {KEY_CANVAS_BUFFER, KEY_COMPS_HEIGHT_PX} from "../../../PageSettings";
+import {
+   Chart as ChartJS,
+   CategoryScale,
+   LinearScale,
+   BarElement,
+   Title,
+   Tooltip,
+   Legend,
+} from 'chart.js';
+import {Bar} from 'react-chartjs-2';
+import FractoUtil from "../../../../fracto/FractoUtil";
+import CoolStyles from "../../../../common/ui/styles/CoolStyles";
+
+ChartJS.register(
+   CategoryScale,
+   LinearScale,
+   BarElement,
+   Title,
+   Tooltip,
+   Legend
+);
 
 export class OrbitalsHistogram extends Component {
    static propTypes = {
@@ -8,6 +29,7 @@ export class OrbitalsHistogram extends Component {
       on_settings_changed: PropTypes.func.isRequired,
    }
    state = {
+      bin_list: [],
       most_recent: {
          scope: 0,
          focal_point: {x: 0, y: 0}
@@ -15,7 +37,9 @@ export class OrbitalsHistogram extends Component {
    }
 
    componentDidMount() {
-      this.fill_histogram()
+      setTimeout(() => {
+         this.fill_histogram()
+      }, 1000)
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
@@ -40,7 +64,6 @@ export class OrbitalsHistogram extends Component {
          return;
       }
       // console.log('canvas_buffer', canvas_buffer);
-      let non_orbitals_count = 0;
       let non_orbital_bins = {}
       canvas_buffer.forEach(row => {
          row.forEach(cell => {
@@ -53,25 +76,50 @@ export class OrbitalsHistogram extends Component {
                non_orbital_bins[non_orbital_key] = 0;
             }
             non_orbital_bins[non_orbital_key]++
-            non_orbitals_count++
          })
       });
       const bin_keys = Object.keys(non_orbital_bins)
-      const bin_list = bin_keys.map(bin_key => {
-         return {
-            iterations: parseInt(bin_key.slice(1), 10),
-            count: non_orbital_bins[bin_key]
-         }
-      }).sort((a, b) => {
-         return a.iterations - b.iterations;
-      })
+      const bin_list = bin_keys
+         .filter(bin_key => non_orbital_bins[bin_key] > 10)
+         .map(bin_key => {
+            return {
+               iterations: parseInt(bin_key.slice(1), 10),
+               count: non_orbital_bins[bin_key]
+            }
+         }).sort((a, b) => {
+            return b.iterations - a.iterations;
+         })
+      this.setState({bin_list})
       console.log('bin_list', bin_list)
    }
 
    render() {
-      return 'OrbitalsHistogram'
+      const {bin_list} = this.state
+      const {page_settings} = this.props
+      const data = {
+         labels: bin_list.map(bin => bin.iterations),
+         datasets: [
+            {
+               label: 'escapes',
+               data: bin_list.map(bin => bin.count),
+               backgroundColor: bin_list.map(bin =>
+                  FractoUtil.fracto_pattern_color(0, bin.iterations)),
+               barThickness: 'flex',
+            },
+         ],
+      }
+      const options = {
+         maintainAspectRatio: false,
+         scales: {
+            x: {type: 'logarithmic'},
+            y: {type: 'logarithmic'},
+         },
+      };
+      const chartStyle = {height: `${page_settings[KEY_COMPS_HEIGHT_PX] * 0.45}px`}
+      return <CoolStyles.Block style={chartStyle}>
+         <Bar data={data} options={options}/>
+      </CoolStyles.Block>
    }
-
 }
 
 export default OrbitalsHistogram
