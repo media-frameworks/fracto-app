@@ -1,47 +1,30 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {CoolTable} from 'common/ui/CoolImports';
-import {
-   CELL_ALIGN_CENTER,
-   CELL_ALIGN_LEFT,
-   CELL_TYPE_CALLBACK,
-   CELL_TYPE_TEXT
-} from "common/ui/CoolTable";
 import FractoUtil from "fracto/FractoUtil";
-import {render_pattern_block} from "fracto/styles/FractoStyles";
-import {KEY_COMPS_WIDTH_PX,} from "pages/PageSettings";
+import {KEY_COMPS_HEIGHT_PX} from "pages/PageSettings";
 import {PaneCompsStyles as styles} from 'styles/PaneCompsStyles'
 
-const COLOR_BAR_WIDTH_PX = 350;
+import {
+   Chart as ChartJS,
+   CategoryScale,
+   LinearScale,
+   BarElement,
+   Title,
+   Tooltip,
+   Legend,
+} from 'chart.js';
+import {Bar} from 'react-chartjs-2';
+import CoolStyles from "common/ui/styles/CoolStyles";
 
-var ORBITALS_HEADERS = [
-   {
-      id: "orbital",
-      label: "#",
-      type: CELL_TYPE_CALLBACK,
-      width_px: 40,
-      align: CELL_ALIGN_CENTER
-   },
-   {
-      id: "count_pct",
-      label: "pixels (%)",
-      type: CELL_TYPE_TEXT,
-      width_px: 100,
-      align: CELL_ALIGN_LEFT,
-      style: {
-         fontfamily: 'monospace',
-         fontSize: '0.80rem',
-         color: '#444444'
-      }
-   },
-   {
-      id: "color_bar",
-      label: `...`,
-      type: CELL_TYPE_CALLBACK,
-      width_px: COLOR_BAR_WIDTH_PX
-   },
-]
+ChartJS.register(
+   CategoryScale,
+   LinearScale,
+   BarElement,
+   Title,
+   Tooltip,
+   Legend
+);
 
 export class OrbitalsColorChart extends Component {
    static propTypes = {
@@ -114,75 +97,40 @@ export class OrbitalsColorChart extends Component {
       return true
    }
 
-   color_bar = (bin) => {
-      const {orbital_bins} = this.state
-      const bar_width_px = COLOR_BAR_WIDTH_PX * (bin.bin_count / orbital_bins.max_bin)
-      const style = {
-         backgroundColor: FractoUtil.fracto_pattern_color(bin.orbital),
-         width: `${bar_width_px}px`
-      };
-      return <styles.ColorBarSegment
-         key={`colorbar_${bin.orbital}_`}
-         style={style}
-         title={bin.orbital}
-      />
-   }
-
    render() {
       const {orbital_bins} = this.state
       const {page_settings} = this.props
-      const width_px = page_settings[KEY_COMPS_WIDTH_PX]
-      const bin_keys = Object.keys(orbital_bins);
+      const bin_keys = Object.keys(orbital_bins)
+         .filter(key => orbital_bins[key].orbital > 0)
+         .filter(key => orbital_bins[key].bin_count > 10)
+         .sort((a, b) => orbital_bins[a].orbital - orbital_bins[b].orbital)
       if (bin_keys.length === 0) {
          return <styles.OrbitalsPrompt>
             {'Loading orbitals data...'}
          </styles.OrbitalsPrompt>
       }
-      const sorted_bins = bin_keys
-         .filter(key => key !== 'total_count')
-         .filter(key => key !== 'max_bin')
-         .map(key => orbital_bins[key])
-         .sort((a, b) => a.orbital > b.orbital ? 1 : -1)
-      const prominent_orbitals = JSON.parse(JSON.stringify(sorted_bins))
-         .filter(bin => bin.bin_count > 300)
-         .sort((a, b) => a.bin_count > b.bin_count ? -1 : 1)
-         .slice(0, 20)
-         .map(bin => bin.orbital)
-      const lesser_orbitals = JSON.parse(JSON.stringify(sorted_bins))
-         .filter(bin => bin.bin_count <= 300)
-      const data = prominent_orbitals.sort((a, b) => a - b)
-         .map(orbital => {
-            const orbital_bin = sorted_bins.find(bin => bin.orbital === orbital)
-            const pct = Math.round(orbital_bin.bin_count * 10000 / orbital_bins.total_count) / 100
-            return {
-               orbital: [render_pattern_block, orbital_bin.orbital],
-               count_pct: `${orbital_bin.bin_count} (${pct}%)`,
-               color_bar: [this.color_bar, orbital_bin]
-            }
-         })
-      const and_the_rest = lesser_orbitals
-         .filter(bin => bin.bin_count > 50)
-         .map(bin => {
-            const pct = Math.round(bin.bin_count * 10000 / orbital_bins.total_count) / 100
-            return <styles.ColorBlockWrapper
-               title={`${bin.bin_count} (${pct}%)`}>
-               {render_pattern_block(bin.orbital)}
-            </styles.ColorBlockWrapper>
-         })
-      const others_block = [
-         <styles.OthersLabel>Other orbitals represented:</styles.OthersLabel>,
-         <styles.OthersWrapper>{and_the_rest}</styles.OthersWrapper>
-      ]
-      ORBITALS_HEADERS[2].width_px = width_px - 235
-      return <styles.BinsWrapper>
-         <styles.OthersLabel>{`${orbital_bins.total_count} pixels have orbital values:`}</styles.OthersLabel>
-         <styles.TableWrapper><CoolTable
-            data={data}
-            columns={ORBITALS_HEADERS}
-         />
-         </styles.TableWrapper>
-         {lesser_orbitals.length ? others_block : ''}
-      </styles.BinsWrapper>
+      const data = {
+         labels: bin_keys.map(key => parseInt(orbital_bins[key].orbital)),
+         datasets: [
+            {
+               label: 'orbitals',
+               data: bin_keys.map(key => orbital_bins[key].bin_count),
+               backgroundColor: bin_keys.map(key => FractoUtil.fracto_pattern_color(orbital_bins[key].orbital)),
+               barThickness: 'flex',
+            },
+         ],
+      }
+      const options = {
+         maintainAspectRatio: false,
+         scales: {
+            // x: {type: 'logarithmic'},
+            y: {type: 'logarithmic'},
+         },
+      };
+      const chartStyle = {height: `${page_settings[KEY_COMPS_HEIGHT_PX] * 0.45}px`}
+      return <CoolStyles.Block style={chartStyle}>
+         <Bar data={data} options={options}/>
+      </CoolStyles.Block>
    }
 }
 
