@@ -11,6 +11,10 @@ export class CompPatternStyles {
    static PatternBlockWrapper = styled(CoolStyles.InlineBlock)`
        font-size: 2rem;
    `
+   static DescriptorWrapper = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.italic};
+   `
+
    static InfoPrompt = styled(CoolStyles.Block)`
        ${CoolStyles.italic};
        ${CoolStyles.align_center};

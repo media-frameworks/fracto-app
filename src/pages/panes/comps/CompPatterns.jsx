@@ -8,7 +8,7 @@ import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {KEY_FOCAL_POINT, KEY_HOVER_POINT} from "../../PageSettings";
 import FractoUtil from "fracto/FractoUtil";
-import {render_pattern_block} from "fracto/styles/FractoStyles";
+import {render_pattern_block, describe_pattern} from "fracto/styles/FractoStyles";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -77,6 +77,7 @@ export class CompPatterns extends Component {
             <styles.PatternBlockWrapper>
                {render_pattern_block(current_pattern)}
             </styles.PatternBlockWrapper>
+            <styles.DescriptorWrapper>{describe_pattern(current_pattern)}</styles.DescriptorWrapper>
          </styles.InfoBlockWrapper>
       }
       return <styles.InfoPrompt>
