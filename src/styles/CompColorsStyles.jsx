@@ -6,7 +6,7 @@ export class CompColorsStyles {
       padding: 0.5rem;
    `
    static CenteredBlock = styled(CoolStyles.Block)`
-       ${CoolStyles.align_center}
+       ${CoolStyles.align_left}
        margin-top: 0.5rem;
        border-bottom: 0.1rem solid #aaaaaa;
    `
@@ -14,6 +14,7 @@ export class CompColorsStyles {
        margin-left: 1rem;
    `
    static LitPrompt = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.pointer}
        ${CoolStyles.bold}
        ${CoolStyles.uppercase}
        ${CoolStyles.deep_blue_text}

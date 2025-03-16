@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import network from "common/config/network.json";
@@ -6,10 +6,15 @@ import network from "common/config/network.json";
 import {
    KEY_BAILIWICK_ID,
    KEY_COMPS_HEIGHT_PX,
-   KEY_COMPS_WIDTH_PX, KEY_DISABLED, KEY_FOCAL_POINT, KEY_SCOPE
-} from "../../PageSettings";
+   KEY_COMPS_WIDTH_PX,
+   KEY_DISABLED,
+   KEY_FOCAL_POINT,
+   KEY_MINIBROT_SORT_TYPE,
+   KEY_SCOPE,
+} from "pages/PageSettings";
 import BailiwickList from "fracto/bailiwick/BailiwickList";
 import {CompMinibrotStyles as styles} from 'styles/CompMinibrotStyles';
+import {render_big_pattern_block} from "fracto/styles/FractoStyles";
 
 const AXIOS_CONFIG = {
    headers: {
@@ -20,6 +25,9 @@ const AXIOS_CONFIG = {
    mode: 'no-cors',
    crossdomain: true,
 }
+
+const SORT_TYPE_BY_ORBITAL = 'sort_type_by_orbital'
+const SORT_TYPE_BY_SIZE = 'sort_type_by_size'
 
 export class CompMinibrot extends Component {
    static propTypes = {
@@ -58,30 +66,113 @@ export class CompMinibrot extends Component {
          new_settings[KEY_SCOPE] = display_settings.scope
          new_settings[KEY_DISABLED] = true
       }
-      setTimeout(()=>{
+      setTimeout(() => {
          on_settings_changed(new_settings)
-      },250)
+      }, 250)
+   }
+
+   set_sort_type = (sort_type) => {
+      const {on_settings_changed} = this.props
+      let new_settings = {}
+      new_settings[KEY_MINIBROT_SORT_TYPE] = sort_type
+      new_settings[KEY_BAILIWICK_ID] = -1
+      on_settings_changed(new_settings)
+   }
+
+   render_sorting_row = () => {
+      const {page_settings} = this.props
+      const sort_type = page_settings[KEY_MINIBROT_SORT_TYPE] || SORT_TYPE_BY_ORBITAL
+      const unlit_style = {color: '#aaaaaa', fontWeight: 400}
+      return <styles.CenteredBlock>
+         <input
+            type={"radio"}
+            checked={sort_type === SORT_TYPE_BY_SIZE}
+            onClick={() => this.set_sort_type(SORT_TYPE_BY_SIZE)}
+         />
+         <styles.SortTypePrompt
+            style={sort_type === SORT_TYPE_BY_ORBITAL ? unlit_style : {}}
+            onClick={() => this.set_sort_type(SORT_TYPE_BY_SIZE)}
+         >{'order by size'}
+         </styles.SortTypePrompt>
+         <styles.Spacer/>
+         <input
+            type={"radio"}
+            checked={sort_type === SORT_TYPE_BY_ORBITAL}
+            onClick={() => this.set_sort_type(SORT_TYPE_BY_ORBITAL)}
+         />
+         <styles.SortTypePrompt
+            style={sort_type === SORT_TYPE_BY_SIZE ? unlit_style : {}}
+            onClick={() => this.set_sort_type(SORT_TYPE_BY_ORBITAL)}
+         >
+            {'by cardinality'}
+         </styles.SortTypePrompt>
+      </styles.CenteredBlock>
+   }
+
+   render_size_list = (bailiwick_list) => {
+      const {page_settings} = this.props
+      return <BailiwickList
+         width_px={page_settings[KEY_COMPS_WIDTH_PX]}
+         bailiwick_list={bailiwick_list.sort((a, b) => b.magnitude - a.magnitude)}
+         selected_id={page_settings[KEY_BAILIWICK_ID]}
+         on_select={this.on_select}
+         in_wait={page_settings[KEY_DISABLED]}
+      />
+   }
+
+   render_orbitals_list = (bailiwick_list) => {
+      const {page_settings} = this.props
+      const orbital_bins = []
+      bailiwick_list.forEach(item => {
+         let bin = orbital_bins.find(bin => bin.pattern === item.pattern)
+         if (!bin) {
+            bin = {
+               pattern: item.pattern,
+               minibrots: []
+            }
+            orbital_bins.push(bin)
+         }
+         bin.minibrots.push(item)
+      })
+      console.log('orbital_bins', orbital_bins)
+      const pattern_block_width_px = 60
+      const list_width_px = page_settings[KEY_COMPS_WIDTH_PX] - pattern_block_width_px - 50
+      return orbital_bins
+         .sort((a, b) => a.pattern - b.pattern)
+         .map(bin => {
+            return <styles.PatternWrapper>
+               <styles.PatternBlockWrapper style={{width: `${pattern_block_width_px}px`}}>
+                  {render_big_pattern_block(bin.pattern)}
+               </styles.PatternBlockWrapper>
+               <styles.PatternBailiwicksWrapper style={{width: `${list_width_px}px`}}>
+                  <BailiwickList
+                     width_px={list_width_px}
+                     bailiwick_list={bin.minibrots.sort((a, b) => b.magnitude - a.magnitude)}
+                     selected_id={page_settings[KEY_BAILIWICK_ID]}
+                     on_select={this.on_select}
+                     in_wait={page_settings[KEY_DISABLED]}
+                  />
+               </styles.PatternBailiwicksWrapper>
+            </styles.PatternWrapper>
+         })
    }
 
    render() {
       const {all_bailiwicks} = this.state
       const {page_settings} = this.props
-      console.log('CompMinibrot page_settings[KEY_BAILIWICK_ID]', page_settings[KEY_BAILIWICK_ID])
       const list_style = {
          height: `${page_settings[KEY_COMPS_HEIGHT_PX] - 60}px`,
-         width: `${page_settings[KEY_COMPS_WIDTH_PX] - 5}px`,
-         marginTop: '20px',
+         width: `${page_settings[KEY_COMPS_WIDTH_PX] - 25}px`,
+         marginTop: '10px',
          cursor: page_settings[KEY_DISABLED] ? 'wait' : 'default'
       }
+      const listing = page_settings[KEY_MINIBROT_SORT_TYPE] === SORT_TYPE_BY_SIZE
+         ? this.render_size_list(all_bailiwicks)
+         : this.render_orbitals_list(all_bailiwicks)
       return <styles.ContentWrapper
          style={list_style}>
-         <BailiwickList
-            width_px={page_settings[KEY_COMPS_WIDTH_PX]}
-            bailiwick_list={all_bailiwicks.sort((a, b) => b.magnitude - a.magnitude)}
-            selected_id={page_settings[KEY_BAILIWICK_ID]}
-            on_select={this.on_select}
-            in_wait={page_settings[KEY_DISABLED]}
-         />
+         {this.render_sorting_row()}
+         {listing}
       </styles.ContentWrapper>
    }
 }

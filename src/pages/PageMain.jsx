@@ -39,6 +39,7 @@ import {
    KEY_LIT_TYPE,
    KEY_COLOR_PHASE,
    KEY_BAILIWICK_ID,
+   KEY_MINIBROT_SORT_TYPE,
 } from "./PageSettings";
 
 const ALL_PANE_DIMENSIONS = [
@@ -70,6 +71,7 @@ const ALL_OPERATIVES = [
    KEY_MODAL,
    KEY_COLOR_PHASE,
    KEY_BAILIWICK_ID,
+   KEY_MINIBROT_SORT_TYPE,
 ]
 
 export class PageMain extends Component {

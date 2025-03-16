@@ -49,6 +49,15 @@ export class PaneCompsStyles {
       font-size: 1.125rem;
    `;
 
+   static ColorWheelWrapper = styled(CoolStyles.InlineBlock)`
+      ${CoolStyles.noselect}
+      margin-right: 0.5rem;
+      margin-bottom: 0.25rem;
+   `;
+
+   static ColorWheelCanvas = styled.canvas`
+       margin: 1rem;
+   `
 }
 
 export default PaneCompsStyles

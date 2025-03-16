@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {KEY_CANVAS_BUFFER, KEY_COMPS_HEIGHT_PX} from "../../../PageSettings";
+import {KEY_CANVAS_BUFFER, KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX} from "../../../PageSettings";
 import {
    Chart as ChartJS,
    CategoryScale,
@@ -115,10 +115,14 @@ export class OrbitalsHistogram extends Component {
             y: {type: 'logarithmic'},
          },
       };
-      const chartStyle = {height: `${page_settings[KEY_COMPS_HEIGHT_PX] * 0.45}px`}
-      return <CoolStyles.Block style={chartStyle}>
+      const height = page_settings[KEY_COMPS_HEIGHT_PX] * 0.45
+      const width = page_settings[KEY_COMPS_WIDTH_PX] * 0.95 - height
+      const chartStyle = {
+         height: `${height}px`, width: `${width}px`
+      }
+      return <CoolStyles.InlineBlock style={chartStyle}>
          <Bar data={data} options={options}/>
-      </CoolStyles.Block>
+      </CoolStyles.InlineBlock>
    }
 }
 

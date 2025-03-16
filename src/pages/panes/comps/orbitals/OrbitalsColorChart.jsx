@@ -16,6 +16,7 @@ import {
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
 import CoolStyles from "common/ui/styles/CoolStyles";
+import {collect_orbitals} from "fracto/CanvasBufferUtils";
 
 ChartJS.register(
    CategoryScale,
@@ -69,30 +70,7 @@ export class OrbitalsColorChart extends Component {
       if (!canvas_buffer) {
          return false;
       }
-      let orbital_bins = {
-         total_count: 0,
-         max_bin: 1
-      }
-      for (let img_x = 0; img_x < canvas_buffer.length; img_x++) {
-         for (let img_y = 0; img_y < canvas_buffer[img_x].length; img_y++) {
-            const pattern = canvas_buffer[img_x][img_y][0]
-            if (pattern === 0) {
-               continue
-            }
-            const orbital_key = `orbital_${pattern}`
-            if (!(orbital_key in orbital_bins)) {
-               orbital_bins[orbital_key] = {
-                  orbital: pattern,
-                  bin_count: 0,
-               }
-            }
-            orbital_bins.total_count += 1
-            orbital_bins[orbital_key].bin_count += 1
-            if (orbital_bins[orbital_key].bin_count > orbital_bins.max_bin) {
-               orbital_bins.max_bin = orbital_bins[orbital_key].bin_count
-            }
-         }
-      }
+      const orbital_bins = collect_orbitals(canvas_buffer)
       this.setState({orbital_bins: orbital_bins})
       return true
    }
