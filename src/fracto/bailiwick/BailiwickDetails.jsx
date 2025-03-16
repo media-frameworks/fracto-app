@@ -2,13 +2,18 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {BailiwickStyles as styles} from '../styles/BailiwickStyles'
-import {CoolStyles} from 'common/ui/CoolImports';
+import {CoolStyles, CoolTable} from 'common/ui/CoolImports';
 import FractoUtil from "fracto/FractoUtil";
 import {render_big_pattern_block, render_coordinates} from "fracto/styles/FractoStyles";
 import {Scatter} from "react-chartjs-2";
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 import FractoFastCalc from "../FractoFastCalc";
 import FractoTileContext from "../FractoTileContext";
+import {
+   CELL_ALIGN_CENTER,
+   CELL_TYPE_NUMBER,
+   CELL_TYPE_TEXT
+} from "common/ui/CoolTable";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -27,6 +32,21 @@ const MIN_CONTEXT_SCOPE = 1.5
 const ZOOM_REFRESH_MS = 50
 const ZOOM_REFRESH_PAUSE_MS = 3000
 
+const QUADRANTS_COLUMNS = [
+   {
+      id: "quadrant",
+      label: "quadrant",
+      type: CELL_TYPE_TEXT,
+      align: CELL_ALIGN_CENTER
+   },
+   {
+      id: "point_count",
+      label: "points",
+      type: CELL_TYPE_NUMBER,
+      align: CELL_ALIGN_CENTER
+   },
+]
+
 export class BailiwickDetails extends Component {
 
    static propTypes = {
@@ -41,26 +61,23 @@ export class BailiwickDetails extends Component {
       details_ref: React.createRef(),
       context_scope: 6,
       scope_factor: CONTRACTION_FACTOR,
-      display_settings: {},
+      display_settings: null,
+      core_point: null,
+      fracto_values: null,
    }
 
    componentDidMount() {
       const {details_ref} = this.state
       const {selected_bailiwick} = this.props
-      details_ref.current.scrollIntoView({behavior: "smooth", block: "center"})
+      details_ref.current.scrollIntoView({behavior: "smooth", block: "start"})
       const display_settings = typeof selected_bailiwick.display_settings === 'string'
-         ? JSON.parse(selected_bailiwick.display_settings) : selected_bailiwick.display_settings
-      this.setState({display_settings})
-   }
-
-   componentDidUpdate(prevProps, prevState, snapshot) {
-      const {selected_bailiwick} = this.props
-      if (!prevProps.selected_bailiwick) {
-         return
-      }
-      if (prevProps.selected_bailiwick.id !== selected_bailiwick.id) {
-         this.setState({node_index: 0})
-      }
+         ? JSON.parse(selected_bailiwick.display_settings)
+         : selected_bailiwick.display_settings
+      const core_point = typeof selected_bailiwick.core_point === 'string'
+         ? JSON.parse(selected_bailiwick.core_point)
+         : selected_bailiwick.core_point
+      const fracto_values = FractoFastCalc.calc(core_point.x, core_point.y)
+      this.setState({display_settings, core_point, fracto_values})
    }
 
    render_magnitude = () => {
@@ -71,28 +88,27 @@ export class BailiwickDetails extends Component {
          <styles.StatLabel>magnitude:</styles.StatLabel>
          <styles.BigStatValue>{rounded}{mu}</styles.BigStatValue>
          <styles.InlineWrapper>
-            <styles.StatValue>{`(${selected_bailiwick.magnitude})`}</styles.StatValue>
+            <styles.StatValue>{` (${selected_bailiwick.magnitude})`}</styles.StatValue>
          </styles.InlineWrapper>
       </CoolStyles.Block>
    }
 
    render_core_point = () => {
-      const {selected_bailiwick} = this.props;
-      const core_point_data = typeof selected_bailiwick.core_point === 'string'
-         ? JSON.parse(selected_bailiwick.core_point)
-         : selected_bailiwick.core_point
-      const core_point = render_coordinates(core_point_data.x, core_point_data.y);
+      const {core_point} = this.state;
+      if (!core_point) {
+         return []
+      }
+      const core_point_rendered = render_coordinates(core_point.x, core_point.y);
       return <CoolStyles.Block>
-         <styles.StatValue>{core_point}</styles.StatValue>
+         <styles.StatValue>{core_point_rendered}</styles.StatValue>
       </CoolStyles.Block>
    }
 
    click_point_chart = () => {
-      const {selected_bailiwick} = this.props;
-      const core_point_data = typeof selected_bailiwick.core_point === 'string'
-         ? JSON.parse(selected_bailiwick.core_point)
-         : selected_bailiwick.core_point
-      const fracto_values = FractoFastCalc.calc(core_point_data.x, core_point_data.y)
+      const {fracto_values} = this.state;
+      if (!fracto_values) {
+         return []
+      }
       const set1 = fracto_values.orbital_points
       const options = {
          scales: {
@@ -126,7 +142,7 @@ export class BailiwickDetails extends Component {
       const tile_scope = display_settings.scope
       const refresh_time_ms =
          context_scope < MIN_CONTEXT_SCOPE || context_scope * tile_scope > 3
-         ? ZOOM_REFRESH_PAUSE_MS : ZOOM_REFRESH_MS
+            ? ZOOM_REFRESH_PAUSE_MS : ZOOM_REFRESH_MS
       setTimeout(() => {
          const {context_scope, scope_factor} = this.state
          if (tile_scope) {
@@ -149,6 +165,43 @@ export class BailiwickDetails extends Component {
       }, refresh_time_ms)
    }
 
+   render_quadrants_table = () => {
+      const {fracto_values} = this.state
+      // console.log('fracto_values', fracto_values)
+      if (!fracto_values) {
+         return []
+      }
+      const quad_counts = [0, 0, 0, 0]
+      fracto_values.orbital_points
+         .forEach((point, index) => {
+            if (index === 0) {
+               return
+            }
+            if (Math.sqrt(point.x * point.x + point.y * point.y) < 0.0001) {
+               return
+            }
+            if (point.x > 0 && point.y > 0) {
+               quad_counts[0] += 1
+            } else if (point.x < 0 && point.y > 0) {
+               quad_counts[1] += 1
+            } else if (point.x < 0 && point.y < 0) {
+               quad_counts[2] += 1
+            } else if (point.x > 0 && point.y < 0) {
+               quad_counts[3] += 1
+            }
+         })
+      const quadrants_data = [
+         {quadrant: 'I', point_count: quad_counts[0]},
+         {quadrant: 'II', point_count: quad_counts[1]},
+         {quadrant: 'III', point_count: quad_counts[2]},
+         {quadrant: 'IV', point_count: quad_counts[3]}
+      ]
+      return <CoolTable
+         data={quadrants_data}
+         columns={QUADRANTS_COLUMNS}
+      />
+   }
+
    render() {
       const {details_ref, context_scope, display_settings} = this.state
       const {selected_bailiwick, on_close, width_px} = this.props;
@@ -156,21 +209,24 @@ export class BailiwickDetails extends Component {
       const close_btn = <styles.CloseButton onClick={on_close}>X</styles.CloseButton>
       const width_chart_px = Math.round(0.72 * width_px)
       const width_context_px = Math.round(0.20 * width_px)
-      const {focal_point, scope} = display_settings
-      const tile_bounds = focal_point ? {
-         left: focal_point.x - scope / 2,
-         right: focal_point.x + scope / 2,
-         top: focal_point.y + scope / 2,
-         bottom: focal_point.y - scope / 2,
-      } : null
-      const context_zoom = focal_point ? <FractoTileContext
-         tile={{scope: context_scope, bounds: tile_bounds}}
-         width_px={width_context_px}
-         on_context_rendered={this.on_context_rendered}
-         scope_factor={context_scope}
-      /> : ''
+      let context_zoom = []
+      if (display_settings) {
+         const {focal_point, scope} = display_settings
+         const tile_bounds = focal_point ? {
+            left: focal_point.x - scope / 2,
+            right: focal_point.x + scope / 2,
+            top: focal_point.y + scope / 2,
+            bottom: focal_point.y - scope / 2,
+         } : null
+         context_zoom = focal_point ? <FractoTileContext
+            tile={{scope: context_scope, bounds: tile_bounds}}
+            width_px={width_context_px}
+            on_context_rendered={this.on_context_rendered}
+            scope_factor={context_scope}
+         /> : ''
+      }
       return [
-         <CoolStyles.Block style={{margin: '0.25rem'}}>
+         <CoolStyles.Block style={{margin: '0.25rem'}} ref={details_ref}>
             {close_btn}
             {render_big_pattern_block(selected_bailiwick?.pattern)}
             <styles.BailiwickNameBlock>
@@ -181,12 +237,15 @@ export class BailiwickDetails extends Component {
          <styles.LowerWrapper>
             {this.render_magnitude()}
          </styles.LowerWrapper>,
-         <styles.ChartWrapper ref={details_ref} style={{width: `${width_chart_px}px`}}>
+         <styles.ChartWrapper style={{width: `${width_chart_px}px`}}>
             {this.click_point_chart(selected_bailiwick.core_point)}
          </styles.ChartWrapper>,
-         <styles.ChartWrapper style={{width: `${width_context_px}px`}}>
+         <styles.SideWrapper style={{width: `${width_context_px}px`}}>
             {context_zoom}
-         </styles.ChartWrapper>
+            <styles.QuadrantsWrapper>
+               {this.render_quadrants_table()}
+            </styles.QuadrantsWrapper>
+         </styles.SideWrapper>,
       ]
    }
 }

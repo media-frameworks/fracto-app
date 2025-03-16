@@ -7,7 +7,7 @@ import FractoRasterImage, {get_tiles} from "../../../fracto/FractoRasterImage";
 import {KEY_COLOR_PHASE, KEY_FOCAL_POINT, KEY_LIT_TYPE, KEY_SCOPE} from "../../PageSettings";
 import CoolStyles from "../../../common/ui/styles/CoolStyles";
 import {NumberSpan} from "../../../fracto/styles/FractoStyles";
-import {LIT_TYPE_OUTSIDE} from "./CompColors";
+import {COLORS_EXTERNAL} from "./CompColors";
 import FractoUtil from "../../../fracto/FractoUtil";
 
 const RESOLUTIONS = [
@@ -52,7 +52,7 @@ export class CompCapture extends Component {
 
    color_handler = (pattern, iterations) => {
       const {page_settings} = this.props
-      if (page_settings[KEY_LIT_TYPE] !== LIT_TYPE_OUTSIDE) {
+      if (page_settings[KEY_LIT_TYPE] !== COLORS_EXTERNAL) {
          const [h, s, l] = FractoUtil.fracto_pattern_color_hsl(pattern, iterations)
          const offset = page_settings[KEY_COLOR_PHASE]
             ? page_settings[KEY_COLOR_PHASE] : 0

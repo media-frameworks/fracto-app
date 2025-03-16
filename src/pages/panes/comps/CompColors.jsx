@@ -2,13 +2,12 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompColorsStyles as styles} from 'styles/CompColorsStyles';
-import {KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX, KEY_LIT_TYPE, KEY_UPDATE_INDEX} from "../../PageSettings";
-import FractoColorWheel from 'fracto/FractoColorWheel';
-import ColorsLitInside from "./colors/ColorsLitInside";
-import ColorsLitOutside from "./colors/ColorsLitOutside";
+import {KEY_LIT_TYPE, KEY_UPDATE_INDEX} from "../../PageSettings";
+import ColorsInterior from "./colors/ColorsInterior";
+import ColorsExterior from "./colors/ColorsExterior";
 
-export const LIT_TYPE_INSIDE = 'lit_type_inside'
-export const LIT_TYPE_OUTSIDE = 'lit_type_outside'
+export const COLORS_INTERNAL = 'colors_internal'
+export const COLORS_EXTERNAL = 'colors_external'
 
 export class CompColors extends Component {
    static propTypes = {
@@ -28,51 +27,43 @@ export class CompColors extends Component {
 
    render_lit_row = () => {
       const {page_settings} = this.props
-      const lit_type = page_settings[KEY_LIT_TYPE] || LIT_TYPE_INSIDE
+      const lit_type = page_settings[KEY_LIT_TYPE] || COLORS_INTERNAL
       const unlit_style = {color: '#aaaaaa', fontWeight: 400}
       return <styles.CenteredBlock>
          <input
             type={"radio"}
-            checked={lit_type === LIT_TYPE_INSIDE}
-            onClick={() => this.set_lit_type(LIT_TYPE_INSIDE)}
+            checked={lit_type === COLORS_INTERNAL}
+            onClick={() => this.set_lit_type(COLORS_INTERNAL)}
          />
          <styles.LitPrompt
-            style={lit_type === LIT_TYPE_OUTSIDE ? unlit_style : {}}
-            onClick={() => this.set_lit_type(LIT_TYPE_INSIDE)}
-         >{'lit on the inside'}
+            style={lit_type === COLORS_EXTERNAL ? unlit_style : {}}
+            onClick={() => this.set_lit_type(COLORS_INTERNAL)}
+         >{'internal'}
          </styles.LitPrompt>
          <styles.Spacer/>
          <input
             type={"radio"}
-            checked={lit_type === LIT_TYPE_OUTSIDE}
-            onClick={() => this.set_lit_type(LIT_TYPE_OUTSIDE)}
+            checked={lit_type === COLORS_EXTERNAL}
+            onClick={() => this.set_lit_type(COLORS_EXTERNAL)}
          />
          <styles.LitPrompt
-            style={lit_type === LIT_TYPE_INSIDE ? unlit_style : {}}
-            onClick={() => this.set_lit_type(LIT_TYPE_OUTSIDE)}
+            style={lit_type === COLORS_INTERNAL ? unlit_style : {}}
+            onClick={() => this.set_lit_type(COLORS_EXTERNAL)}
          >
-            {'lit on the outside'}
+            {'external'}
          </styles.LitPrompt>
       </styles.CenteredBlock>
    }
 
    render() {
       const {page_settings, on_settings_changed} = this.props
-      const max_size_px = Math.min(
-         page_settings[KEY_COMPS_WIDTH_PX],
-         page_settings[KEY_COMPS_HEIGHT_PX] - 80)
       const lit_row = this.render_lit_row()
-      const color_wheel = <FractoColorWheel
-         width_px={500}
-         page_settings={page_settings}
-         on_settings_changed={on_settings_changed}
-      />
-      const lit_type = page_settings[KEY_LIT_TYPE] || LIT_TYPE_INSIDE
-      const lit_content = lit_type === LIT_TYPE_INSIDE
-         ? <ColorsLitInside
+      const lit_type = page_settings[KEY_LIT_TYPE] || COLORS_INTERNAL
+      const lit_content = lit_type === COLORS_INTERNAL
+         ? <ColorsInterior
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}/>
-         : <ColorsLitOutside
+         : <ColorsExterior
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}/>
       return <styles.ContentWrapper>

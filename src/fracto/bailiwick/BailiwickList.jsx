@@ -55,7 +55,7 @@ export class BailiwickList extends Component {
    render() {
       const {scroll_ref} = this.state
       const {bailiwick_list, selected_id, in_wait, on_select, width_px} = this.props
-      // console.log('selected_id',selected_id)
+      console.log('bailiwick_list',bailiwick_list)
       return bailiwick_list
          .map((item, i) => {
             const pattern_block = render_big_pattern_block(item.pattern)
@@ -73,9 +73,9 @@ export class BailiwickList extends Component {
             const block_render = item.thumbnail_name && item.thumbnail_name.indexOf('.png') > 0
                ? this.render_image_block(item) : pattern_block
             const row_content = selected
-               ? <CoolStyles.Block>
+               ? <CoolStyles.Block style={{padding: '0.5rem'}}>
                   <BailiwickDetails
-                     width_px={width_px}
+                     width_px={width_px - 35}
                      freeform_index={item.free_ordinal}
                      highest_level={highest_level}
                      on_close={() => on_select(null)}
@@ -85,7 +85,9 @@ export class BailiwickList extends Component {
                : <styles.MiniBlock>
                   <styles.BlockWrapper key={`pattern_${i}`}>{block_render}</styles.BlockWrapper>
                   <styles.SizeWrapper key={`size_${i}`}>{size}</styles.SizeWrapper>
-                  <styles.UpdatedWrapper key={`index_${i}`}>{`#${i + 1} in size`}</styles.UpdatedWrapper>
+                  <styles.UpdatedWrapper key={`type_${i}`}>
+                     {item.is_inline ? 'inline' : 'free-floating'}
+                  </styles.UpdatedWrapper>
                </styles.MiniBlock>
             return <styles.RowWrapper
                ref={selected ? scroll_ref : null}

@@ -52,19 +52,19 @@ export class BailiwickStyles {
    static StatValue = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.monospace}
        ${CoolStyles.bold}
-       font-size: 0.95rem;
+       font-size: 0.90rem;
        color: black;
        line-height: 1.25rem;
    `;
 
    static MuStyle = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.bold}
-       font-size: 0.95rem;
+       font-size: 0.90rem;
    `;
 
    static InlineWrapper = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.align_center}
-       margin: 0;
+       margin-right: 0.25rem;
    `;
 
    static LowerWrapper = styled(CoolStyles.Block)`
@@ -74,6 +74,7 @@ export class BailiwickStyles {
 
    static BigStatValue = styled(BailiwickStyles.StatValue)`
        font-size: 1.5rem;
+       margin-right: 0.5rem;
    `
    static BailiwickNameBlock = styled(CoolStyles.InlineBlock)`
        margin-bottom: 0.25rem;
@@ -111,6 +112,19 @@ export class BailiwickStyles {
    static ChartWrapper = styled(CoolStyles.InlineBlock)`
        background-color: white;
        margin: 0.5rem;
+   `;
+
+   static SideWrapper = styled(CoolStyles.InlineBlock)`
+       margin: 0.5rem;
+   `;
+
+   static QuadrantsWrapper = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.monospace}
+       ${CoolStyles.align_center}
+       ${CoolStyles.medium_box_shadow}
+       margin-top: 1rem;
+       color: #444444;
+       font-size: 1.25rem;
    `;
 
    static CloseButton = styled(CoolStyles.InlineBlock)`

@@ -1,9 +1,10 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import {CompOrbitalStyles as styles} from "styles/CompOrbitalStyles"
 import OrbitalsColorChart from "./orbitals/OrbitalsColorChart";
 import OrbitalsHistogram from "./orbitals/OrbitalsHistogram";
-import {CompOrbitalStyles as styles} from "styles/CompOrbitalStyles"
+import OrbitalsColorWheel from "./orbitals/OrbitalsColorWheel";
 
 export class CompOrbitals extends Component {
    static propTypes = {
@@ -18,6 +19,10 @@ export class CompOrbitals extends Component {
       const {page_settings, on_settings_changed} = this.props
       const elements = [
          <OrbitalsColorChart
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}
+         />,
+         <OrbitalsColorWheel
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
          />,
