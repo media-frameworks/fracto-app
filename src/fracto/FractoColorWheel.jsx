@@ -46,7 +46,7 @@ export class FractoColorWheel extends Component {
 
       const size_by_two = width_px / 2
       const angle = -Math.PI / 2 - temp_color_phase * TWO_PI / 360;
-      // eslint-disable-next-line 
+      // eslint-disable-next-line
       let [h, s, l] = FractoUtil.fracto_pattern_color_hsl(1, 500)
       const ball_color = `hsl(0, ${s}%, ${l}%)`
       const radius_margin = width_px / 30
