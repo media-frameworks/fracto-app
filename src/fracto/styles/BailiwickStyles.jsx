@@ -125,6 +125,7 @@ export class BailiwickStyles {
        margin-top: 1rem;
        color: #444444;
        font-size: 1.25rem;
+       background-color: #eeeeee;
    `;
 
    static CloseButton = styled(CoolStyles.InlineBlock)`
