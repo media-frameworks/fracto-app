@@ -10,7 +10,9 @@ setInterval(() => {
 }, 10000)
 
 const CACHE_TIMEOUT = 2 * 1000 * 60;
-const MIN_CACHE = 150
+const QUICK_CACHE_TIMEOUT = 1000 * 60;
+const MIN_CACHE = 250
+const MAX_CACHE = 750
 
 const AXIOS_CONFIG = {
    responseType: 'blob',
@@ -77,16 +79,19 @@ export class FractoTileCache {
       if (short_codes.length < MIN_CACHE) {
          return;
       }
+      const timeout = short_codes.length > MAX_CACHE
+         ? QUICK_CACHE_TIMEOUT
+         : CACHE_TIMEOUT
       let delete_count = 0
       short_codes.forEach((short_code) => {
-         if (CACHED_TILES[short_code].last_access < Date.now() - CACHE_TIMEOUT + extra_ms) {
+         if (CACHED_TILES[short_code].last_access < Date.now() - timeout + extra_ms) {
             // console.log(`deleting ${short_code} from cache`)
             delete_count++
             delete CACHED_TILES[short_code]
          }
       })
       if (delete_count > 1) {
-         console.log(`trim_cache deleted: ${delete_count}`)
+         console.log(`trim_cache deleted: ${delete_count} from ${short_codes.length}`)
       }
    }
 }

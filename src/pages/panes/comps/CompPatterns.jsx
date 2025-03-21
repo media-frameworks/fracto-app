@@ -8,7 +8,8 @@ import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {KEY_FOCAL_POINT, KEY_HOVER_POINT} from "../../PageSettings";
 import FractoUtil from "fracto/FractoUtil";
-import {render_pattern_block, describe_pattern} from "fracto/styles/FractoStyles";
+import {render_pattern_block, describe_pattern, render_coordinates} from "fracto/styles/FractoStyles";
+import Complex from "../../../common/math/Complex";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -70,14 +71,42 @@ export class CompPatterns extends Component {
    }
 
    render_info = () => {
+      const {page_settings} = this.props
       const fracto_values = this.get_fracto_values()
       const current_pattern = (fracto_values.orbital_points?.length || 1) - 1
       if (current_pattern) {
+         let click_point = page_settings[KEY_HOVER_POINT]
+         if (!click_point) {
+            click_point = page_settings[KEY_FOCAL_POINT]
+         }
+         const c = new Complex(click_point.x, click_point.y)
+         const neg_c = c.scale(-1)
+         let z= new Complex(0,0)
+         for (let i = 0; i < current_pattern + 10; i++) {
+            z = z.add(neg_c)
+            console.log('z', z.toString())
+            z = z.sqrt()
+         }
+         console.log('fracto_values.orbital_points', fracto_values.orbital_points)
+         // let product = new Complex(1, 0)
+         // for (let point_index = 0; point_index < fracto_values.orbital_points.length - 1; point_index++) {
+         //    console.log(`product`, product.re, product.im)
+         //    const op_1 = new Complex(
+         //       fracto_values.orbital_points[point_index].x,
+         //       fracto_values.orbital_points[point_index].y
+         //    )
+         //    const op_2 = new Complex(
+         //       fracto_values.orbital_points[point_index + 1].x,
+         //       fracto_values.orbital_points[point_index + 1].y
+         //    )
+         //    const sum = op_1.add(op_2)
+         //    product = product.mul(sum)
+         // }
          return <styles.InfoBlockWrapper>
             <styles.PatternBlockWrapper>
                {render_pattern_block(current_pattern)}
             </styles.PatternBlockWrapper>
-            <styles.DescriptorWrapper>{describe_pattern(current_pattern)}</styles.DescriptorWrapper>
+            {/*{render_coordinates(product.re, product.im)}*/}
          </styles.InfoBlockWrapper>
       }
       return <styles.InfoPrompt>
