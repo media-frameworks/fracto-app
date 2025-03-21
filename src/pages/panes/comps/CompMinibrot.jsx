@@ -136,7 +136,7 @@ export class CompMinibrot extends Component {
       })
       console.log('orbital_bins', orbital_bins)
       const pattern_block_width_px = 60
-      const list_width_px = page_settings[KEY_COMPS_WIDTH_PX] - pattern_block_width_px - 50
+      const list_width_px = page_settings[KEY_COMPS_WIDTH_PX] - pattern_block_width_px - 45
       return orbital_bins
          .sort((a, b) => a.pattern - b.pattern)
          .map(bin => {
