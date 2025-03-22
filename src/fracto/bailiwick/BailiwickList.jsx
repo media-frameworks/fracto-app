@@ -7,6 +7,12 @@ import {render_big_pattern_block} from "../styles/FractoStyles";
 import BailiwickDetails from "./BailiwickDetails";
 import {BailiwickStyles as styles} from '../styles/BailiwickStyles'
 
+const numberToOrdinal = (n) => {
+   const s = ['th', 'st', 'nd', 'rd'];
+   const v = n % 100;
+   return n + (s[(v - 20) % 10] || s[v] || s[0]);
+};
+
 export class BailiwickList extends Component {
    static propTypes = {
       width_px: PropTypes.number.isRequired,
@@ -86,7 +92,7 @@ export class BailiwickList extends Component {
                   <styles.BlockWrapper key={`pattern_${i}`}>{block_render}</styles.BlockWrapper>
                   <styles.SizeWrapper key={`size_${i}`}>{size}</styles.SizeWrapper>
                   <styles.UpdatedWrapper key={`type_${i}`}>
-                     {item.is_inline ? 'inline' : 'free-floating'}
+                     {`${numberToOrdinal(i + 1)} of ${bailiwick_list.length}`}
                   </styles.UpdatedWrapper>
                </styles.MiniBlock>
             return <styles.RowWrapper

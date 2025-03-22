@@ -73,9 +73,12 @@ export class BailiwickDetails extends Component {
       const display_settings = typeof selected_bailiwick.display_settings === 'string'
          ? JSON.parse(selected_bailiwick.display_settings)
          : selected_bailiwick.display_settings
-      const core_point = typeof selected_bailiwick.core_point === 'string'
+      let core_point = typeof selected_bailiwick.core_point === 'string'
          ? JSON.parse(selected_bailiwick.core_point)
          : selected_bailiwick.core_point
+      if (core_point.y < 0.00001) {
+         core_point.y = 0
+      }
       const fracto_values = FractoFastCalc.calc(core_point.x, core_point.y)
       this.setState({display_settings, core_point, fracto_values})
    }

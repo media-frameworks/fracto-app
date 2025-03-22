@@ -123,17 +123,19 @@ export class CompMinibrot extends Component {
    render_orbitals_list = (bailiwick_list) => {
       const {page_settings} = this.props
       const orbital_bins = []
-      bailiwick_list.forEach(item => {
-         let bin = orbital_bins.find(bin => bin.pattern === item.pattern)
-         if (!bin) {
-            bin = {
-               pattern: item.pattern,
-               minibrots: []
+      bailiwick_list
+         .filter(item => !item.is_inline)
+         .forEach(item => {
+            let bin = orbital_bins.find(bin => bin.pattern === item.pattern)
+            if (!bin) {
+               bin = {
+                  pattern: item.pattern,
+                  minibrots: []
+               }
+               orbital_bins.push(bin)
             }
-            orbital_bins.push(bin)
-         }
-         bin.minibrots.push(item)
-      })
+            bin.minibrots.push(item)
+         })
       console.log('orbital_bins', orbital_bins)
       const pattern_block_width_px = 60
       const list_width_px = page_settings[KEY_COMPS_WIDTH_PX] - pattern_block_width_px - 45
