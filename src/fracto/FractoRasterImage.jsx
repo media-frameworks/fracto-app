@@ -249,14 +249,14 @@ export class FractoRasterImage extends Component {
                      const pattern = tile_data[tile_x][tile_y][0]
                      const iteration = tile_data[tile_x][tile_y][1]
                      canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
+                     const [hue, sat_pct, lum_pct] = color_handler(pattern, iteration)
+                     ctx.fillStyle = `hsl(${hue}, ${sat_pct}%, ${lum_pct}%)`
+                     ctx.fillRect(canvas_x, canvas_y, 2, 2);
+                     found_point = true
                   } catch (e) {
                      console.log('canvas_buffer size error', canvas_buffer, canvas_x, canvas_y)
                      continue;
                   }
-                  const [hue, sat_pct, lum_pct] = color_handler(pattern, iteration)
-                  ctx.fillStyle = `hsl(${hue}, ${sat_pct}%, ${lum_pct}%)`
-                  ctx.fillRect(canvas_x, canvas_y, 2, 2);
-                  found_point = true
                   break;
                }
             }
