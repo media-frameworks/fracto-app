@@ -251,7 +251,7 @@ export class FractoRasterImage extends Component {
                      canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
                   } catch (e) {
                      console.log('canvas_buffer size error', canvas_buffer, canvas_x, canvas_y)
-                     return;
+                     continue;
                   }
                   const [hue, sat_pct, lum_pct] = color_handler(pattern, iteration)
                   ctx.fillStyle = `hsl(${hue}, ${sat_pct}%, ${lum_pct}%)`
