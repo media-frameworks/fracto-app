@@ -245,9 +245,9 @@ export class FractoRasterImage extends Component {
                      (x - tile.bounds.left) / level_data_set.tile_increment)
                   const tile_y = Math.floor(
                      (tile.bounds.top - y) / level_data_set.tile_increment)
-                  const pattern = tile_data[tile_x][tile_y][0]
-                  const iteration = tile_data[tile_x][tile_y][1]
                   try {
+                     const pattern = tile_data[tile_x][tile_y][0]
+                     const iteration = tile_data[tile_x][tile_y][1]
                      canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
                   } catch (e) {
                      console.log('canvas_buffer size error', canvas_buffer, canvas_x, canvas_y)
