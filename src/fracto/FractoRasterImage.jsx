@@ -67,6 +67,7 @@ export class FractoRasterImage extends Component {
       disabled: false,
       update_counter: 0,
       filter_level: 0,
+      color_handler: FractoUtil.fracto_pattern_color_hsl,
    }
 
    state = {
@@ -201,6 +202,9 @@ export class FractoRasterImage extends Component {
          aspect_ratio,
          color_handler,
       } = this.props
+      if (!canvas_buffer) {
+         return;
+      }
       const canvas_increment = scope / width_px
       const height_px = width_px * aspect_ratio
 
@@ -224,10 +228,10 @@ export class FractoRasterImage extends Component {
             for (let index = 0; index < level_data_sets.length; index++) {
                const level_data_set = level_data_sets[index]
                const tile = level_data_set.level_tiles
-                  .find(tile => tile.bounds.left < x
-                     && tile.bounds.right > x
-                     && tile.bounds.top > y
-                     && tile.bounds.bottom < y)
+                  .find(tile => tile.bounds.left <= x
+                     && tile.bounds.right >= x
+                     && tile.bounds.top >= y
+                     && tile.bounds.bottom <= y)
                if (tile) {
                   if (BAD_TILES[tile.short_code]) {
                      continue;
@@ -239,25 +243,17 @@ export class FractoRasterImage extends Component {
                   }
                   const tile_x = Math.floor(
                      (x - tile.bounds.left) / level_data_set.tile_increment)
-                  if (!tile_data[tile_x]) {
-                     continue
-                  }
                   const tile_y = Math.floor(
                      (tile.bounds.top - y) / level_data_set.tile_increment)
-                  if (!tile_data[tile_x][tile_y]) {
-                     continue
-                  }
                   const pattern = tile_data[tile_x][tile_y][0]
                   const iteration = tile_data[tile_x][tile_y][1]
-                  if (canvas_buffer && canvas_buffer[canvas_x] && canvas_buffer[canvas_x][canvas_y]) {
+                  try {
                      canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
+                  } catch (e) {
+                     console.log('canvas_buffer size error', canvas_buffer, canvas_x, canvas_y)
+                     return;
                   }
-                  let hue, sat_pct, lum_pct
-                  if (color_handler) {
-                     [hue, sat_pct, lum_pct] = color_handler(pattern, iteration)
-                  } else {
-                     [hue, sat_pct, lum_pct] = FractoUtil.fracto_pattern_color_hsl(pattern, iteration)
-                  }
+                  const [hue, sat_pct, lum_pct] = color_handler(pattern, iteration)
                   ctx.fillStyle = `hsl(${hue}, ${sat_pct}%, ${lum_pct}%)`
                   ctx.fillRect(canvas_x, canvas_y, 2, 2);
                   found_point = true
@@ -266,9 +262,7 @@ export class FractoRasterImage extends Component {
             }
             if (!found_point) {
                const {pattern, iteration} = FractoFastCalc.calc(x, y)
-               if (canvas_buffer && canvas_buffer[canvas_x] && canvas_buffer[canvas_x][canvas_y]) {
-                  canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
-               }
+               canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
                const [hue, sat_pct, lum_pct] =
                   FractoUtil.fracto_pattern_color_hsl(pattern, iteration)
                ctx.fillStyle = `hsl(${hue}, ${sat_pct}%, ${lum_pct}%)`
