@@ -26,7 +26,7 @@ export class BailiwickStyles {
        ${CoolStyles.align_center}
        line-height: 1.25rem;
        letter-spacing: 0.1rem;
-       font-size: 0.8rem;
+       font-size: 0.90rem;
        color: #666666;
        vertical-align: middle;
    `;
@@ -35,7 +35,7 @@ export class BailiwickStyles {
        ${CoolStyles.italic}
        ${CoolStyles.align_center}
        letter-spacing: 0.1rem;
-       font-size: 0.75rem;
+       font-size: 0.85rem;
        color: #666666;
        width: ${MINI_BLOCK_WIDTH_PX - 2}px;
    `;
