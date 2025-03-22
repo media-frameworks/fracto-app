@@ -237,10 +237,6 @@ export class FractoRasterImage extends Component {
                      continue;
                   }
                   const tile_data = await FractoTileCache.get_tile(tile.short_code)
-                  if (!tile_data) {
-                     BAD_TILES[tile.short_code] = true
-                     continue;
-                  }
                   const tile_x = Math.floor(
                      (x - tile.bounds.left) / level_data_set.tile_increment)
                   const tile_y = Math.floor(
@@ -254,7 +250,10 @@ export class FractoRasterImage extends Component {
                      ctx.fillRect(canvas_x, canvas_y, 2, 2);
                      found_point = true
                   } catch (e) {
-                     console.log('canvas_buffer size error', canvas_buffer, canvas_x, canvas_y)
+                     if (!tile_data) {
+                        BAD_TILES[tile.short_code] = true
+                     }
+                     console.log('canvas_buffer size error', canvas_x, canvas_y)
                      continue;
                   }
                   break;

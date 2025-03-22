@@ -90,7 +90,7 @@ export class OrbitalsHistogram extends Component {
             return b.iterations - a.iterations;
          })
       this.setState({bin_list})
-      console.log('bin_list', bin_list)
+      // console.log('bin_list', bin_list)
    }
 
    render() {
