@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import {CoolStyles} from 'common/ui/CoolImports';
 
-import FractoUtil from './FractoUtil';
 import FractoRasterImage from "./FractoRasterImage";
 import FractoTileCache from "./FractoTileCache";
 
@@ -58,13 +57,10 @@ export class FractoTileRender extends Component {
    load_tile = async (ctx) => {
       const {tile, width_px, tile_data} = this.props;
       if (tile_data) {
-         // console.log("load_tile", tile.short_code, tile_data)
-         FractoUtil.data_to_canvas(tile_data, ctx, width_px);
-         // this.setState({tile_loaded: true})
+         FractoRasterImage.buffer_to_canvas(tile_data, ctx, width_px / 256)
       } else {
          const tile_data = await FractoTileCache.get_tile(tile.short_code)
-         FractoUtil.data_to_canvas(tile_data, ctx, width_px);
-         // this.setState({tile_loaded: true})
+         FractoRasterImage.buffer_to_canvas(tile_data, ctx, width_px / 256)
       }
    }
 
