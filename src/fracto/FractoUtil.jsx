@@ -121,7 +121,7 @@ export class FractoUtil {
       return short_form ? `r${root},h${relative_harmonic},o${pattern_octave}` : `root ${root} harmonic ${relative_harmonic} octave ${pattern_octave}`;
    }
 
-   static fracto_pattern_color_hsl = (pattern, iterations = 255) => {
+   static fracto_pattern_color_hsl = (pattern, iterations= 255, distance_to_center = 0) => {
       if (pattern === -1) {
          return [0, 0, 0]
       }
