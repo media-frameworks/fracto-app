@@ -11,7 +11,7 @@ import {NumberInline, SmallNumberInline} from "fracto/styles/FractoStyles";
 import {KEY_COMPS_WIDTH_PX, KEY_MODAL} from "../../PageSettings";
 import LatestTileDetail from "./latest/TileDetailModal";
 
-const TILE_COUNT = 24;
+const TILE_COUNT = 17;
 const PAGE_REFRESH_TIME_MS = 3000;
 
 export class CompNursery extends Component {
