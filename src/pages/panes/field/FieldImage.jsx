@@ -189,7 +189,7 @@ export class FieldImage extends Component {
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
       const field_height = page_settings[KEY_FIELD_HEIGHT_PX] - HEADER_HEIGHT_PX
-      console.log('update_index', update_index)
+      // console.log('update_index', update_index)
       return <styles.FieldWrapper
          style={{width: field_width, height: field_height}}>
          <styles.ImageWrapper
