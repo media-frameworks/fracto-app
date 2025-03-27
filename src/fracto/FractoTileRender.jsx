@@ -6,6 +6,7 @@ import {CoolStyles} from 'common/ui/CoolImports';
 
 import FractoRasterImage from "./FractoRasterImage";
 import FractoTileCache from "./FractoTileCache";
+import FractoColors from "./styles/FractoColors";
 
 const RenderWrapper = styled(CoolStyles.InlineBlock)`
     background-color: #f8f8f8;
@@ -57,10 +58,10 @@ export class FractoTileRender extends Component {
    load_tile = async (ctx) => {
       const {tile, width_px, tile_data} = this.props;
       if (tile_data) {
-         FractoRasterImage.buffer_to_canvas(tile_data, ctx, width_px / 256)
+         FractoColors.buffer_to_canvas(tile_data, ctx, width_px / 256)
       } else {
          const tile_data = await FractoTileCache.get_tile(tile.short_code)
-         FractoRasterImage.buffer_to_canvas(tile_data, ctx, width_px / 256)
+         FractoColors.buffer_to_canvas(tile_data, ctx, width_px / 256)
       }
    }
 
