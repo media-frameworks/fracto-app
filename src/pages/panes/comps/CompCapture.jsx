@@ -14,10 +14,9 @@ const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},
    {label: '300', value: 300, help: 'snapshot',},
    {label: '600', value: 600, help: 'tiny',},
-   {label: '1200', value: 1200, help: 'small',},
+   {label: '1600', value: 1600, help: 'small',},
    {label: '2400', value: 2400, help: 'medium',},
-   {label: '3600', value: 3600, help: 'large',},
-   {label: '4800', value: 4800, help: 'larger',},
+   {label: '3200', value: 3200, help: 'large',},
 ]
 
 export class CompCapture extends Component {
