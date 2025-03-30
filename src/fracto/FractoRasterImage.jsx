@@ -241,10 +241,8 @@ export class FractoRasterImage extends Component {
                      canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
                      found_point = true
                   } catch (e) {
-                     if (!tile_data) {
-                        BAD_TILES[tile.short_code] = true
-                     }
-                     console.log('canvas_buffer size error', canvas_x, canvas_y, e)
+                     BAD_TILES[tile.short_code] = true
+                     // console.log('canvas_buffer size error', canvas_x, canvas_y, e)
                      continue;
                   }
                   break;

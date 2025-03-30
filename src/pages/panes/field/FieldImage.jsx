@@ -185,7 +185,7 @@ export class FieldImage extends Component {
    render() {
       const {image_ref} = this.state
       const {page_settings} = this.props
-      const {focal_point, scope, disabled, update_index} = page_settings
+      const {focal_point, scope, disabled} = page_settings
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
       const field_height = page_settings[KEY_FIELD_HEIGHT_PX] - HEADER_HEIGHT_PX

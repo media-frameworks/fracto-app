@@ -15,6 +15,7 @@ import CompMinibrot from "./comps/CompMinibrot";
 import CompNursery from "./comps/CompNursery";
 import CompCapture from "./comps/CompCapture";
 import CompColors from "./comps/CompColors";
+import CompScript from "./comps/CompScript";
 
 export class PaneComps extends Component {
 
@@ -34,7 +35,7 @@ export class PaneComps extends Component {
    render() {
       const {selected_tab} = this.state
       const {page_settings, on_settings_changed} = this.props
-      const tabs_width = page_settings[KEY_COMPS_WIDTH_PX] - 10
+      const tabs_width = page_settings[KEY_COMPS_WIDTH_PX] - 20
       const tabs_style = {}
       const all_tabs = [
          {
@@ -82,6 +83,13 @@ export class PaneComps extends Component {
          {
             label: 'admin',
             content: <CompAdmin
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         },
+         {
+            label: 'script',
+            content: <CompScript
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />

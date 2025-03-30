@@ -3,7 +3,7 @@ import {CoolStyles} from '../common/ui/CoolImports'
 
 export const HEADER_BAR_HEIGHT_REM = 1.35;
 export const MAX_SPLITTER_PX = 350
-export const SPLITTER_WIDTH_PX = 5;
+export const SPLITTER_WIDTH_PX = 4;
 export const HEADER_HEIGHT_PX = 22;
 
 export class PageAppStyles {

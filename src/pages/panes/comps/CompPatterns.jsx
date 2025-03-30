@@ -8,8 +8,8 @@ import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {KEY_FOCAL_POINT, KEY_HOVER_POINT} from "../../PageSettings";
 import FractoUtil from "fracto/FractoUtil";
-import {render_pattern_block, describe_pattern, render_coordinates} from "fracto/styles/FractoStyles";
-import Complex from "../../../common/math/Complex";
+import {render_pattern_block} from "fracto/styles/FractoStyles";
+import Complex from "common/math/Complex";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -88,20 +88,6 @@ export class CompPatterns extends Component {
             z = z.sqrt()
          }
          console.log('fracto_values.orbital_points', fracto_values.orbital_points)
-         // let product = new Complex(1, 0)
-         // for (let point_index = 0; point_index < fracto_values.orbital_points.length - 1; point_index++) {
-         //    console.log(`product`, product.re, product.im)
-         //    const op_1 = new Complex(
-         //       fracto_values.orbital_points[point_index].x,
-         //       fracto_values.orbital_points[point_index].y
-         //    )
-         //    const op_2 = new Complex(
-         //       fracto_values.orbital_points[point_index + 1].x,
-         //       fracto_values.orbital_points[point_index + 1].y
-         //    )
-         //    const sum = op_1.add(op_2)
-         //    product = product.mul(sum)
-         // }
          return <styles.InfoBlockWrapper>
             <styles.PatternBlockWrapper>
                {render_pattern_block(current_pattern)}
