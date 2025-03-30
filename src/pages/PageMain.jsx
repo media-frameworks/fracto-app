@@ -26,53 +26,12 @@ import {
    KEY_SCOPE,
    KEY_DISABLED,
    KEY_HOVER_POINT,
-   KEY_CTX,
    KEY_CANVAS_BUFFER,
-   KEY_IMG_X,
-   KEY_IMG_Y,
-   KEY_BAD_TILES,
-   KEY_CACHE_SIZE,
-   KEY_STEPS_ZOOM,
-   KEY_UPDATE_INDEX,
-   KEY_IMAGE_WIDTH,
    KEY_MODAL,
-   KEY_LIT_TYPE,
-   KEY_COLOR_PHASE,
-   KEY_BAILIWICK_ID,
-   KEY_MINIBROT_SORT_TYPE,
+   ALL_PANE_DIMENSIONS,
+   ALL_OPERATIVES,
+   PERSIST_KEYS_MAP, TYPE_STRING, TYPE_NUMBER, TYPE_OBJECT, TYPE_ARRAY,
 } from "./PageSettings";
-
-const ALL_PANE_DIMENSIONS = [
-   KEY_STEPS_WIDTH_PX,
-   KEY_STEPS_HEIGHT_PX,
-   KEY_FIELD_WIDTH_PX,
-   KEY_FIELD_HEIGHT_PX,
-   KEY_COMPS_WIDTH_PX,
-   KEY_COMPS_HEIGHT_PX,
-   KEY_LEGEND_WIDTH_PX,
-   KEY_LEGEND_HEIGHT_PX,
-   KEY_IMAGE_WIDTH,
-]
-
-const ALL_OPERATIVES = [
-   KEY_FOCAL_POINT,
-   KEY_SCOPE,
-   KEY_DISABLED,
-   KEY_HOVER_POINT,
-   KEY_CTX,
-   KEY_CANVAS_BUFFER,
-   KEY_IMG_X,
-   KEY_IMG_Y,
-   KEY_BAD_TILES,
-   KEY_CACHE_SIZE,
-   KEY_STEPS_ZOOM,
-   KEY_UPDATE_INDEX,
-   KEY_LIT_TYPE,
-   KEY_MODAL,
-   KEY_COLOR_PHASE,
-   KEY_BAILIWICK_ID,
-   KEY_MINIBROT_SORT_TYPE,
-]
 
 export class PageMain extends Component {
 
@@ -101,6 +60,33 @@ export class PageMain extends Component {
       let new_setings = {}
       new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(bounds.height)
       this.on_settings_changed(new_setings)
+      this.load_persisted()
+   }
+
+   load_persisted = () => {
+      const persist_key_names = Object.keys(PERSIST_KEYS_MAP)
+      let new_settings = {}
+      persist_key_names.forEach(key => {
+         const setting_str = localStorage.getItem(key)
+         if (setting_str) {
+            switch (PERSIST_KEYS_MAP[key]) {
+               case TYPE_STRING:
+                  new_settings[key] = setting_str;
+                  break;
+               case TYPE_NUMBER:
+                  new_settings[key] = parseFloat(setting_str);
+                  break;
+               case TYPE_OBJECT:
+               case TYPE_ARRAY:
+                  new_settings[key] = JSON.parse(setting_str);
+                  break;
+               default:
+                  break;
+            }
+         }
+      })
+      console.log('on_settings_changed', new_settings)
+      this.on_settings_changed(new_settings)
    }
 
    on_resize = (left_width_px, right_width_px, height_px) => {
@@ -164,6 +150,21 @@ export class PageMain extends Component {
          if (new_settings[operative] !== undefined) {
             // console.log(`setting operative ${operative} to ${new_settings[operative]}`)
             new_state.page_settings[operative] = new_settings[operative]
+         }
+      })
+      const all_new_keys = Object.keys(new_settings)
+      const persist_keys = Object.keys(PERSIST_KEYS_MAP)
+      persist_keys.forEach(key => {
+         if (all_new_keys.includes(key)) {
+            if (typeof new_settings[key] === 'string') {
+               localStorage.setItem(key, new_settings[key])
+            } else if (typeof new_settings[key] === 'number') {
+               localStorage.setItem(key, `${new_settings[key]}`)
+            } else if (typeof new_settings[key] === 'object') {
+               localStorage.setItem(key, JSON.stringify(new_settings[key]))
+            } else if (Array.isArray(new_settings[key])) {
+               localStorage.setItem(key, JSON.stringify(new_settings[key]))
+            }
          }
       })
       this.setState(new_state)
