@@ -14,8 +14,8 @@ import {
    KEY_SCRIPT_TREE_WIDTH_PX,
 } from "pages/PageSettings";
 import ScriptsTree from "./scripts/ScriptsTree";
-
-const REFRESH_INTEVAL_MS = 1500
+import ScriptsViewer from "./scripts/ScriptsViewer";
+import ScriptsDetail from "./scripts/ScriptsDetail";
 
 export class CompScript extends Component {
    static propTypes = {
@@ -32,38 +32,28 @@ export class CompScript extends Component {
 
    componentDidMount() {
       const {page_settings, on_settings_changed} = this.props
-      let prev_upper_pos = this.state.upper_pane_position
-      let prev_left_pos = this.state.left_pane_position
-      const refresh_interval = setInterval(() => {
-         if (prev_upper_pos !== this.state.upper_pane_position) {
-            let new_settings = {}
-            new_settings[KEY_SCRIPT_TREE_HEIGHT_PX] = this.state.upper_pane_position
-            on_settings_changed(new_settings)
-         }
-         if (prev_left_pos !== this.state.left_pane_position) {
-            let new_settings = {}
-            new_settings[KEY_SCRIPT_TREE_WIDTH_PX] = this.state.left_pane_position
-            on_settings_changed(new_settings)
-         }
-      }, REFRESH_INTEVAL_MS)
       this.setState({
-         refresh_interval,
          upper_pane_position: page_settings[KEY_SCRIPT_TREE_HEIGHT_PX] || 200,
          left_pane_position: page_settings[KEY_SCRIPT_TREE_WIDTH_PX] || 200,
       })
-   }
-
-   componentWillUnmount() {
-      const {refresh_interval} = this.state
-      clearInterval(refresh_interval)
+      setTimeout(() => {
+         on_settings_changed({
+            [KEY_SCRIPT_TREE_HEIGHT_PX]: this.state.upper_pane_position,
+            [KEY_SCRIPT_TREE_WIDTH_PX]: this.state.left_pane_position,
+         })
+      }, 1000)
    }
 
    change_upper_pane_position = (new_position) => {
+      const {on_settings_changed} = this.props
       this.setState({upper_pane_position: new_position})
+      on_settings_changed({[KEY_SCRIPT_TREE_HEIGHT_PX]: new_position})
    }
 
    change_left_pane_position = (new_position) => {
+      const {on_settings_changed} = this.props
       this.setState({left_pane_position: new_position})
+      on_settings_changed({[KEY_SCRIPT_TREE_WIDTH_PX]: new_position})
    }
 
    render_horz_splitter = () => {
@@ -122,7 +112,15 @@ export class CompScript extends Component {
             on_settings_changed={on_settings_changed}
          />
          {this.render_vert_splitter()}
+         <ScriptsViewer
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}
+         />
          {this.render_horz_splitter()}
+         <ScriptsDetail
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}
+         />
       </styles.ContentWrapper>
    }
 }

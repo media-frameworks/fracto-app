@@ -28,7 +28,7 @@ export class CompPatterns extends Component {
       on_settings_changed: PropTypes.func.isRequired,
    }
 
-   click_point_chart = (set1) => {
+   click_point_chart = (set1, set2) => {
       const options = {
          scales: {
             x: {grid: GRID_CONFIG},
@@ -45,6 +45,13 @@ export class CompPatterns extends Component {
                data: set1,
                backgroundColor: FractoUtil.fracto_pattern_color(cardinality || 0),
                showLine: true
+            },
+            {
+               Id: 2,
+               label: `core point`,
+               data: set2,
+               backgroundColor: 'black',
+               showLine: false
             },
          ]
       }
@@ -66,8 +73,21 @@ export class CompPatterns extends Component {
    }
 
    click_point_data = () => {
+      const {page_settings} = this.props
+      let click_point = page_settings[KEY_HOVER_POINT]
+      if (!click_point) {
+         click_point = page_settings[KEY_FOCAL_POINT]
+      }
+      const P = new Complex(click_point.x, click_point.y)
+      const under_radical = P.scale(-4).offset(1, 0)
+      const negative_radical = under_radical.sqrt().scale(-1)
+      const Q = negative_radical.offset(1, 0).scale(0.5)
+      const Q_center = {x: Q.re, y: Q.im}
       const fracto_values = this.get_fracto_values()
-      return this.click_point_chart(fracto_values.orbital_points)
+      return this.click_point_chart(
+         fracto_values.orbital_points,
+         [Q_center]
+      )
    }
 
    render_info = () => {

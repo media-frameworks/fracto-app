@@ -9,8 +9,10 @@ import {
    KEY_SCRIPT_TREE_WIDTH_PX,
    KEY_SCRIPT_TREE_HEIGHT_PX,
    KEY_SCRIPT_TREE_EXPANDED,
-   KEY_SCRIPT_TREE_SELECTED
+   KEY_SCRIPT_TREE_SELECTED,
+   KEY_SCRIPT_SELECTED_NODE
 } from "pages/PageSettings";
+import {TAB_HEIGHT_PX} from "../../PaneComps";
 
 export class ScriptsTree extends Component {
    static propTypes = {
@@ -27,17 +29,14 @@ export class ScriptsTree extends Component {
    componentDidMount() {
       const {page_settings} = this.props
       this.init_script_data()
-      setTimeout(() => {
-         // console.log('ScriptsTree page_settings', page_settings)
-         this.setState({
-            selected_keys: page_settings[KEY_SCRIPT_TREE_SELECTED].length
-               ? page_settings[KEY_SCRIPT_TREE_SELECTED]
-               : ['0'],
-            expanded_keys: page_settings[KEY_SCRIPT_TREE_EXPANDED].length
-               ? page_settings[KEY_SCRIPT_TREE_EXPANDED]
-               : ['0'],
-         })
-      }, 50)
+      this.setState({
+         selected_keys: page_settings[KEY_SCRIPT_TREE_SELECTED].length
+            ? page_settings[KEY_SCRIPT_TREE_SELECTED]
+            : ['0'],
+         expanded_keys: page_settings[KEY_SCRIPT_TREE_EXPANDED].length
+            ? page_settings[KEY_SCRIPT_TREE_EXPANDED]
+            : ['0'],
+      })
    }
 
    init_script_data = () => {
@@ -69,22 +68,18 @@ export class ScriptsTree extends Component {
    select_script = (selected_keys, event) => {
       const {on_settings_changed} = this.props
       // console.log('select_script selected_keys, event', selected_keys, event)
-      this.setState({selected_keys, selected_node: event.node})
-      setTimeout(() => {
-         let new_settings = {}
-         new_settings[KEY_SCRIPT_TREE_SELECTED] = selected_keys
-         on_settings_changed(new_settings)
-      }, 50)
+      this.setState({selected_keys})
+      on_settings_changed({
+         [KEY_SCRIPT_TREE_SELECTED]: selected_keys,
+         [KEY_SCRIPT_SELECTED_NODE]: event.node
+      })
    }
 
    expand_folder = (expanded_keys, event) => {
       const {on_settings_changed} = this.props
-      // console.log('expand_folder expanded_keys, event', expanded_keys, event)
       this.setState({expanded_keys})
       setTimeout(() => {
-         let new_settings = {}
-         new_settings[KEY_SCRIPT_TREE_EXPANDED] = expanded_keys
-         on_settings_changed(new_settings)
+         on_settings_changed({[KEY_SCRIPT_TREE_EXPANDED]: expanded_keys})
       }, 50)
    }
 
@@ -93,10 +88,10 @@ export class ScriptsTree extends Component {
       const {page_settings} = this.props
       const wrapper_style = {
          width: page_settings[KEY_SCRIPT_TREE_WIDTH_PX],
-         height: page_settings[KEY_SCRIPT_TREE_HEIGHT_PX] - 25,
+         height: page_settings[KEY_SCRIPT_TREE_HEIGHT_PX] - TAB_HEIGHT_PX,
          backgroundColor: "#f8f8f8"
       }
-      // console.log('ScriptsTree expanded_keys', expanded_keys)
+      // console.log('script_data', script_data)
       return <styles.TreeWrapper
          style={wrapper_style}>
          <CoolTree
