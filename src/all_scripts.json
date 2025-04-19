@@ -2,5 +2,6 @@
   "common/go_to",
   "common/play_sound",
   "common/startup",
+  "explainer/main",
   "gradual_descent"
 ]

@@ -18,7 +18,7 @@ const list_files_recursively = (folder_path) => {
          } else {
             const not_win_path = absolute_path.replaceAll('\\', '/');
             const not_with_extension = not_win_path.replaceAll('.fs', '');
-            const removed_base_path = not_with_extension.replaceAll('src/script/', '');
+            const removed_base_path = not_with_extension.replaceAll('public/script/', '');
             results.push(removed_base_path);
          }
       }
@@ -38,7 +38,7 @@ function writeStringsToJson(filePath, stringList) {
    }
 }
 
-const allFiles = list_files_recursively('./src/script');
+const allFiles = list_files_recursively('public/script');
 console.log(allFiles);
 
 writeStringsToJson('./src/all_scripts.json', allFiles);

@@ -14,7 +14,7 @@ const SETTINGS_COLUMNS = [
       id: "name",
       label: "name",
       type: CELL_TYPE_TEXT,
-      width_px: 150,
+      width_px: 250,
       align: CELL_ALIGN_RIGHT
    },
    {
@@ -40,7 +40,10 @@ export class AdminSettings extends Component {
             let value = page_settings[key] ? page_settings[key] : 'null'
             switch (typeof value) {
                case "object":
-                  value = !Array.isArray(value) ? JSON.stringify(value, '', 2) : '[]';
+                  const json_obj = JSON.stringify(value, '', 2)
+                  value = !Array.isArray(value)
+                     ? <pre style={{margin: 0}}>{json_obj}</pre>
+                     : '[]';
                   break;
                case "boolean":
                   value = value ? 'true' : 'false'

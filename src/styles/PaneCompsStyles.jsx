@@ -43,9 +43,9 @@ export class PaneCompsStyles {
    static OrbitalsPrompt = styled(CoolStyles.Block)`
        ${CoolStyles.italic}
        ${CoolStyles.align_center}
-      color: #888888;
+       color: #888888;
        margin-top: 1rem;
-      font-size: 1.125rem;
+       font-size: 1.125rem;
    `;
 
    static ColorWheelWrapper = styled(CoolStyles.InlineBlock)`

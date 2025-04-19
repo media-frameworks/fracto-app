@@ -13,7 +13,7 @@ import PaneField from "./panes/PaneField";
 import PaneSteps from "./panes/PaneSteps";
 import PaneLegend from "./panes/PaneLegend";
 import PaneComps from "./panes/PaneComps";
-import {
+import PageSettings, {
    KEY_STEPS_WIDTH_PX,
    KEY_STEPS_HEIGHT_PX,
    KEY_FIELD_WIDTH_PX,
@@ -30,7 +30,6 @@ import {
    KEY_MODAL,
    ALL_PANE_DIMENSIONS,
    ALL_OPERATIVES,
-   PERSIST_KEYS_MAP, TYPE_STRING, TYPE_NUMBER, TYPE_OBJECT, TYPE_ARRAY,
 } from "./PageSettings";
 
 export class PageMain extends Component {
@@ -46,47 +45,18 @@ export class PageMain extends Component {
       page_settings: {
          focal_point: {x: -0.75, y: 0.0125},
          scope: 3,
-         disabled: false,
-         canvas_buffer: null,
-         ctx: null,
       },
       main_ref: React.createRef()
    };
 
    componentDidMount() {
-      const {main_ref} = this.state
+      const {main_ref, page_settings} = this.state
       const bounds = main_ref.current.getBoundingClientRect()
       this.setState({height_px: bounds.height})
       let new_setings = {}
       new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(bounds.height)
       this.on_settings_changed(new_setings)
-      this.load_persisted()
-   }
-
-   load_persisted = () => {
-      const persist_key_names = Object.keys(PERSIST_KEYS_MAP)
-      let new_settings = {}
-      persist_key_names.forEach(key => {
-         const setting_str = localStorage.getItem(key)
-         if (setting_str) {
-            switch (PERSIST_KEYS_MAP[key]) {
-               case TYPE_STRING:
-                  new_settings[key] = setting_str;
-                  break;
-               case TYPE_NUMBER:
-                  new_settings[key] = parseFloat(setting_str);
-                  break;
-               case TYPE_OBJECT:
-               case TYPE_ARRAY:
-                  new_settings[key] = JSON.parse(setting_str);
-                  break;
-               default:
-                  break;
-            }
-         }
-      })
-      console.log('on_settings_changed', new_settings)
-      this.on_settings_changed(new_settings)
+      PageSettings.load_settings(page_settings)
    }
 
    on_resize = (left_width_px, right_width_px, height_px) => {
@@ -126,7 +96,6 @@ export class PageMain extends Component {
       if (new_settings[KEY_FOCAL_POINT]) {
          new_state.page_settings[KEY_FOCAL_POINT] =
             JSON.parse(JSON.stringify(new_settings[KEY_FOCAL_POINT]))
-         new_state.page_settings[KEY_DISABLED] = true
       }
       if (new_settings[KEY_CANVAS_BUFFER]) {
          new_state.page_settings[KEY_CANVAS_BUFFER] =
@@ -136,8 +105,7 @@ export class PageMain extends Component {
          new_state.page_settings[KEY_HOVER_POINT] =
             JSON.parse(JSON.stringify(new_settings[KEY_HOVER_POINT]))
       }
-      if (new_settings[KEY_SCOPE]) {
-         new_state.page_settings[KEY_SCOPE] = new_settings[KEY_SCOPE]
+      if (new_settings[KEY_SCOPE] || new_settings[KEY_FOCAL_POINT]) {
          new_state.page_settings[KEY_DISABLED] = true
       }
       ALL_PANE_DIMENSIONS.forEach(dim_key => {
@@ -146,27 +114,11 @@ export class PageMain extends Component {
          }
       })
       ALL_OPERATIVES.forEach(operative => {
-         // console.log(`testing operative ${operative} to ${new_settings[operative]}`)
          if (new_settings[operative] !== undefined) {
-            // console.log(`setting operative ${operative} to ${new_settings[operative]}`)
             new_state.page_settings[operative] = new_settings[operative]
          }
       })
-      const all_new_keys = Object.keys(new_settings)
-      const persist_keys = Object.keys(PERSIST_KEYS_MAP)
-      persist_keys.forEach(key => {
-         if (all_new_keys.includes(key)) {
-            if (typeof new_settings[key] === 'string') {
-               localStorage.setItem(key, new_settings[key])
-            } else if (typeof new_settings[key] === 'number') {
-               localStorage.setItem(key, `${new_settings[key]}`)
-            } else if (typeof new_settings[key] === 'object') {
-               localStorage.setItem(key, JSON.stringify(new_settings[key]))
-            } else if (Array.isArray(new_settings[key])) {
-               localStorage.setItem(key, JSON.stringify(new_settings[key]))
-            }
-         }
-      })
+      PageSettings.persist_settings(new_settings)
       this.setState(new_state)
    }
 

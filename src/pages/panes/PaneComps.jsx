@@ -16,6 +16,9 @@ import CompNursery from "./comps/CompNursery";
 import CompCapture from "./comps/CompCapture";
 import CompColors from "./comps/CompColors";
 import CompScript from "./comps/CompScript";
+import CoolStyles from "../../common/ui/styles/CoolStyles";
+
+export const TAB_HEIGHT_PX = 20
 
 export class PaneComps extends Component {
 
@@ -36,7 +39,9 @@ export class PaneComps extends Component {
       const {selected_tab} = this.state
       const {page_settings, on_settings_changed} = this.props
       const tabs_width = page_settings[KEY_COMPS_WIDTH_PX] - 20
-      const tabs_style = {}
+      const tabs_style = {
+         height: `${TAB_HEIGHT_PX}px`,
+      }
       const all_tabs = [
          {
             label: 'orbitals',
@@ -94,10 +99,22 @@ export class PaneComps extends Component {
                on_settings_changed={on_settings_changed}
             />
          },
-      ]
+      ].map(tab => {
+         const labelStyle = {
+            fontSize: `${tabs_width / 75}px`,
+            padding: `${TAB_HEIGHT_PX / 5}px ${tabs_width / 60}px`,
+            // height: `${TAB_HEIGHT_PX}px`,
+         }
+         return {
+            label: <CoolStyles.InlineBlock style={labelStyle}>
+               {tab.label}
+            </CoolStyles.InlineBlock>,
+            content: tab.content
+         }
+      })
       const all_labels = all_tabs.map(tab => tab.label)
       const wrapper_style = {
-         height: page_settings[KEY_COMPS_HEIGHT_PX] - 50,
+         height: page_settings[KEY_COMPS_HEIGHT_PX] - 52,
          width: page_settings[KEY_COMPS_WIDTH_PX] - 8,
       }
       const selected_content = <styles.TabsWrapper style={wrapper_style}>
