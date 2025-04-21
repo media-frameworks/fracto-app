@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import {KEY_STEPS_WIDTH_PX} from "settings/PaneSettings";
 import {
    KEY_FOCAL_POINT,
    KEY_SCOPE,
-   KEY_STEPS_WIDTH_PX,
-   KEY_DISABLED, KEY_STEPS_ZOOM,
-} from "../../PageSettings";
+   KEY_DISABLED,
+   KEY_STEPS_ZOOM,
+} from 'settings/AppSettings'
 import {PaneStepsStyles as styles} from 'styles/PaneStepsStyles'
 import FractoRasterImage from "../../../fracto/FractoRasterImage";
 
@@ -62,7 +63,7 @@ export class StepsList extends Component {
       const step_entry = create_step_entry(3.0)
       new_steps.push(step_entry)
       // console.log('new_steps', new_steps)
-      setTimeout(()=>{
+      setTimeout(() => {
          this.setState({all_steps: new_steps})
       }, 250)
    }

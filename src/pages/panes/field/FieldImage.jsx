@@ -7,22 +7,27 @@ import {HEADER_HEIGHT_PX} from "styles/PaneStepsStyles";
 import {CACHED_TILES} from "../../../fracto/FractoTileCache";
 
 import {
-   KEY_FIELD_WIDTH_PX,
-   KEY_FIELD_HEIGHT_PX,
    KEY_FOCAL_POINT,
    KEY_SCOPE,
    KEY_CANVAS_BUFFER,
    KEY_CTX,
    KEY_DISABLED,
-   KEY_HOVER_POINT,
-   KEY_IMG_X,
-   KEY_IMG_Y,
    KEY_BAD_TILES,
+   KEY_HOVER_POINT,
+} from "settings/AppSettings";
+import {
+   KEY_FIELD_WIDTH_PX,
+   KEY_FIELD_HEIGHT_PX,
+} from 'settings/PaneSettings'
+import {
+   KEY_IMAGE_WIDTH,
+   KEY_COLORATION_TYPE,
+   KEY_COLOR_PHASE
+} from 'settings/CompSettings'
+import {
    KEY_CACHE_SIZE,
    KEY_UPDATE_INDEX,
-   KEY_IMAGE_WIDTH,
-   KEY_LIT_TYPE, KEY_COLOR_PHASE,
-} from "../../PageSettings";
+} from 'settings/AppSettings'
 import FractoUtil from "fracto/FractoUtil";
 import {COLORS_EXTERNAL} from "../comps/CompColors";
 
@@ -113,26 +118,23 @@ export class FieldImage extends Component {
       const leftmost = focal_point.x - scope / 2
       const topmost = focal_point.y + scope / 2
       const increment = scope / container_bounds.width
-      let settings = {}
+      let settings = {[KEY_DISABLED]: true}
       settings[KEY_FOCAL_POINT] = {
          x: leftmost + increment * img_x, y: topmost - increment * img_y,
       }
       if (e.ctrlKey) {
          settings[KEY_SCOPE] = page_settings[KEY_SCOPE] / ZOOM_FACTOR
       }
-      settings[KEY_IMG_X] = img_x
-      settings[KEY_IMG_Y] = img_y
       on_settings_changed(settings)
    }
 
    on_wheel = (e) => {
       const {page_settings, on_settings_changed} = this.props
       const {scope, disabled} = page_settings
-      // console.log('on_wheel', e)
       if (disabled) {
          return;
       }
-      let settings = {}
+      let settings = {[KEY_DISABLED]: true}
       let zoom_factor = e.shiftKey ? ZOOM_FACTOR_MAJOR : ZOOM_FACTOR
       if (e.altKey) {
          zoom_factor = ZOOM_FACTOR_MINOR
@@ -168,7 +170,7 @@ export class FieldImage extends Component {
 
    color_handler = (pattern, iterations) => {
       const {page_settings} = this.props
-      if (page_settings[KEY_LIT_TYPE] !== COLORS_EXTERNAL) {
+      if (page_settings[KEY_COLORATION_TYPE] !== COLORS_EXTERNAL) {
          const [h, s, l] = FractoUtil.fracto_pattern_color_hsl(pattern, iterations)
          const offset = page_settings[KEY_COLOR_PHASE]
             ? page_settings[KEY_COLOR_PHASE] : 0

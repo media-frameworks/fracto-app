@@ -2,8 +2,9 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {
-   KEY_STEPS_WIDTH_PX, KEY_STEPS_ZOOM
-} from "../../PageSettings";
+    KEY_STEPS_ZOOM
+} from "settings/AppSettings";
+import {KEY_STEPS_WIDTH_PX} from 'settings/PaneSettings'
 import {CoolSlider, CoolStyles} from "../../../common/ui/CoolImports";
 import styled from "styled-components";
 

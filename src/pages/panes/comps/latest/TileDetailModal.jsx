@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 import network from "common/config/network.json";
 import {CoolStyles, CoolModal} from "common/ui/CoolImports";
-import {KEY_MODAL} from "pages/PageSettings";
+import {KEY_MODAL} from "settings/AppSettings";
 
 import FractoTileContext from "fracto/FractoTileContext";
 import FractoUtil from "fracto/FractoUtil";
 import FractoTileRender from "fracto/FractoTileRender";
 import FractoTileCache from "fracto/FractoTileCache";
 import {TileDetailStyles as styles} from 'styles/TileDetailStyles';
-import {NumberSpan, render_coordinates} from "../../../../fracto/styles/FractoStyles";
+import {NumberSpan, render_coordinates} from "fracto/styles/FractoStyles";
 
 export class TileDetailModal extends Component {
    static propTypes = {

@@ -14,6 +14,13 @@ import PaneSteps from "./panes/PaneSteps";
 import PaneLegend from "./panes/PaneLegend";
 import PaneComps from "./panes/PaneComps";
 import PageSettings, {
+   TYPE_OBJECT,
+   TYPE_ARRAY,
+} from "./PageSettings";
+import {
+   KEY_DISABLED
+} from "../settings/AppSettings";
+import {
    KEY_STEPS_WIDTH_PX,
    KEY_STEPS_HEIGHT_PX,
    KEY_FIELD_WIDTH_PX,
@@ -21,16 +28,25 @@ import PageSettings, {
    KEY_COMPS_WIDTH_PX,
    KEY_COMPS_HEIGHT_PX,
    KEY_LEGEND_WIDTH_PX,
-   KEY_LEGEND_HEIGHT_PX,
-   KEY_FOCAL_POINT,
-   KEY_SCOPE,
-   KEY_DISABLED,
-   KEY_HOVER_POINT,
-   KEY_CANVAS_BUFFER,
-   KEY_MODAL,
-   ALL_PANE_DIMENSIONS,
-   ALL_OPERATIVES,
-} from "./PageSettings";
+   KEY_LEGEND_HEIGHT_PX
+} from "../settings/PaneSettings";
+
+const getViewportDimensions = () => {
+   let viewport = {}
+   if (typeof window.innerWidth != 'undefined') {
+      viewport.width = window.innerWidth;
+      viewport.height = window.innerHeight;
+   }
+   else if (typeof document.documentElement !== 'undefined' && typeof document.documentElement.clientWidth !== 'undefined' && document.documentElement.clientWidth !== 0) {
+      viewport.width = document.documentElement.clientWidth;
+      viewport.height = document.documentElement.clientHeight;
+   }
+   else {
+      viewport.width = document.getElementsByTagName('body')[0].clientWidth;
+      viewport.height = document.getElementsByTagName('body')[0].clientHeight;
+   }
+   return viewport;
+}
 
 export class PageMain extends Component {
 
@@ -42,89 +58,97 @@ export class PageMain extends Component {
       left_width_px: 0,
       right_width_px: 0,
       height_px: 1,
-      page_settings: {
-         focal_point: {x: -0.75, y: 0.0125},
-         scope: 3,
-      },
-      main_ref: React.createRef()
+      page_settings: {},
    };
 
    componentDidMount() {
-      const {main_ref, page_settings} = this.state
-      const bounds = main_ref.current.getBoundingClientRect()
-      this.setState({height_px: bounds.height})
-      let new_setings = {}
-      new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(bounds.height)
-      this.on_settings_changed(new_setings)
-      PageSettings.load_settings(page_settings)
+      const page_settings = PageSettings.initialize()
+      this.setState({page_settings})
+      setTimeout(() => {
+         const viewport = getViewportDimensions()
+         const height_px = viewport.height // Math.round(bounds.height)
+         // console.log('height_px', height_px)
+         if (height_px) {
+            this.on_settings_changed({[KEY_COMPS_HEIGHT_PX]: height_px})
+            this.setState({height_px})
+         }
+      }, 100)
    }
 
-   on_resize = (left_width_px, right_width_px, height_px) => {
+   componentDidUpdate(prevProps, prevState, snapshot) {
+      // const {main_ref} = this.state
+      // const bounds = main_ref.current.getBoundingClientRect()
+      // const height_px = Math.round(bounds.height)
+      // if (height_px !== prevState.height_px && height_px) {
+      //    this.on_settings_changed({[KEY_COMPS_HEIGHT_PX]: height_px})
+      //    this.setState({height_px})
+      // }
+   }
+
+   on_resize = (new_left_width_px, new_right_width_px, new_height_px) => {
       const {page_settings} = this.state;
       if (page_settings[KEY_DISABLED]) {
          return;
       }
-      this.setState({
-         left_width_px: Math.round(left_width_px),
-         right_width_px: Math.round(right_width_px),
-         height_px: Math.round(height_px),
+      const left_width_px = Math.round(new_left_width_px)
+      const right_width_px = Math.round(new_right_width_px)
+      const height_px = Math.round(new_height_px)
+      this.setState({left_width_px, right_width_px, height_px})
+      this.on_settings_changed({
+         [KEY_FIELD_WIDTH_PX]: left_width_px - page_settings[KEY_STEPS_WIDTH_PX],
+         [KEY_LEGEND_WIDTH_PX]: left_width_px,
+         [KEY_COMPS_HEIGHT_PX]: height_px,
+         [KEY_COMPS_WIDTH_PX]: right_width_px,
       })
-      let new_setings = {}
-      new_setings[KEY_FIELD_WIDTH_PX] = left_width_px - page_settings[KEY_STEPS_WIDTH_PX]
-      new_setings[KEY_LEGEND_WIDTH_PX] = left_width_px
-      new_setings[KEY_COMPS_HEIGHT_PX] = Math.round(height_px)
-      new_setings[KEY_COMPS_WIDTH_PX] = right_width_px
-      this.on_settings_changed(new_setings)
    }
 
    on_settings_changed = (new_settings) => {
       let new_state = {page_settings: this.state.page_settings}
+      const new_settings_keys = Object.keys(new_settings)
+      new_settings_keys.forEach((key) => {
+         const key_definition = PageSettings.all_settings[key]
+         if (!key_definition) {
+            console.log('key_definition not found', key)
+            return
+         }
+         console.log(`${key}=>${new_settings[key]}`)
+         switch (key_definition.data_type) {
+            case TYPE_ARRAY:
+            case TYPE_OBJECT:
+               new_state.page_settings[key] =
+                  JSON.parse(JSON.stringify(new_settings[key]))
+               break
+            default:
+               new_state.page_settings[key] = new_settings[key]
+               break;
+         }
+      })
       // console.log('new_settings', new_settings)
       if (new_settings[UPPER_HEIGHT_KEY]) {
          new_state.page_settings[KEY_STEPS_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
          new_state.page_settings[KEY_FIELD_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
+         new_settings[KEY_STEPS_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
+         new_settings[KEY_FIELD_HEIGHT_PX] = new_settings[UPPER_HEIGHT_KEY]
       }
       if (new_settings[LOWER_HEIGHT_KEY]) {
          new_state.page_settings[KEY_LEGEND_HEIGHT_PX] = Math.abs(new_settings[LOWER_HEIGHT_KEY])
+         new_settings[KEY_LEGEND_HEIGHT_PX] = Math.abs(new_settings[LOWER_HEIGHT_KEY])
       }
       if (new_settings[UPPER_LEFT_WIDTH_KEY]) {
          new_state.page_settings[KEY_STEPS_WIDTH_PX] = new_settings[UPPER_LEFT_WIDTH_KEY]
+         new_settings[KEY_STEPS_WIDTH_PX] = new_settings[UPPER_LEFT_WIDTH_KEY]
       }
       if (new_settings[UPPER_RIGHT_WIDTH_KEY]) {
          new_state.page_settings[KEY_FIELD_WIDTH_PX] = new_settings[UPPER_RIGHT_WIDTH_KEY]
+         new_settings[KEY_FIELD_WIDTH_PX] = new_settings[UPPER_RIGHT_WIDTH_KEY]
       }
-      if (new_settings[KEY_FOCAL_POINT]) {
-         new_state.page_settings[KEY_FOCAL_POINT] =
-            JSON.parse(JSON.stringify(new_settings[KEY_FOCAL_POINT]))
-      }
-      if (new_settings[KEY_CANVAS_BUFFER]) {
-         new_state.page_settings[KEY_CANVAS_BUFFER] =
-            JSON.parse(JSON.stringify(new_settings[KEY_CANVAS_BUFFER]))
-      }
-      if (new_settings[KEY_HOVER_POINT]) {
-         new_state.page_settings[KEY_HOVER_POINT] =
-            JSON.parse(JSON.stringify(new_settings[KEY_HOVER_POINT]))
-      }
-      if (new_settings[KEY_SCOPE] || new_settings[KEY_FOCAL_POINT]) {
-         new_state.page_settings[KEY_DISABLED] = true
-      }
-      ALL_PANE_DIMENSIONS.forEach(dim_key => {
-         if (new_settings[dim_key]) {
-            new_state.page_settings[dim_key] = new_settings[dim_key]
-         }
-      })
-      ALL_OPERATIVES.forEach(operative => {
-         if (new_settings[operative] !== undefined) {
-            new_state.page_settings[operative] = new_settings[operative]
-         }
-      })
       PageSettings.persist_settings(new_settings)
       this.setState(new_state)
    }
 
    render() {
       const {app_name} = this.props
-      const {left_width_px, height_px, page_settings, main_ref} = this.state
+      const {left_width_px, height_px, page_settings} = this.state
       const pane_steps = <PaneSteps
          page_settings={page_settings}
          on_settings_changed={this.on_settings_changed}
@@ -149,9 +173,8 @@ export class PageMain extends Component {
          pane_legend={pane_legend}
          on_settings_changed={this.on_settings_changed}
       />
-      const modal = page_settings[KEY_MODAL] || []
-      return <div
-         ref={main_ref}>
+      const modal = []// page_settings[KEY_MODAL] || []
+      return <div>
          <AppPageMain
             app_name={app_name}
             on_resize={this.on_resize}

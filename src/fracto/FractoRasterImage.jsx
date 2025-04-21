@@ -103,8 +103,8 @@ export class FractoRasterImage extends Component {
    componentDidUpdate(prevProps, prevState, snapshot) {
       const width_px_changed = prevProps.width_px !== this.props.width_px;
       const aspect_ratio_changed = prevProps.aspect_ratio !== this.props.aspect_ratio;
-      const focal_point_x_changed = prevProps.focal_point.x !== this.props.focal_point.x;
-      const focal_point_y_changed = prevProps.focal_point.y !== this.props.focal_point.y;
+      const focal_point_x_changed = prevProps.focal_point?.x !== this.props.focal_point?.x;
+      const focal_point_y_changed = prevProps.focal_point?.y !== this.props.focal_point?.y;
       const scope_changed = prevProps.scope !== this.props.scope;
       const disabled_changed = prevProps.disabled !== this.props.disabled;
       const filter_level_changed = this.props.filter_level && prevProps.filter_level !== this.props.filter_level;

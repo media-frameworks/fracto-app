@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolButton, CoolSelect} from "common/ui/CoolImports";
 import FractoRasterImage, {get_tiles} from "../../../fracto/FractoRasterImage";
-import {KEY_COLOR_PHASE, KEY_FOCAL_POINT, KEY_LIT_TYPE, KEY_SCOPE} from "../../PageSettings";
+import {KEY_COLOR_PHASE} from "settings/CompSettings";
 import CoolStyles from "../../../common/ui/styles/CoolStyles";
 import {NumberSpan} from "../../../fracto/styles/FractoStyles";
 import {COLORS_EXTERNAL} from "./CompColors";
 import FractoUtil from "../../../fracto/FractoUtil";
+import {KEY_FOCAL_POINT, KEY_SCOPE} from "settings/AppSettings";
+import {KEY_COLORATION_TYPE} from 'settings/CompSettings'
 
 const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},
@@ -51,7 +53,7 @@ export class CompCapture extends Component {
 
    color_handler = (pattern, iterations) => {
       const {page_settings} = this.props
-      if (page_settings[KEY_LIT_TYPE] !== COLORS_EXTERNAL) {
+      if (page_settings[KEY_COLORATION_TYPE] !== COLORS_EXTERNAL) {
          const [h, s, l] = FractoUtil.fracto_pattern_color_hsl(pattern, iterations)
          const offset = page_settings[KEY_COLOR_PHASE]
             ? page_settings[KEY_COLOR_PHASE] : 0

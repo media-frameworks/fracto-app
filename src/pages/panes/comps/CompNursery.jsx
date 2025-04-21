@@ -8,8 +8,9 @@ import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolStyles} from "common/ui/CoolImports";
 import LatestTileBlock from "./latest/LatestTileBlock";
 import {NumberInline, SmallNumberInline} from "fracto/styles/FractoStyles";
-import {KEY_COMPS_WIDTH_PX, KEY_MODAL} from "../../PageSettings";
+import { KEY_MODAL} from "settings/AppSettings";
 import LatestTileDetail from "./latest/TileDetailModal";
+import {KEY_COMPS_WIDTH_PX} from 'settings/PaneSettings'
 
 const TILE_COUNT = 17;
 const PAGE_REFRESH_TIME_MS = 3000;

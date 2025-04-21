@@ -59,11 +59,13 @@ export class CompScriptStyles {
    `;
 
    static TreeTitleText = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.noselect}
        color: ${TREE_TEXT_COLOR};
        font-size: 0.85rem;
        margin: 0 0.125rem;
    `;
    static TreeTitleNumber = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.noselect}
        ${CoolStyles.monospace}
        color: ${TREE_TEXT_COLOR};
        font-size: 0.85rem;
