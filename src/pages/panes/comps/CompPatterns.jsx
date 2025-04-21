@@ -6,7 +6,7 @@ import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
-import {KEY_FOCAL_POINT, KEY_HOVER_POINT} from "../../PageSettings";
+import {KEY_FOCAL_POINT, KEY_HOVER_POINT} from "settings/AppSettings";
 import FractoUtil from "fracto/FractoUtil";
 import {render_pattern_block} from "fracto/styles/FractoStyles";
 import Complex from "common/math/Complex";

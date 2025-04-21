@@ -4,14 +4,18 @@ import axios from "axios";
 import network from "common/config/network.json";
 
 import {
+   KEY_MINIBROT_SORT_TYPE,
    KEY_BAILIWICK_ID,
+} from "settings/CompSettings";
+import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX,
+} from "settings/PaneSettings";
+import {
    KEY_DISABLED,
    KEY_FOCAL_POINT,
-   KEY_MINIBROT_SORT_TYPE,
    KEY_SCOPE,
-} from "pages/PageSettings";
+} from 'settings/AppSettings'
 import BailiwickList from "fracto/bailiwick/BailiwickList";
 import {CompMinibrotStyles as styles} from 'styles/CompMinibrotStyles';
 import {render_big_pattern_block} from "fracto/styles/FractoStyles";
@@ -26,8 +30,8 @@ const AXIOS_CONFIG = {
    crossdomain: true,
 }
 
-const SORT_TYPE_BY_ORBITAL = 'sort_type_by_orbital'
-const SORT_TYPE_BY_SIZE = 'sort_type_by_size'
+export const SORT_TYPE_BY_ORBITAL = 'sort_type_by_orbital'
+export const SORT_TYPE_BY_SIZE = 'sort_type_by_size'
 
 export class CompMinibrot extends Component {
    static propTypes = {

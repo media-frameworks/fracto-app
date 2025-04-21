@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 
 import {PaneCompsStyles as styles} from 'styles/PaneCompsStyles'
-import {KEY_COMPS_HEIGHT_PX} from "pages/PageSettings";
+import {KEY_COMPS_HEIGHT_PX} from "settings/PaneSettings";
 import {collect_orbitals} from "fracto/CanvasBufferUtils";
 import {color_wheel} from "fracto/ColorWheelUtils";
 
@@ -27,7 +27,7 @@ export class OrbitalsColorWheel extends Component {
          if (this.fill_pattern_bins()) {
             clearInterval(interval)
          }
-      }, 1000)
+      }, 500)
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
@@ -37,8 +37,8 @@ export class OrbitalsColorWheel extends Component {
       const mr_scope = most_recent.scope
       const mr_focal_point = most_recent.focal_point
       const scope_changed = mr_scope !== scope
-      const focal_point_x_changed = mr_focal_point.x !== focal_point.x
-      const focal_point_y_changed = mr_focal_point.y !== focal_point.y
+      const focal_point_x_changed = mr_focal_point.x !== focal_point?.x
+      const focal_point_y_changed = mr_focal_point.y !== focal_point?.y
       if (scope_changed || focal_point_x_changed || focal_point_y_changed) {
          this.setState({most_recent: {scope, focal_point}})
          this.fill_pattern_bins()
@@ -55,7 +55,10 @@ export class OrbitalsColorWheel extends Component {
       const dimension_px = page_settings[KEY_COMPS_HEIGHT_PX] * 0.40
       const orbital_bins = collect_orbitals(canvas_buffer)
       this.setState({orbital_bins: orbital_bins, dimension_px})
-      color_wheel(canvas_ref, dimension_px / 2 - 10, 7,0)
+      const radius = dimension_px / 2 - 10
+      if (radius > 0) {
+         color_wheel(canvas_ref, radius, 7, 0)
+      }
       return true
    }
 

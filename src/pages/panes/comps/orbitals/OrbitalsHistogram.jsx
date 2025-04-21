@@ -1,6 +1,7 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {KEY_CANVAS_BUFFER, KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX} from "../../../PageSettings";
+import { KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
+import {KEY_CANVAS_BUFFER} from 'settings/AppSettings'
 import {
    Chart as ChartJS,
    CategoryScale,
@@ -60,7 +61,7 @@ export class OrbitalsHistogram extends Component {
    fill_histogram = () => {
       const {page_settings} = this.props
       const canvas_buffer = page_settings[KEY_CANVAS_BUFFER]
-      if (!canvas_buffer) {
+      if (!canvas_buffer || !canvas_buffer.length) {
          return;
       }
       // console.log('canvas_buffer', canvas_buffer);

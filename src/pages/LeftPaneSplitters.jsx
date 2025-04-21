@@ -38,12 +38,10 @@ export class LeftPaneSplitters extends Component {
    componentDidMount() {
       const {left_pane_ref} = this.state
       console.log('page ready')
-      setTimeout(() => {
-         if (left_pane_ref.current) {
-            const bounds = left_pane_ref.current.getBoundingClientRect()
-            this.setState({height_px: bounds.height})
-         }
-      }, 500)
+      if (left_pane_ref.current) {
+         const bounds = left_pane_ref.current.getBoundingClientRect()
+         this.setState({height_px: bounds.height})
+      }
 
       const left_pane_position_str = localStorage.getItem(LS_LEFT_PANE_POSITION);
       let left_pane_position = LS_LEFT_PANE_DEFAULT
@@ -61,8 +59,7 @@ export class LeftPaneSplitters extends Component {
 
    change_left_pane_position = (new_position) => {
       const {height_px, on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[UPPER_HEIGHT_KEY] = new_position
+      const new_settings = {[UPPER_HEIGHT_KEY]: new_position}
       if (height_px) {
          new_settings[LOWER_HEIGHT_KEY] = height_px - new_position - 20
       }
@@ -73,8 +70,7 @@ export class LeftPaneSplitters extends Component {
 
    change_upper_pane_position = (new_position) => {
       const {width_px, on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[UPPER_LEFT_WIDTH_KEY] = new_position
+      const new_settings = {[UPPER_LEFT_WIDTH_KEY]: new_position}
       if (width_px) {
          new_settings[UPPER_RIGHT_WIDTH_KEY] = width_px - new_position
       }

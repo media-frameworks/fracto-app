@@ -7,7 +7,7 @@ import {
    KEY_SCRIPT_SELECTED_KEYS,
    KEY_SCRIPT_SELECTED_NODE,
    KEY_SELECTED_SCRIPT_DATA
-} from "pages/PageSettings";
+} from "settings/CompSettings";
 import CoolTree from "common/ui/CoolTree";
 
 import {
@@ -21,7 +21,6 @@ import {
 import {
    faComment
 } from "@fortawesome/free-regular-svg-icons"
-import {CoolColors} from "../../../../common/ui/CoolImports";
 
 const DATA_KEY_ROOT = 'root'
 const DATA_KEY_IMPORTS = 'imports'
@@ -114,7 +113,7 @@ export class ScriptViewerTree extends Component {
       const {selected_keys} = this.state
       const is_selected = selected_keys.includes(item_key)
       const simple_style = {
-         color: is_selected ? 'maroon' : TREE_TEXT_COLOR
+         color: is_selected ? 'maroon' : TREE_TEXT_COLOR,
       }
       if (typeof item === 'string') {
          switch (data_key) {
@@ -138,8 +137,17 @@ export class ScriptViewerTree extends Component {
       }
    }
 
+   node_click = (e) => {
+      console.log('node_click', e)
+   }
+
    build_tree = (data, data_type, key_path) => {
       const branch = []
+      const node_style = {
+         height: '22px',
+         lineHeight: '22px',
+         verticalAlign: 'top',
+      }
       if (Array.isArray(data)) {
          data.forEach((item, i) => {
             const simple_type = typeof item === 'string' || typeof item === 'number'
@@ -149,12 +157,14 @@ export class ScriptViewerTree extends Component {
                   key: new_key,
                   title: this.render_simple_title(item, data_type, new_key),
                   icon: this.icon_from_key(data_type),
+                  style: node_style,
                   children: []
                })
             } else {
                branch.push({
                   key: new_key,
                   title: this.render_simple_title(`#${i + 1}`, DATA_KEY_INDEXED, new_key),
+                  style: node_style,
                   children: this.build_tree(item, DATA_KEY_INDEXED, new_key)
                })
             }
@@ -170,8 +180,9 @@ export class ScriptViewerTree extends Component {
             branch.push({
                key: new_key,
                title: title,
+               style: node_style,
                children: this.build_tree(data[key], key, new_key),
-               icon: this.icon_from_key(key)
+               icon: this.icon_from_key(key),
             })
          })
       }

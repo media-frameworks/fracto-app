@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {
    KEY_LEGEND_WIDTH_PX,
-} from "../../PageSettings";
+} from "settings/PaneSettings";
 import {PaneLegendStyles as styles} from 'styles/PaneLegendStyles';
 
 export class LegendHeader extends Component {

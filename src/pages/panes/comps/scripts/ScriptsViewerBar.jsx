@@ -8,7 +8,7 @@ import {
    KEY_SCRIPT_TREE_HEIGHT_PX,
    KEY_SCRIPT_TREE_WIDTH_PX,
    KEY_SCRIPT_VIEWER_MODE
-} from "pages/PageSettings";
+} from "settings/CompSettings";
 
 export const SCRIPT_VIEWER_MODE_TEXT = 'script_viewer_mode_text'
 export const SCRIPT_VIEWER_MODE_UI = 'script_viewer_mode_ui'

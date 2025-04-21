@@ -2,17 +2,19 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {NumberSpan, render_coordinates} from "fracto/styles/FractoStyles";
+import {KEY_IMAGE_WIDTH} from 'settings/CompSettings'
 import {
    KEY_CACHE_SIZE,
    KEY_DISABLED,
-   KEY_FIELD_WIDTH_PX,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
-   KEY_IMAGE_WIDTH,
+   KEY_SCOPE
+} from 'settings/AppSettings'
+import {
+   KEY_FIELD_WIDTH_PX,
    KEY_LEGEND_HEIGHT_PX,
    KEY_LEGEND_WIDTH_PX,
-   KEY_SCOPE
-} from "../../PageSettings";
+} from 'settings/PaneSettings'
 import {
    PaneLegendStyles as styles,
    THUMBNAIL_WIDTH_PX,
@@ -37,14 +39,14 @@ export class LegendTabStats extends Component {
    componentDidMount() {
    }
 
-   reduce_cache = (amount_ms=30*1000) =>{
+   reduce_cache = (amount_ms = 30 * 1000) => {
       FractoTileCache.trim_cache(amount_ms);
    }
 
    render_stats = () => {
       const {page_settings} = this.props
-      const focal_point_x = page_settings[KEY_FOCAL_POINT].x
-      const focal_point_y = page_settings[KEY_FOCAL_POINT].y
+      const focal_point_x = page_settings[KEY_FOCAL_POINT]?.x || 0.0
+      const focal_point_y = page_settings[KEY_FOCAL_POINT]?.y || 0.0
       const hover_point_x = page_settings[KEY_HOVER_POINT]?.x || null
       const hover_point_y = page_settings[KEY_HOVER_POINT]?.y || null
       const coverage_data = get_tiles(

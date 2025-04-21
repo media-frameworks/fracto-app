@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX,
-} from "../PageSettings";
+} from "../../settings/PaneSettings";
 import {CoolTabs} from "common/ui/CoolImports";
 import {PaneCompsStyles as styles} from 'styles/PaneCompsStyles'
 

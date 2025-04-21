@@ -1,8 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {PaneLegendStyles as styles, HEADER_HEIGHT_PX, THUMBNAIL_WIDTH_PX} from "styles/PaneLegendStyles"
-import {KEY_FOCAL_POINT, KEY_LEGEND_HEIGHT_PX, KEY_LEGEND_WIDTH_PX} from "../PageSettings";
+import {KEY_FOCAL_POINT} from "settings/AppSettings";
+import {
+   KEY_LEGEND_HEIGHT_PX, KEY_LEGEND_WIDTH_PX
+} from "settings/PaneSettings";
+import {
+   PaneLegendStyles as styles,
+   HEADER_HEIGHT_PX,
+   THUMBNAIL_WIDTH_PX
+} from "styles/PaneLegendStyles"
 import LegendHeader from "./legend/LegendHeader";
 import FractoRasterImage from "fracto/FractoRasterImage";
 import FractoCanvasOverlay from "fracto/FractoCanvasOverlay";
@@ -21,8 +28,7 @@ export class PaneLegend extends Component {
       on_settings_changed: PropTypes.func.isRequired,
    }
 
-   state = {
-   }
+   state = {}
 
    on_plan_complete = (canvas_buffer, ctx) => {
       const {page_settings} = this.props

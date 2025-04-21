@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import StepsList from "./steps/StepsList";
 import StepsHeader from "./steps/StepsHeader";
 import {PaneStepsStyles as styles, HEADER_HEIGHT_PX} from "../../styles/PaneStepsStyles"
-import {KEY_STEPS_HEIGHT_PX} from "../PageSettings";
+import {KEY_STEPS_HEIGHT_PX} from "settings/PaneSettings";
 
 export class PaneSteps extends Component {
 

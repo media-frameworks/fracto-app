@@ -10,9 +10,11 @@ import {SPLITTER_WIDTH_PX} from "styles/PageAppStyles";
 import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX,
+} from "settings/PaneSettings";
+import {
    KEY_SCRIPT_TREE_HEIGHT_PX,
-   KEY_SCRIPT_TREE_WIDTH_PX,
-} from "pages/PageSettings";
+   KEY_SCRIPT_TREE_WIDTH_PX
+} from 'settings/CompSettings'
 import ScriptsTree from "./scripts/ScriptsTree";
 import ScriptsViewer from "./scripts/ScriptsViewer";
 import ScriptsDetail from "./scripts/ScriptsDetail";
