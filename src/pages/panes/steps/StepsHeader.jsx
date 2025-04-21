@@ -1,12 +1,10 @@
 import {Component} from 'react';
+import styled from "styled-components";
 import PropTypes from 'prop-types';
 
-import {
-    KEY_STEPS_ZOOM
-} from "settings/AppSettings";
+import {CoolSlider, CoolStyles} from "common/ui/CoolImports";
+import {KEY_STEPS_ZOOM} from "settings/AppSettings";
 import {KEY_STEPS_WIDTH_PX} from 'settings/PaneSettings'
-import {CoolSlider, CoolStyles} from "../../../common/ui/CoolImports";
-import styled from "styled-components";
 
 const MARGIN_PX = 10;
 const HeaderZoomWrapper = styled(CoolStyles.Block)`
@@ -36,9 +34,7 @@ export class StepsHeader extends Component {
       if (zoom_value_str) {
          zoom_value = parseFloat(zoom_value_str);
       }
-      let new_setings = {}
-      new_setings[KEY_STEPS_ZOOM] = zoom_value
-      on_settings_changed(new_setings)
+      on_settings_changed({[KEY_STEPS_ZOOM]: zoom_value})
    }
 
    set_value = (e) => {
@@ -46,9 +42,7 @@ export class StepsHeader extends Component {
       const zoom_value = e.target.value
       this.setState({zoom_value})
       localStorage.setItem(LS_STEPS_ZOOM_VALUE, `${zoom_value}`);
-      let new_setings = {}
-      new_setings[KEY_STEPS_ZOOM] = zoom_value
-      on_settings_changed(new_setings)
+      on_settings_changed({[KEY_STEPS_ZOOM]: zoom_value})
    }
 
    render() {

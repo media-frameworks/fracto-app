@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import FractoRasterImage, {BAD_TILES} from "fracto/FractoRasterImage";
 import {PaneFieldStyles as styles} from 'styles/PaneFieldStyles'
 import {HEADER_HEIGHT_PX} from "styles/PaneStepsStyles";
-import {CACHED_TILES} from "../../../fracto/FractoTileCache";
+import {CACHED_TILES} from "fracto/FractoTileCache";
 
 import {
    KEY_FOCAL_POINT,
@@ -14,6 +14,8 @@ import {
    KEY_DISABLED,
    KEY_BAD_TILES,
    KEY_HOVER_POINT,
+   KEY_CACHE_SIZE,
+   KEY_UPDATE_INDEX,
 } from "settings/AppSettings";
 import {
    KEY_FIELD_WIDTH_PX,
@@ -24,10 +26,6 @@ import {
    KEY_COLORATION_TYPE,
    KEY_COLOR_PHASE
 } from 'settings/CompSettings'
-import {
-   KEY_CACHE_SIZE,
-   KEY_UPDATE_INDEX,
-} from 'settings/AppSettings'
 import FractoUtil from "fracto/FractoUtil";
 import {COLORS_EXTERNAL} from "../comps/CompColors";
 
@@ -48,9 +46,7 @@ export class FieldImage extends Component {
 
    componentDidMount() {
       const {on_settings_changed} = this.props
-      let new_setings = {}
-      new_setings[KEY_UPDATE_INDEX] = 0
-      on_settings_changed(new_setings)
+      on_settings_changed({[KEY_UPDATE_INDEX]: 0})
       window.addEventListener('keydown', this.key_listener)
    }
 
@@ -62,9 +58,7 @@ export class FieldImage extends Component {
       const {page_settings, on_settings_changed} = this.props
       // console.log('key_listener', e)
       if (e.code === 'Escape') {
-         let new_setings = {}
-         new_setings[KEY_SCOPE] = page_settings[KEY_SCOPE] * 1.618
-         on_settings_changed(new_setings)
+         on_settings_changed({[KEY_SCOPE]: page_settings[KEY_SCOPE] * 1.618})
       }
    }
 
@@ -91,18 +85,12 @@ export class FieldImage extends Component {
    on_mousemove = (e) => {
       const {on_settings_changed} = this.props
       const location = this.get_mouse_pos(e)
-      let new_setings = {}
-      new_setings[KEY_HOVER_POINT] = {
-         x: location.x, y: location.y,
-      }
-      on_settings_changed(new_setings)
+      on_settings_changed({[KEY_HOVER_POINT]: {x: location.x, y: location.y}})
    }
 
    on_mouseleave = (e) => {
       const {on_settings_changed} = this.props
-      let new_setings = {}
-      new_setings[KEY_HOVER_POINT] = null
-      on_settings_changed(new_setings)
+      on_settings_changed({[KEY_HOVER_POINT]: null})
    }
 
    on_click = (e) => {
@@ -157,15 +145,15 @@ export class FieldImage extends Component {
 
    on_plan_complete = (canvas_buffer, ctx) => {
       const {page_settings, on_settings_changed} = this.props
-      let new_setings = {}
-      new_setings[KEY_CANVAS_BUFFER] = canvas_buffer
-      new_setings[KEY_CTX] = ctx
-      new_setings[KEY_DISABLED] = false
-      new_setings[KEY_BAD_TILES] = Object.keys(BAD_TILES).length;
-      new_setings[KEY_CACHE_SIZE] = Object.keys(CACHED_TILES).length;
-      new_setings[KEY_UPDATE_INDEX] = 1 + page_settings[KEY_UPDATE_INDEX] || 0;
-      new_setings[KEY_IMAGE_WIDTH] = this.get_image_width()
-      on_settings_changed(new_setings)
+      on_settings_changed({
+         [KEY_CANVAS_BUFFER] : canvas_buffer,
+         [KEY_CTX] : ctx,
+         [KEY_DISABLED] : false,
+         [KEY_BAD_TILES] : Object.keys(BAD_TILES).length,
+         [KEY_CACHE_SIZE] : Object.keys(CACHED_TILES).length,
+         [KEY_UPDATE_INDEX] : 1 + page_settings[KEY_UPDATE_INDEX] || 0,
+         [KEY_IMAGE_WIDTH] : this.get_image_width(),
+      })
    }
 
    color_handler = (pattern, iterations) => {
@@ -180,7 +168,7 @@ export class FieldImage extends Component {
             return [0, 0, 0]
          }
          const log_iterations = Math.log(iterations)
-         return [12 + 112 *  log_iterations, 1 +  2 * log_iterations, 1 + 15 * log_iterations]
+         return [12 + 112 * log_iterations, 1 + 2 * log_iterations, 1 + 15 * log_iterations]
       }
    }
 

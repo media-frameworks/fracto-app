@@ -1,7 +1,5 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import { KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
-import {KEY_CANVAS_BUFFER} from 'settings/AppSettings'
 import {
    Chart as ChartJS,
    CategoryScale,
@@ -12,8 +10,14 @@ import {
    Legend,
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
-import FractoUtil from "../../../../fracto/FractoUtil";
-import CoolStyles from "../../../../common/ui/styles/CoolStyles";
+
+import {
+   KEY_COMPS_HEIGHT_PX,
+   KEY_COMPS_WIDTH_PX
+} from "settings/PaneSettings";
+import {KEY_CANVAS_BUFFER} from 'settings/AppSettings'
+import FractoUtil from "fracto/FractoUtil";
+import CoolStyles from "common/ui/styles/CoolStyles";
 
 ChartJS.register(
    CategoryScale,

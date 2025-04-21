@@ -1,16 +1,20 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import {CoolStyles, CoolButton, CoolSelect} from "common/ui/CoolImports";
+import {NumberSpan} from "fracto/styles/FractoStyles";
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
-import {CoolButton, CoolSelect} from "common/ui/CoolImports";
-import FractoRasterImage, {get_tiles} from "../../../fracto/FractoRasterImage";
-import {KEY_COLOR_PHASE} from "settings/CompSettings";
-import CoolStyles from "../../../common/ui/styles/CoolStyles";
-import {NumberSpan} from "../../../fracto/styles/FractoStyles";
+
+import FractoUtil from "fracto/FractoUtil";
+import FractoRasterImage, {get_tiles} from "fracto/FractoRasterImage";
 import {COLORS_EXTERNAL} from "./CompColors";
-import FractoUtil from "../../../fracto/FractoUtil";
-import {KEY_FOCAL_POINT, KEY_SCOPE} from "settings/AppSettings";
-import {KEY_COLORATION_TYPE} from 'settings/CompSettings'
+
+import {
+   KEY_FOCAL_POINT, KEY_SCOPE
+} from "settings/AppSettings";
+import {
+   KEY_COLORATION_TYPE, KEY_COLOR_PHASE
+} from 'settings/CompSettings'
 
 const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},
@@ -63,7 +67,7 @@ export class CompCapture extends Component {
             return [0, 0, 0]
          }
          const log_iterations = Math.log(iterations)
-         return [12 + 112 *  log_iterations, 1 +  2 * log_iterations, 1 + 15 * log_iterations]
+         return [12 + 112 * log_iterations, 1 + 2 * log_iterations, 1 + 15 * log_iterations]
       }
    }
 

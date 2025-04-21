@@ -75,16 +75,6 @@ export class PageMain extends Component {
       }, 100)
    }
 
-   componentDidUpdate(prevProps, prevState, snapshot) {
-      // const {main_ref} = this.state
-      // const bounds = main_ref.current.getBoundingClientRect()
-      // const height_px = Math.round(bounds.height)
-      // if (height_px !== prevState.height_px && height_px) {
-      //    this.on_settings_changed({[KEY_COMPS_HEIGHT_PX]: height_px})
-      //    this.setState({height_px})
-      // }
-   }
-
    on_resize = (new_left_width_px, new_right_width_px, new_height_px) => {
       const {page_settings} = this.state;
       if (page_settings[KEY_DISABLED]) {

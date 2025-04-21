@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {KEY_STEPS_WIDTH_PX} from "settings/PaneSettings";
+import {PaneStepsStyles as styles} from 'styles/PaneStepsStyles'
+import FractoRasterImage from "fracto/FractoRasterImage";
 import {
    KEY_FOCAL_POINT,
    KEY_SCOPE,
    KEY_DISABLED,
    KEY_STEPS_ZOOM,
 } from 'settings/AppSettings'
-import {PaneStepsStyles as styles} from 'styles/PaneStepsStyles'
-import FractoRasterImage from "../../../fracto/FractoRasterImage";
+import {KEY_STEPS_WIDTH_PX} from "settings/PaneSettings";
 
 const create_step_entry = (step_scope) => {
    return {
@@ -70,9 +70,7 @@ export class StepsList extends Component {
 
    click_step = (step) => {
       const {on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[KEY_SCOPE] = step.scope
-      on_settings_changed(new_settings)
+      on_settings_changed({[KEY_SCOPE]: step.scope})
    }
 
    render() {
