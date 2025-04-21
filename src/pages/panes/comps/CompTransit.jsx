@@ -66,29 +66,29 @@ export class CompTransit extends Component {
    select_step = (index) => {
       const {path_steps} = this.state
       const {on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[KEY_FOCAL_POINT] = {
-         x: path_steps[index].focal_point.x,
-         y: path_steps[index].focal_point.y,
-      }
-      new_settings[KEY_SCOPE] = path_steps[index].scope
-      on_settings_changed(new_settings)
+      on_settings_changed({
+         [KEY_FOCAL_POINT]: {
+            x: path_steps[index].focal_point.x,
+            y: path_steps[index].focal_point.y,
+         },
+         [KEY_SCOPE]: path_steps[index].scope
+      })
       this.setState({step_index: index})
    }
 
    make_frame_list = () => {
       const {path_steps} = this.state
       const frame_list = []
-      path_steps.forEach((step,step_index) => {
+      path_steps.forEach((step, step_index) => {
          if (step_index === path_steps.length - 1) {
             return;
          }
          const focal_point_x_diff =
-            path_steps[step_index+1].focal_point.x - step.focal_point.x
+            path_steps[step_index + 1].focal_point.x - step.focal_point.x
          const focal_point_y_diff =
-            path_steps[step_index+1].focal_point.y - step.focal_point.y
+            path_steps[step_index + 1].focal_point.y - step.focal_point.y
          const scope_diff =
-            path_steps[step_index+1].scope - step.scope
+            path_steps[step_index + 1].scope - step.scope
          for (let frame_index = 0; frame_index < FRAMES_PER_STEP; frame_index++) {
             const focal_point_x = step.focal_point.x +
                (focal_point_x_diff * frame_index) / FRAMES_PER_STEP
@@ -119,19 +119,19 @@ export class CompTransit extends Component {
                const frame_index = current_update_index - starting_update_index + 1
                if (frame_index >= frame_list.length) {
                   clearInterval(interval)
-                  let new_settings = {}
-                  new_settings[KEY_IN_ANIMATION] = false
-                  new_settings[KEY_DISABLED] = false
-                  on_settings_changed(new_settings)
+                  on_settings_changed({
+                     [KEY_IN_ANIMATION]: false,
+                     [KEY_DISABLED]: false
+                  })
                   return;
                }
                const frame = frame_list[frame_index]
-               let new_settings = {}
-               new_settings[KEY_IN_ANIMATION] = true
-               new_settings[KEY_FOCAL_POINT] = frame.focal_point
-               new_settings[KEY_SCOPE] = frame.scope
-               new_settings[KEY_DISABLED] = true
-               on_settings_changed(new_settings)
+               on_settings_changed({
+                  [KEY_IN_ANIMATION]: true,
+                  [KEY_FOCAL_POINT]: frame.focal_point,
+                  [KEY_SCOPE]: frame.scope,
+                  [KEY_DISABLED]: true
+               })
             }
          }, 100)
       }, 1000)

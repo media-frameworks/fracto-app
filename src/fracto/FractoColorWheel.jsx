@@ -83,10 +83,10 @@ export class FractoColorWheel extends Component {
          return;
       }
       const angle = this.color_angle(e)
-      let new_settings = {}
-      new_settings[KEY_COLOR_PHASE] = -360 * angle / TWO_PI
-      new_settings[KEY_DISABLED] = true
-      on_settings_changed(new_settings)
+      on_settings_changed({
+         [KEY_COLOR_PHASE]: -360 * angle / TWO_PI,
+         [KEY_DISABLED]: true
+      })
       this.fill_canvas()
    }
 

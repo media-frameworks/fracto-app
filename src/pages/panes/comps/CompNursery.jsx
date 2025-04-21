@@ -8,7 +8,7 @@ import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolStyles} from "common/ui/CoolImports";
 import LatestTileBlock from "./latest/LatestTileBlock";
 import {NumberInline, SmallNumberInline} from "fracto/styles/FractoStyles";
-import { KEY_MODAL} from "settings/AppSettings";
+import {KEY_MODAL} from "settings/AppSettings";
 import LatestTileDetail from "./latest/TileDetailModal";
 import {KEY_COMPS_WIDTH_PX} from 'settings/PaneSettings'
 
@@ -54,12 +54,12 @@ export class CompNursery extends Component {
 
    tile_detail = (short_code) => {
       const {on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[KEY_MODAL] = <LatestTileDetail
-         short_code={short_code}
-         on_settings_changed={on_settings_changed}
-      />
-      on_settings_changed(new_settings)
+      on_settings_changed({
+         [KEY_MODAL]: <LatestTileDetail
+            short_code={short_code}
+            on_settings_changed={on_settings_changed}
+         />
+      })
    }
 
    render() {

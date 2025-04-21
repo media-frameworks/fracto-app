@@ -23,16 +23,12 @@ export class ScriptsViewerBar extends Component {
 
    set_text_mode = () => {
       const {on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[KEY_SCRIPT_VIEWER_MODE] = SCRIPT_VIEWER_MODE_TEXT
-      on_settings_changed(new_settings)
+      on_settings_changed({[KEY_SCRIPT_VIEWER_MODE]: SCRIPT_VIEWER_MODE_TEXT})
    }
 
    set_interactive_mode = () => {
       const {on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[KEY_SCRIPT_VIEWER_MODE] = SCRIPT_VIEWER_MODE_UI
-      on_settings_changed(new_settings)
+      on_settings_changed({[KEY_SCRIPT_VIEWER_MODE]: SCRIPT_VIEWER_MODE_UI})
    }
 
    render() {

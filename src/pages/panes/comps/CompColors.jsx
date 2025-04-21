@@ -20,10 +20,10 @@ export class CompColors extends Component {
 
    set_coloration_type = (coloration_type) => {
       const {page_settings, on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[KEY_COLORATION_TYPE] = coloration_type
-      new_settings[KEY_UPDATE_INDEX] = page_settings[KEY_UPDATE_INDEX] + 1
-      on_settings_changed(new_settings)
+      on_settings_changed({
+         [KEY_COLORATION_TYPE] : coloration_type,
+         [KEY_UPDATE_INDEX]: page_settings[KEY_UPDATE_INDEX] + 1
+      })
    }
 
    render_lit_row = () => {

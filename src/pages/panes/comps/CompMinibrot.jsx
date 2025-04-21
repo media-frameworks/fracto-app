@@ -77,10 +77,10 @@ export class CompMinibrot extends Component {
 
    set_sort_type = (sort_type) => {
       const {on_settings_changed} = this.props
-      let new_settings = {}
-      new_settings[KEY_MINIBROT_SORT_TYPE] = sort_type
-      new_settings[KEY_BAILIWICK_ID] = -1
-      on_settings_changed(new_settings)
+      on_settings_changed({
+         [KEY_MINIBROT_SORT_TYPE] : sort_type,
+         [KEY_BAILIWICK_ID]: -1
+      })
    }
 
    render_sorting_row = () => {

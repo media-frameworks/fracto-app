@@ -38,9 +38,7 @@ export class TileDetailModal extends Component {
    handle_response = (r) => {
       const {on_settings_changed} = this.props
       if (!r) {
-         let new_settings = {};
-         new_settings[KEY_MODAL] = null
-         on_settings_changed(new_settings)
+         on_settings_changed({[KEY_MODAL]: null})
       }
    }
 
