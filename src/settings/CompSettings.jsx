@@ -1,7 +1,21 @@
-import {TYPE_NUMBER, TYPE_STRING, TYPE_OBJECT, TYPE_ARRAY} from "./AppSettings";
-import {SORT_TYPE_BY_ORBITAL, SORT_TYPE_BY_SIZE} from "../pages/panes/comps/CompMinibrot";
-import {COLORS_INTERNAL, COLORS_EXTERNAL} from "../pages/panes/comps/CompColors";
-import {SCRIPT_VIEWER_MODE_TEXT, SCRIPT_VIEWER_MODE_UI} from "../pages/panes/comps/scripts/ScriptsViewerBar";
+import {
+   TYPE_NUMBER,
+   TYPE_STRING,
+   TYPE_OBJECT,
+   TYPE_ARRAY
+} from "./AppSettings";
+import {
+   SORT_TYPE_BY_ORBITAL,
+   SORT_TYPE_BY_SIZE
+} from "../pages/panes/comps/CompMinibrot";
+import {
+   COLORS_INTERNAL,
+   COLORS_EXTERNAL
+} from "../pages/panes/comps/CompColors";
+import {
+   SCRIPT_VIEWER_MODE_TEXT,
+   SCRIPT_VIEWER_MODE_UI
+} from "../pages/panes/comps/scripts/ScriptsViewerBar";
 
 export const KEY_IMAGE_WIDTH = 'image_width'
 export const KEY_COLORATION_TYPE = 'coloration_type'

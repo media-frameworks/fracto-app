@@ -27,39 +27,29 @@ export class CompScript extends Component {
 
    state = {
       wrapper_ref: React.createRef(),
-      upper_pane_position: 250,
-      left_pane_position: 250,
-      refresh_interval: null,
    }
 
    componentDidMount() {
       const {page_settings, on_settings_changed} = this.props
-      this.setState({
-         upper_pane_position: page_settings[KEY_SCRIPT_TREE_HEIGHT_PX] || 200,
-         left_pane_position: page_settings[KEY_SCRIPT_TREE_WIDTH_PX] || 200,
-      })
-      setTimeout(() => {
+      if (!page_settings[KEY_SCRIPT_TREE_HEIGHT_PX]) {
          on_settings_changed({
-            [KEY_SCRIPT_TREE_HEIGHT_PX]: this.state.upper_pane_position,
-            [KEY_SCRIPT_TREE_WIDTH_PX]: this.state.left_pane_position,
+            [KEY_SCRIPT_TREE_HEIGHT_PX]: 400,
+            [KEY_SCRIPT_TREE_WIDTH_PX]: 200,
          })
-      }, 1000)
+      }
    }
 
    change_upper_pane_position = (new_position) => {
       const {on_settings_changed} = this.props
-      this.setState({upper_pane_position: new_position})
       on_settings_changed({[KEY_SCRIPT_TREE_HEIGHT_PX]: new_position})
    }
 
    change_left_pane_position = (new_position) => {
       const {on_settings_changed} = this.props
-      this.setState({left_pane_position: new_position})
       on_settings_changed({[KEY_SCRIPT_TREE_WIDTH_PX]: new_position})
    }
 
    render_horz_splitter = () => {
-      const {upper_pane_position} = this.state
       const {page_settings} = this.props
       const container_bounds = {
          left: 0, top: 0,
@@ -72,23 +62,22 @@ export class CompScript extends Component {
          name={'main-splitter-bar'}
          bar_width_px={SPLITTER_WIDTH_PX}
          container_bounds={container_bounds}
-         position={upper_pane_position}
+         position={page_settings[KEY_SCRIPT_TREE_HEIGHT_PX]}
          on_change={this.change_upper_pane_position}
       />
    }
 
    render_vert_splitter = () => {
-      const {
-         wrapper_ref, upper_pane_position, left_pane_position
-      } = this.state
+      const {wrapper_ref} = this.state
       const {page_settings} = this.props
       let top = 0
-      let splitter_height = upper_pane_position
+      let splitter_height = page_settings[KEY_SCRIPT_TREE_HEIGHT_PX]
       if (wrapper_ref.current) {
          const bounds = wrapper_ref.current.getBoundingClientRect()
          top = bounds.top - 20
       }
       splitter_height -= top
+      const left_pane_position = page_settings[KEY_SCRIPT_TREE_WIDTH_PX]
       const upper_container_bounds = {
          left: left_pane_position, top,
          width: page_settings[KEY_COMPS_WIDTH_PX] - left_pane_position,

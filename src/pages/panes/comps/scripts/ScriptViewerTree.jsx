@@ -16,7 +16,8 @@ import {
    faArrowRight,
    faCode,
    faCodeBranch,
-   faBullhorn
+   faBullhorn,
+   faPersonWalking,
 } from "@fortawesome/free-solid-svg-icons";
 import {
    faComment
@@ -29,6 +30,7 @@ const DATA_KEY_COMMENT = 'comment'
 const DATA_KEY_CALL = 'call'
 const DATA_KEY_INDEXED = 'indexed'
 const DATA_KEY_DECLARES = 'declares'
+const DATA_KEY_STEPS = 'steps'
 
 export class ScriptViewerTree extends Component {
    static propTypes = {
@@ -104,6 +106,8 @@ export class ScriptViewerTree extends Component {
             return <styles.TreeIcon icon={faCodeBranch}/>
          case DATA_KEY_DECLARES:
             return <styles.TreeIcon icon={faBullhorn}/>
+         case DATA_KEY_STEPS:
+            return <styles.TreeIcon icon={faPersonWalking}/>
          default:
             return <styles.TreeIcon icon={faCircleQuestion}/>
       }
