@@ -12,37 +12,37 @@ export const KEY_LEGEND_HEIGHT_PX = 'legend_height_px'
 export const PANE_KEYED_SETTINGS = {
    [KEY_STEPS_WIDTH_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 200,
+      default_value: 125,
       description: 'width of the steps pane in pixels',
       persist: true,
    },
    [KEY_STEPS_HEIGHT_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 400,
+      default_value: 500,
       description: 'height of the steps pane in pixels',
       persist: true,
    },
    [KEY_FIELD_WIDTH_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 600,
+      default_value: 500,
       description: 'width of the field pane in pixels',
       persist: true,
    },
    [KEY_FIELD_HEIGHT_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 400,
+      default_value: 500,
       description: 'height of the field pane in pixels',
       persist: true,
    },
    [KEY_COMPS_WIDTH_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 800,
+      default_value: 950,
       description: 'width of the comps pane in pixels',
       persist: true,
    },
    [KEY_COMPS_HEIGHT_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 400,
+      default_value: 800,
       description: 'height of the comps pane in pixels',
       persist: false,
    },
@@ -54,7 +54,7 @@ export const PANE_KEYED_SETTINGS = {
    },
    [KEY_LEGEND_HEIGHT_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 400,
+      default_value: 300,
       description: 'height of the legend pane in pixels',
       persist: true,
    },
