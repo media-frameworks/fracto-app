@@ -16,8 +16,7 @@ export class ScriptsDetail extends Component {
 
    render() {
       const {page_settings} = this.props
-      const data_key = `${page_settings[KEY_SCRIPT_SELECTED_DATA]?.key}`
-      return data_key
+      return `${page_settings[KEY_SCRIPT_SELECTED_DATA]?.key}`
    }
 }
 
