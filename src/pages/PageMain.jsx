@@ -101,7 +101,7 @@ export class PageMain extends Component {
             console.log('key_definition not found', key)
             return
          }
-         console.log(`${key}=>${new_settings[key]}`)
+         // console.log(`${key}=>${new_settings[key]}`)
          switch (key_definition.data_type) {
             case TYPE_ARRAY:
             case TYPE_OBJECT:

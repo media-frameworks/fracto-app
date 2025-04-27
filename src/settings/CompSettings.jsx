@@ -21,6 +21,7 @@ export const KEY_IMAGE_WIDTH = 'image_width'
 export const KEY_COLORATION_TYPE = 'coloration_type'
 export const KEY_MINIBROT_SORT_TYPE = 'minibrot_sort_type'
 export const KEY_BAILIWICK_ID = 'bailiwick_id'
+export const KEY_COLOR_PHASE = 'color_phase'
 
 export const KEY_SCRIPT_TREE_WIDTH_PX = 'script_tree_width_px'
 export const KEY_SCRIPT_TREE_HEIGHT_PX = 'script_tree_height_px'
@@ -31,7 +32,7 @@ export const KEY_SCRIPT_VIEWER_MODE = 'script_viewer_mode'
 export const KEY_SELECTED_SCRIPT_DATA = 'selected_script_data'
 export const KEY_SCRIPT_EXPANDED_KEYS = 'script_expanded_sets'
 export const KEY_SCRIPT_SELECTED_KEYS = 'script_selected_sets'
-export const KEY_COLOR_PHASE = 'color_phase'
+export const KEY_SCRIPT_SELECTED_DATA = 'script_selected_data'
 
 export const COMPONENT_CAPTURE = 'component_capture'
 export const COMPONENT_MINIBROT = 'component_minibrot'
@@ -140,6 +141,13 @@ export const COMP_KEYED_SETTINGS = {
       data_type: TYPE_OBJECT,
       default_value: {},
       description: 'JSON-encoded data of the currently selected script',
+      component: COMPONENT_SCRIPT,
+      persist: false,
+   },
+   [KEY_SCRIPT_SELECTED_DATA]: {
+      data_type: TYPE_OBJECT,
+      default_value: [],
+      description: 'data selected in the UI for inspection and editing',
       component: COMPONENT_SCRIPT,
       persist: false,
    },
