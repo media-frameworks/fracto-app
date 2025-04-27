@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
+import {KEY_SCRIPT_SELECTED_DATA} from "settings/CompSettings";
 
 export class ScriptsDetail extends Component {
    static propTypes = {
@@ -14,7 +15,9 @@ export class ScriptsDetail extends Component {
    }
 
    render() {
-      return 'ScriptsDetail'
+      const {page_settings} = this.props
+      const data_key = `${page_settings[KEY_SCRIPT_SELECTED_DATA]?.key}`
+      return data_key
    }
 }
 
