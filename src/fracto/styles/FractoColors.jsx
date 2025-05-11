@@ -53,8 +53,9 @@ export class FractoColors {
       all_sets.forEach((set, index) => {
          if (set.iteration_count > best_bin_size) {
             let reduce_by = Math.floor(set.iteration_count / best_bin_size)
-            if (reduce_by > 10) {
-               reduce_by = 10
+            const threshhold = (current_grey_tone - base_value) / 10
+            if (reduce_by > threshhold) {
+               reduce_by = Math.round(threshhold) + 1
             }
             current_grey_tone -= reduce_by
             current_bin_size = 0
