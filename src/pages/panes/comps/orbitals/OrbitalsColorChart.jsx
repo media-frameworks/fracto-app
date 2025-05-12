@@ -71,7 +71,7 @@ export class OrbitalsColorChart extends Component {
          return false;
       }
       const orbital_bins = collect_orbitals(canvas_buffer)
-      this.setState({orbital_bins: orbital_bins})
+      this.setState({orbital_bins})
       return true
    }
 

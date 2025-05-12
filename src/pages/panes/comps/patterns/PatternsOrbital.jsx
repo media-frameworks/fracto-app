@@ -110,12 +110,10 @@ export class PatternsOrbital extends Component {
             },
          ]
       }
-      return [
-         <Scatter
-            datasetIdKey='id1'
-            data={data_dataset} options={options}
-         />
-      ]
+      return <Scatter
+         datasetIdKey='id1'
+         data={data_dataset} options={options}
+      />
    }
 
    get_fracto_values = (set1, set2) => {
@@ -229,7 +227,7 @@ export class PatternsOrbital extends Component {
          if (i > 0) {
             m1 = (point.y - Q_core_neg.y) / (point.x - Q_core_neg.x)
             m2 = (prev_y - Q_core_neg.y) / (prev_x - Q_core_neg.x)
-            theta = Math.atan((m1 - m2)/(1 + m1 * m2))
+            theta = Math.atan((m1 - m2) / (1 + m1 * m2))
          }
          prev_x = point.x
          prev_y = point.y
@@ -254,7 +252,7 @@ export class PatternsOrbital extends Component {
       }
       const wrapper_style = {
          width: `${wrapper_dimension * 0.750}px`,
-         height: `${wrapper_dimension * 0.750}px`
+         height: `${wrapper_dimension * 0.60}px`
       }
       return <styles.ContentWrapper style={wrapper_style}>
          {this.click_point_data()}

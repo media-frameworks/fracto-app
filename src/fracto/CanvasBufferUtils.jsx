@@ -1,6 +1,6 @@
 
 export const collect_orbitals = (canvas_buffer) => {
-   let orbital_bins = {
+   const orbital_bins = {
       total_count: 0,
       max_bin: 1
    }

@@ -21,7 +21,10 @@ import {
    faUpDown,
    faScroll,
 } from "@fortawesome/free-solid-svg-icons";
-import {faComment} from "@fortawesome/free-regular-svg-icons"
+import {
+   faComment,
+   faClock
+} from "@fortawesome/free-regular-svg-icons"
 
 export const NODE_TYPE_UNKNOWN = 'node_type_unknown'
 export const NODE_TYPE_FILE = 'node_type_file'
@@ -39,6 +42,7 @@ export const KEY_TYPE_WIDTH_PX = 'key_width_px'
 export const KEY_TYPE_HEIGHT_PX = 'key_height_px'
 export const KEY_TYPE_SCRIPT_PATH = 'key_type_script_path'
 export const KEY_TYPE_FRACTO_SCRIPT = 'key_type_fracto_script'
+export const KEY_TYPE_DURATION = 'key_type_duration'
 
 // Script Node Types
 export const SCRIPT_NODE_TYPES = {
@@ -99,8 +103,8 @@ export const SCRIPT_NODE_TYPES = {
       component: 'NodeTypeStep',
    },
    [NODE_TYPE_CALL]: {
-      title: 'call',
-      title_plural: 'calls',
+      title: 'invoke',
+      title_plural: 'invokes',
       icon: 'faCodeBranch',
       icon_plural: 'faCodeBranch',
       description: 'Synchronously invoke a script method with inputs',
@@ -170,6 +174,14 @@ export const SCRIPT_KEY_TYPES = {
       icon: 'faScroll',
       description: 'The name of an imported script',
       format: TYPE_STRING,
+      listable: false,
+      component: 'KeyTypeFactoScript',
+   },
+   [KEY_TYPE_DURATION]: {
+      title: 'duration',
+      icon: 'faClock',
+      description: 'duration of a script step (in ms)',
+      format: TYPE_NUMBER,
       listable: false,
       component: 'KeyTypeFactoScript',
    },
@@ -244,6 +256,8 @@ export const icon_from_key = (key) => {
          return <styles.TreeIcon icon={faUpDown}/>
       case 'faScroll':
          return <styles.TreeIcon icon={faScroll}/>
+      case 'faClock':
+         return <styles.TreeIcon icon={faClock}/>
       default:
          return <styles.TreeIcon icon={faCircleQuestion}/>
    }

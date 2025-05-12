@@ -173,7 +173,7 @@ export class ScriptViewerTree extends Component {
             const new_key = `${key_path}-${key}`
             const simple_type = typeof data[key] === 'string' || typeof data[key] === 'number'
             const title = simple_type
-               ? this.render_simple_title(`${key}: ${data[key]}`, key, new_key)
+               ? this.render_simple_title(`${data[key]}`, key, new_key)
                : this.render_simple_title(key, DATA_KEY_INDEXED, new_key)
             const new_branch = {
                key: new_key,

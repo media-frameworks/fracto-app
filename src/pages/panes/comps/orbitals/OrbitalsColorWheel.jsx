@@ -13,7 +13,6 @@ export class OrbitalsColorWheel extends Component {
    }
 
    state = {
-      orbital_bins: {},
       most_recent: {
          scope: 0,
          focal_point: {x: 0, y: 0}
@@ -54,10 +53,10 @@ export class OrbitalsColorWheel extends Component {
       }
       const dimension_px = page_settings[KEY_COMPS_HEIGHT_PX] * 0.40
       const orbital_bins = collect_orbitals(canvas_buffer)
-      this.setState({orbital_bins: orbital_bins, dimension_px})
+      this.setState({ dimension_px})
       const radius = dimension_px / 2 - 10
       if (radius > 0) {
-         color_wheel(canvas_ref, radius, 7, 0)
+         color_wheel(canvas_ref, radius, 8, 0, orbital_bins)
       }
       return true
    }

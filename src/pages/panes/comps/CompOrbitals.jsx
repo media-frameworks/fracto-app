@@ -17,22 +17,19 @@ export class CompOrbitals extends Component {
 
    render() {
       const {page_settings, on_settings_changed} = this.props
-      const elements = [
+      return <styles.ContentWrapper>
          <OrbitalsColorChart
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
-         />,
+         />
          <OrbitalsColorWheel
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
-         />,
+         />
          <OrbitalsHistogram
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
          />
-      ]
-      return <styles.ContentWrapper>
-         {elements}
       </styles.ContentWrapper>
    }
 }
