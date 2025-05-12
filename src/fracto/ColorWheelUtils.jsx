@@ -3,7 +3,7 @@ import FractoUtil from "fracto/FractoUtil";
 export const TWO_PI = 2 * Math.PI;
 const PI_BY_2 = Math.PI / 2
 
-const draw_region = (ctx, canvas_width_px, radius1, radius2, angle1, angle2, pattern, color_phase = 0) => {
+const draw_region = (ctx, canvas_width_px, radius1, radius2, angle1, angle2, pattern, color_phase = 0, opacity = 1.0) => {
    const size_by_two = canvas_width_px / 2
    ctx.beginPath();
    ctx.strokeStyle = 'black'
@@ -12,7 +12,7 @@ const draw_region = (ctx, canvas_width_px, radius1, radius2, angle1, angle2, pat
    ctx.closePath();
 
    const [h, s, l] = FractoUtil.fracto_pattern_color_hsl(pattern, 500)
-   ctx.fillStyle = `hsl(${h + color_phase}, ${s}%, ${l}%)`
+   ctx.fillStyle = `hsla(${h + color_phase}, ${s}%, ${l}%, ${opacity})`
    ctx.fill();
    ctx.stroke();
 
@@ -40,20 +40,54 @@ export const draw_circle = (ctx, x, y, radius, color) => {
    ctx.closePath();
 }
 
-export const color_wheel = (canvas_ref, radius, ring_count = 5, color_phase = 0) => {
+const get_opacity = (orbital_bins, pattern) => {
+   if (orbital_bins) {
+      const orbital_key = `orbital_${pattern}`
+      if (orbital_bins[orbital_key]) {
+         return 0.25 + 0.75 * orbital_bins[orbital_key].portion
+      }
+   }
+   return 0.25
+}
+
+export const color_wheel = (canvas_ref, radius, ring_count = 5, color_phase = 0, orbital_bins = null) => {
    const canvas = canvas_ref.current
    if (!canvas) {
       return
    }
+   if (orbital_bins) {
+      let greatest_bin_count = 0
+      const pattern_limit = Math.pow(2, ring_count)
+      for (let pattern = 1; pattern < pattern_limit; pattern++) {
+         const orbital_key = `orbital_${pattern}`
+         if (orbital_bins[orbital_key]) {
+            if (greatest_bin_count < orbital_bins[orbital_key].bin_count) {
+               greatest_bin_count = orbital_bins[orbital_key].bin_count
+            }
+         }
+      }
+      const log_greatest_bin_count = Math.log(greatest_bin_count)
+      for (let pattern = 1; pattern < pattern_limit; pattern++) {
+         const orbital_key = `orbital_${pattern}`
+         if (orbital_bins[orbital_key]) {
+            orbital_bins[orbital_key].portion =
+               Math.log(orbital_bins[orbital_key].bin_count) / log_greatest_bin_count
+         }
+      }
+      console.log('orbital_bins', orbital_bins)
+   }
+
    const ctx = canvas.getContext('2d');
    ctx.lineWidth = radius / 250;
 
    const bounds = canvas.getBoundingClientRect();
    const width_px = bounds.width;
+   ctx.fillStyle = 'white'
+   ctx.fillRect(0, 0, width_px, width_px);
 
    const radii = [];
    for (let i = 1; i <= ring_count; i++) {
-      radii.push(i * radius / ring_count );
+      radii.push(i * radius / ring_count);
    }
 
    let angle = -PI_BY_2
@@ -62,15 +96,27 @@ export const color_wheel = (canvas_ref, radius, ring_count = 5, color_phase = 0)
       const limit = Math.pow(2, ring + 1) - 1
       const angle_increment = Math.PI / Math.pow(2, ring - 1)
       for (; pattern <= limit; pattern++) {
-         draw_region(ctx, width_px, radii[ring - 1], radii[ring], angle, angle + angle_increment, pattern, color_phase)
+         const opacity = get_opacity(orbital_bins, pattern)
+         draw_region(
+            ctx,
+            width_px,
+            radii[ring - 1],
+            radii[ring],
+            angle,
+            angle + angle_increment,
+            pattern,
+            color_phase,
+            opacity
+         )
          angle += angle_increment
       }
    }
 
    const size_by_two = width_px / 2
    let [h, s, l] = FractoUtil.fracto_pattern_color_hsl(1, 500)
+   const opacity = get_opacity(orbital_bins, 1)
    draw_circle(ctx, size_by_two, size_by_two, radii[0],
-      `hsl(${h + color_phase}, ${s}%, ${l}%)`)
+      `hsla(${h + color_phase}, ${s}%, ${l}%, ${opacity})`)
    ctx.strokeStyle = 'white';
    ctx.textAlign = 'center';
    ctx.textBaseline = 'middle';

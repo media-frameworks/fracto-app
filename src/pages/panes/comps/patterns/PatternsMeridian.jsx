@@ -208,7 +208,7 @@ export class PatternsMeridian extends Component {
       }
       const wrapper_style = {
          width: `${wrapper_dimension * 0.750}px`,
-         height: `${wrapper_dimension * 0.750}px`
+         height: `${wrapper_dimension * 0.60}px`
       }
       return <styles.ContentWrapper style={wrapper_style}>
          {this.render_meridians()}

@@ -3,5 +3,6 @@
   "common/play_sound",
   "common/startup",
   "explainer/main",
-  "gradual_descent"
+  "gradual_descent",
+  "slow_pan"
 ]
