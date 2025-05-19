@@ -5,6 +5,7 @@ import {CompOrbitalStyles as styles} from "styles/CompOrbitalStyles"
 import OrbitalsColorChart from "./orbitals/OrbitalsColorChart";
 import OrbitalsHistogram from "./orbitals/OrbitalsHistogram";
 import OrbitalsColorWheel from "./orbitals/OrbitalsColorWheel";
+import OrbitalsFamilySpan from "./orbitals/OrbitalsFamilySpan";
 
 export class CompOrbitals extends Component {
    static propTypes = {
@@ -18,15 +19,19 @@ export class CompOrbitals extends Component {
    render() {
       const {page_settings, on_settings_changed} = this.props
       return <styles.ContentWrapper>
-         <OrbitalsColorChart
-            page_settings={page_settings}
-            on_settings_changed={on_settings_changed}
-         />
          <OrbitalsColorWheel
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
          />
          <OrbitalsHistogram
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}
+         />
+         {/*<OrbitalsColorChart*/}
+         {/*   page_settings={page_settings}*/}
+         {/*   on_settings_changed={on_settings_changed}*/}
+         {/*/>*/}
+         <OrbitalsFamilySpan
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}
          />

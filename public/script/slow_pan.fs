@@ -1,11 +1,11 @@
 {
   "comment": "Will transit slowly from one fp/scope to another",
   "declares": {
-    "STARTING_POINT": [-1.25, 0],
-    "STARTING_SCOPE": [3.0],
-    "ENDING_POINT": [-1.95, 0],
-    "ENDING_SCOPE": [0.125],
-    "DURATION_MS": 100000
+    "starting_point": {"type": "FocalPoint", "value": {"r": -1.25, "i": 0}},
+    "starting_scope": {"type": "Scope", "value": 3.0},
+    "ending_point": {"type": "FocalPoint", "value": {"r": -1.95, "i": 0}},
+    "ending_scope": {"type": "Scope", "value": 0.125},
+    "duration": {"type": "TimeMs", "value": 100000}
   },
   "steps": [
     {
