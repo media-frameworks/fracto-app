@@ -43,7 +43,7 @@ export class OrbitalsColorWheel extends Component {
          this.setState({most_recent: {scope, focal_point}})
          this.fill_pattern_bins()
       } else if (canvas_buffer_changed) {
-         this.fill_pattern_bins()
+         // this.fill_pattern_bins()
       }
    }
 

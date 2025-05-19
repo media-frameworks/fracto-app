@@ -71,13 +71,13 @@ export class PaneComps extends Component {
                on_settings_changed={on_settings_changed}
             />
          },
-         {
-            label: 'colors',
-            content: <CompColors
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-         },
+         // {
+         //    label: 'colors',
+         //    content: <CompColors
+         //       page_settings={page_settings}
+         //       on_settings_changed={on_settings_changed}
+         //    />
+         // },
          {
             label: 'nursery',
             content: <CompNursery

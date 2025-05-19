@@ -256,7 +256,7 @@ export class PatternsOrbital extends Component {
       }
       return <styles.ContentWrapper style={wrapper_style}>
          {this.click_point_data()}
-         {this.click_point_table()}
+         {/*{this.click_point_table()}*/}
          {this.render_info()}
       </styles.ContentWrapper>
    }

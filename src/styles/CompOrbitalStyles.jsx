@@ -3,9 +3,11 @@ import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompOrbitalStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
-      padding: 0.5rem 1rem;
-       height: fit-content;
-       overflow: scroll;
+      margin: 0.5rem 1rem;
+   `
+   static FamilySpanCanvas = styled.canvas`
+       ${CoolStyles.pointer}
+       margin: 1rem;
    `
 }
 
