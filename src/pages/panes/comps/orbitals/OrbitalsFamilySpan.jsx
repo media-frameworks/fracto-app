@@ -125,7 +125,7 @@ export class OrbitalsFamilySpan extends Component {
          family.members.sort((a, b) => a.orbital - b.orbital).forEach((member) => {
             const height_px = 0.45 * wrapper_height_px * Math.log(member.bin_count) / log_highest_count
             base_y -= height_px
-            let width_px = 50 - 7 * Math.log(member.orbital)
+            let width_px = Math.max(2, 100 - 16 * Math.log(member.orbital))
             if (width_px < 1) {
                width_px = 1
             }
@@ -134,7 +134,10 @@ export class OrbitalsFamilySpan extends Component {
             ctx.lineWidth = 1
             ctx.strokeRect(leftmost, base_y, width_px + 1, height_px + 1)
             if (height_px > 15 && width_px > 15) {
-               const font_size = Math.min(width_px - 12, height_px)
+               let font_size = Math.min(width_px -10, height_px - 10)
+               if (font_size > 24) {
+                  font_size = 24
+               }
                ctx.font = `lighter ${font_size}px Courier, monospace`;
                ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
                ctx.strokeOpacity = 0.5
