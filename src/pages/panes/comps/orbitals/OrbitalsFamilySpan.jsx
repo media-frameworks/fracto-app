@@ -2,10 +2,11 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 
 import {CompOrbitalStyles as styles} from 'styles/CompOrbitalStyles'
-import {KEY_COMPS_HEIGHT_PX, KEY_COMPS_WIDTH_PX} from "../../../../settings/PaneSettings";
+import {KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
 import {collect_orbitals} from "fracto/CanvasBufferUtils";
-import {color_wheel} from "../../../../fracto/ColorWheelUtils";
-import FractoUtil from "../../../../fracto/FractoUtil";
+import FractoUtil from "fracto/FractoUtil";
+
+const GRADUAL_FACTOR_CHANGE = 1.015
 
 export class OrbitalsFamilySpan extends Component {
    static propTypes = {
@@ -24,6 +25,7 @@ export class OrbitalsFamilySpan extends Component {
       orbital_bins: {},
       families: {},
       highest_family_count: 0,
+      height_scalar: 0.45,
    };
 
    componentDidMount() {
@@ -34,7 +36,7 @@ export class OrbitalsFamilySpan extends Component {
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
-      const {most_recent, wrapper_width_px} = this.state
+      const {most_recent, wrapper_width_px, height_scalar} = this.state
       const {page_settings} = this.props
       const {scope, focal_point, canvas_buffer} = page_settings
       const mr_scope = most_recent.scope
@@ -45,7 +47,8 @@ export class OrbitalsFamilySpan extends Component {
       const canvas_buffer_changed = canvas_buffer && canvas_buffer.length !== prevState.canvas_buffer_width
       const width_px = page_settings[KEY_COMPS_WIDTH_PX] - 100
       const wrapper_width_changed = width_px !== wrapper_width_px
-      if (scope_changed || focal_point_x_changed || focal_point_y_changed) {
+      const height_scalar_changed = height_scalar !== prevState.height_scalar
+      if (scope_changed || focal_point_x_changed || focal_point_y_changed || height_scalar_changed) {
          this.setState({most_recent: {scope, focal_point}})
          this.fill_pattern_bins()
       } else if (wrapper_width_changed) {
@@ -69,7 +72,7 @@ export class OrbitalsFamilySpan extends Component {
    }
 
    fill_pattern_bins = () => {
-      const {canvas_ref, wrapper_width_px, wrapper_height_px} = this.state
+      const {canvas_ref, wrapper_width_px, wrapper_height_px, height_scalar} = this.state
       const {page_settings} = this.props
       const {canvas_buffer} = page_settings
       if (!canvas_buffer) {
@@ -114,6 +117,7 @@ export class OrbitalsFamilySpan extends Component {
       })
       console.log('families, highest_family_count', families, highest_family_count)
       const log_highest_count = Math.log(highest_family_count) * 2
+      let least_base_y = wrapper_height_px
       Object.keys(families).forEach(key => {
          const family = families[key]
          const leftmost = family.base === 1 ? 0
@@ -123,7 +127,7 @@ export class OrbitalsFamilySpan extends Component {
          let base_y = wrapper_height_px
          ctx.fillStyle = FractoUtil.fracto_pattern_color(family.base)
          family.members.sort((a, b) => a.orbital - b.orbital).forEach((member) => {
-            const height_px = 0.45 * wrapper_height_px * Math.log(member.bin_count) / log_highest_count
+            const height_px = height_scalar * wrapper_height_px * Math.log(member.bin_count) / log_highest_count
             base_y -= height_px
             let width_px = Math.max(2, 100 - 16 * Math.log(member.orbital))
             if (width_px < 1) {
@@ -134,7 +138,7 @@ export class OrbitalsFamilySpan extends Component {
             ctx.lineWidth = 1
             ctx.strokeRect(leftmost, base_y, width_px + 1, height_px + 1)
             if (height_px > 15 && width_px > 15) {
-               let font_size = Math.min(width_px -10, height_px - 10)
+               let font_size = Math.min(width_px - 10, height_px - 10)
                if (font_size > 24) {
                   font_size = 24
                }
@@ -146,19 +150,28 @@ export class OrbitalsFamilySpan extends Component {
                const text_pos_y = base_y + font_size + 1
                ctx.strokeText(`${member.orbital}`, text_pos_x, text_pos_y);
             }
+            if (base_y < least_base_y) {
+               least_base_y = base_y
+            }
          })
          console.log('family', family, leftmost, wrapper_height_px)
       })
 
-
       setTimeout(() => {
+         let new_height_scalar = height_scalar
+         if (least_base_y > 20) {
+            new_height_scalar = height_scalar * GRADUAL_FACTOR_CHANGE
+         } else if (least_base_y < 0) {
+            new_height_scalar = height_scalar / GRADUAL_FACTOR_CHANGE
+         }
          this.setState({
             orbital_bins,
             families,
             highest_family_count,
+            height_scalar: new_height_scalar,
             canvas_buffer_width: canvas_buffer.length
          })
-      }, 150)
+      }, 50)
       return true
    }
 
