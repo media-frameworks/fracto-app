@@ -17,6 +17,7 @@ import {
    SCRIPT_VIEWER_MODE_UI
 } from "../pages/panes/comps/scripts/ScriptsViewerBar";
 import {PATTERN_TYPE_ORBITALS} from "../pages/panes/comps/CompPatterns";
+import {ADMIN_TYPE_SETTINGS} from "../pages/panes/comps/CompAdmin";
 
 export const KEY_IMAGE_WIDTH = 'image_width'
 export const KEY_COLORATION_TYPE = 'coloration_type'
@@ -24,6 +25,7 @@ export const KEY_MINIBROT_SORT_TYPE = 'minibrot_sort_type'
 export const KEY_BAILIWICK_ID = 'bailiwick_id'
 export const KEY_COLOR_PHASE = 'color_phase'
 export const KEY_PATTERN_TYPE = 'pattern_type'
+export const KEY_ADMIN_TYPE = 'admin_type'
 
 export const KEY_SCRIPT_TREE_WIDTH_PX = 'script_tree_width_px'
 export const KEY_SCRIPT_TREE_HEIGHT_PX = 'script_tree_height_px'
@@ -158,6 +160,13 @@ export const COMP_KEYED_SETTINGS = {
       data_type: TYPE_STRING,
       default_value: PATTERN_TYPE_ORBITALS,
       description: 'type of patterns chosen in the UI (orbitals or meridians)',
+      component: COMPONENT_PATTERNS,
+      persist: true,
+   },
+   [KEY_ADMIN_TYPE]: {
+      data_type: TYPE_STRING,
+      default_value: ADMIN_TYPE_SETTINGS,
+      description: 'type of admin contents chosen in the UI (settings or inventory)',
       component: COMPONENT_PATTERNS,
       persist: true,
    },

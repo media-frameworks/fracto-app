@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {Scatter} from "react-chartjs-2";
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import Complex from "common/math/Complex";
 import FractoFastCalc from "fracto/FractoFastCalc";
-import FractoUtil from "fracto/FractoUtil";
-import {render_pattern_block} from "fracto/styles/FractoStyles";
+// import {render_pattern_block} from "fracto/styles/FractoStyles";
 import {
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
@@ -19,17 +17,15 @@ import CoolTable, {
    CELL_ALIGN_LEFT,
    CELL_TYPE_NUMBER,
 } from "common/ui/CoolTable";
+import {
+   calculate_cardioid_Q,
+   click_point_chart,
+   escape_points_chart,
+   escape_r_theta_chart,
+   r_theta_chart
+} from "./PatternsUtils";
 
 ChartJS.register(CategoryScale, BarController)
-
-const GRID_CONFIG = {
-   color: function (context) {
-      return context.tick.value === 0 ? '#aaaaaa' : '#dddddd'
-   },
-   lineWidth: function (context) {
-      return context.tick.value === 0 ? 1.5 : 1
-   }
-};
 
 const ORBITAL_POINTS_COLUMNS = [
    {
@@ -73,49 +69,6 @@ export class PatternsOrbital extends Component {
       Q_core_neg: null,
    }
 
-   click_point_chart = (set1, set2, in_cardioid = false, escaper = false) => {
-      const options = {
-         scales: {
-            x: {grid: GRID_CONFIG,},
-            y: {grid: GRID_CONFIG,}
-         },
-         animation: false,
-         maintainAspectRatio: false,
-      }
-      if (!in_cardioid) {
-         options.scales.x.min = -2
-         options.scales.x.max = 2
-         options.scales.y.min = -2
-         options.scales.y.max = 2
-      }
-      const cardinality = set1?.length - 1 || 0
-      const set1_label = escaper
-         ? `escapes in ${cardinality || '?'} steps`
-         : `${cardinality || '?'} point${in_cardioid ? 's in cardiod' : ' orbital'}`
-      const data_dataset = {
-         datasets: [
-            {
-               Id: 1,
-               label: set1_label,
-               data: set1,
-               backgroundColor: FractoUtil.fracto_pattern_color(cardinality || 0),
-               showLine: true
-            },
-            {
-               Id: 2,
-               label: in_cardioid ? 'Q' : 'Q',
-               data: set2,
-               backgroundColor: 'black',
-               showLine: false
-            },
-         ]
-      }
-      return <Scatter
-         datasetIdKey='id1'
-         data={data_dataset} options={options}
-      />
-   }
-
    get_fracto_values = (set1, set2) => {
       const {page_settings} = this.props
       let click_point = page_settings[KEY_HOVER_POINT]
@@ -123,42 +76,6 @@ export class PatternsOrbital extends Component {
          click_point = page_settings[KEY_FOCAL_POINT]
       }
       return FractoFastCalc.calc(click_point.x, click_point.y)
-   }
-
-   calculate_cardioid_Q = (x, y, scalar = 1) => {
-      const P = new Complex(x, y)
-      const negative_four_P = P.scale(-4.0)
-      const under_radocal = negative_four_P.offset(1, 0)
-      const radical = under_radocal.sqrt().scale(scalar)
-      const result = radical.offset(1.0, 0).scale(0.5)
-      return {x: result.re, y: result.im}
-   }
-
-   escape_points_chart = (click_point) => {
-      const P_x = click_point.x
-      const P_y = click_point.y
-      let Q_x_squared = 0
-      let Q_y_squared = 0
-      let Q_x = 0
-      let Q_y = 0
-      const escape_points = [{x: 0, y: 0}]
-      for (let iteration = 0; iteration < 10000; iteration++) {
-         Q_y = 2 * Q_x * Q_y + P_y;
-         Q_x = Q_x_squared - Q_y_squared + P_x;
-         Q_x_squared = Q_x * Q_x
-         Q_y_squared = Q_y * Q_y
-         const sum_squares = Q_x_squared + Q_y_squared
-         if (sum_squares > 4) {
-            break;
-         }
-         escape_points.push({x: Q_x, y: Q_y})
-      }
-      const Q_core_neg = this.calculate_cardioid_Q(click_point.x, click_point.y, -1)
-      setTimeout(() => {
-         this.setState({orbital_points: escape_points, Q_core_neg})
-      }, 1000)
-
-      return this.click_point_chart(escape_points, [Q_core_neg], false, true)
    }
 
    click_point_data = () => {
@@ -169,18 +86,32 @@ export class PatternsOrbital extends Component {
       }
       const fracto_values = this.get_fracto_values()
       const in_cardioid = FractoFastCalc.point_in_main_cardioid(click_point.x, click_point.y)
-      const Q_core_neg = this.calculate_cardioid_Q(click_point.x, click_point.y, -1)
+      const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
       if (fracto_values.pattern) {
          setTimeout(() => {
             this.setState({orbital_points: fracto_values.orbital_points, Q_core_neg})
          }, 1000)
-         return this.click_point_chart(
+         return click_point_chart(
             fracto_values.orbital_points,
             [Q_core_neg],
             in_cardioid, false
          )
       }
-      return this.escape_points_chart(click_point)
+      return escape_points_chart(click_point)
+   }
+
+   r_theta_data = () => {
+      const {page_settings} = this.props
+      let click_point = page_settings[KEY_HOVER_POINT]
+      if (!click_point) {
+         click_point = page_settings[KEY_FOCAL_POINT]
+      }
+      const fracto_values = this.get_fracto_values()
+      const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
+      if (fracto_values.pattern) {
+         return r_theta_chart(fracto_values.orbital_points, Q_core_neg)
+      }
+      return escape_r_theta_chart(click_point)
    }
 
    render_info = () => {
@@ -202,10 +133,6 @@ export class PatternsOrbital extends Component {
          }
          console.log('fracto_values.orbital_points', fracto_values.orbital_points)
          return <styles.InfoBlockWrapper>
-            <styles.PatternBlockWrapper>
-               {render_pattern_block(current_pattern)}
-            </styles.PatternBlockWrapper>
-            {/*{render_coordinates(product.re, product.im)}*/}
          </styles.InfoBlockWrapper>
       }
       return <styles.InfoPrompt>
@@ -250,14 +177,24 @@ export class PatternsOrbital extends Component {
       if (page_settings[KEY_COMPS_WIDTH_PX]) {
          wrapper_dimension = Math.min(page_settings[KEY_COMPS_WIDTH_PX], page_settings[KEY_COMPS_WIDTH_PX])
       }
-      const wrapper_style = {
-         width: `${wrapper_dimension * 0.750}px`,
-         height: `${wrapper_dimension * 0.60}px`
+      const click_point_style = {
+         width: `${wrapper_dimension * 0.55}px`,
+         height: `${wrapper_dimension * 0.55}px`
       }
-      return <styles.ContentWrapper style={wrapper_style}>
-         {this.click_point_data()}
+      const r_theta_style = {
+         width: `${wrapper_dimension * 0.75}px`,
+         height: `${wrapper_dimension * 0.35}px`,
+         backgroundColor: '#f8f8f8',
+      }
+      return <styles.ContentWrapper>
+         <styles.GraphWrapper style={click_point_style}>
+            {this.click_point_data()}
+         </styles.GraphWrapper>
+         <styles.GraphWrapper style={r_theta_style}>
+            {this.r_theta_data()}
+         </styles.GraphWrapper>
          {/*{this.click_point_table()}*/}
-         {this.render_info()}
+         {/*{this.render_info()}*/}
       </styles.ContentWrapper>
    }
 }
