@@ -3,7 +3,11 @@ import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompPatternStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
-      padding: 0.5rem 1rem;
+       overflow: scroll;
+       padding: 0.5rem 1rem;
+   `
+   static GraphWrapper = styled(CoolStyles.InlineBlock)`
+      margin: 0;
    `
    static InfoBlockWrapper = styled(CoolStyles.Block)`
        padding: 0.5rem 1rem;

@@ -67,8 +67,8 @@ export class CompNursery extends Component {
       const {page_settings, on_settings_changed} = this.props
       const frame_width = page_settings[KEY_COMPS_WIDTH_PX] - 25
       const margin = frame_width / 80
-      const large_width = (frame_width - 4 * margin) / 3
-      const small_width = (frame_width - 8 * margin) / 7
+      const large_width = (frame_width - 4 * margin) / 3.125
+      const small_width = (frame_width - 8 * margin) / 7.5
       const item_keys = Object.keys(tile_blocks)
       const new_tile_list = item_keys
          .sort((a, b) => tile_blocks[b] - tile_blocks[a])

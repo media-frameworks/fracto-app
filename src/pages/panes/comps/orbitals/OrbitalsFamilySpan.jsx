@@ -161,7 +161,7 @@ export class OrbitalsFamilySpan extends Component {
          let new_height_scalar = height_scalar
          if (least_base_y > 20) {
             new_height_scalar = height_scalar * GRADUAL_FACTOR_CHANGE
-         } else if (least_base_y < 0) {
+         } else if (least_base_y < 5) {
             new_height_scalar = height_scalar / GRADUAL_FACTOR_CHANGE
          }
          this.setState({

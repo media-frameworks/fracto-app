@@ -3,8 +3,8 @@ import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompAdminStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
-      padding: 0.25rem;
        overflow-y: auto;
+       padding: 0.5rem 1rem;
    `
    static TileBlockWrapper = styled(CoolStyles.InlineBlock)`
        padding: 0;
@@ -17,7 +17,7 @@ export class CompAdminStyles {
        margin-bottom: 0.75rem;
    `
    static PreambleWrapper = styled(CoolStyles.Block)`
-       ${CoolStyles.align_center}
+       ${CoolStyles.align_left};
        ${CoolStyles.italic}
        color: #aaaaaa;
        font-size: 1.25rem;
@@ -36,7 +36,18 @@ export class CompAdminStyles {
        margin-left: 1rem;
    `
    static CenteredBlock = styled(CoolStyles.Block)`
-       ${CoolStyles.align_center}
+       ${CoolStyles.align_left}
+       border-bottom: 0.1rem solid #aaaaaa;
+       margin-bottom: 0.5rem;
+   `
+   static PatternTypePrompt = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.pointer}
+       ${CoolStyles.bold}
+       ${CoolStyles.uppercase}
+       ${CoolStyles.deep_blue_text}
+       font-size: 1rem;
+       margin-left: 0.25rem;
+       margin-bottom: 0.25rem;
    `
 }
 
