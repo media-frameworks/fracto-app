@@ -81,7 +81,7 @@ export const iteration_chart = (set1, set2) => {
    }
    options.scales.y.min = 0
    options.scales.x.min = set1[0].x
-   options.scales.x.max = set1[set1.length - 1].x
+   // options.scales.x.max = set1[set1.length - 1].x
    const cardinality = set1?.length - 1 || 0
    const data_dataset = {
       datasets: [
@@ -91,14 +91,7 @@ export const iteration_chart = (set1, set2) => {
             data: set1,
             backgroundColor: FractoUtil.fracto_pattern_color(cardinality),
             showLine: true
-         },
-         {
-            Id: 2,
-            label: 'theta',
-            data: set2,
-            backgroundColor: 'blue',
-            showLine: true
-         },
+         }
       ]
    }
    return <Scatter
@@ -144,7 +137,7 @@ export const r_theta_chart = (orbital_points, Q) => {
       const point = new Complex(p.x, p.y)
       const difference = point.offset(-Q.x, -Q.y)
       let angle = Math.atan2(difference.im, difference.re)
-      while (angle < max_angle) {
+      while (angle < max_angle - Math.PI) {
          angle += Math.PI * 2
       }
       max_angle = angle
@@ -161,7 +154,7 @@ export const escape_r_theta_chart = (click_point) => {
       const point = new Complex(p.x, p.y)
       const difference = point.offset(-Q_core_neg.x,-Q_core_neg.y)
       let angle = Math.atan2(difference.im, difference.re)
-      while (angle < max_angle) {
+      while (angle < max_angle - Math.PI) {
          angle += Math.PI * 2
       }
       max_angle = angle
