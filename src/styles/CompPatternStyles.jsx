@@ -49,6 +49,9 @@ export class CompPatternStyles {
        margin-left: 0.25rem;
        margin-bottom: 0.25rem;
    `
+   static InfoLine = styled(CoolStyles.Block)`
+       ${CoolStyles.italic}
+   `
 }
 
 export default CompPatternStyles

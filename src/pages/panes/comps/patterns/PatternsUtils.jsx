@@ -4,11 +4,23 @@ import {Scatter} from "react-chartjs-2";
 import Complex from "common/math/Complex";
 import FractoUtil from "fracto/FractoUtil";
 
+const EPSILON = 0.0001
+
 const GRID_CONFIG = {
    color: function (context) {
+      const pi_grid = context.tick.value / (Math.PI * 2)
+      const diff = Math.abs(pi_grid - Math.round(pi_grid))
+      if (diff < EPSILON && pi_grid > EPSILON) {
+         return '#888888'
+      }
       return context.tick.value === 0 ? '#aaaaaa' : '#dddddd'
    },
    lineWidth: function (context) {
+      const pi_grid = context.tick.value / (Math.PI * 2)
+      const diff = Math.abs(pi_grid - Math.round(pi_grid))
+      if (diff < EPSILON && pi_grid > EPSILON) {
+         return 1.5
+      }
       return context.tick.value === 0 ? 1.5 : 1
    }
 };
@@ -80,10 +92,6 @@ export const iteration_chart = (set1, in_cardioid, escaper) => {
       maintainAspectRatio: false,
    }
    options.scales.y.min = 0
-   options.scales.x.min = set1[0].x
-   if (!escaper) {
-      options.scales.x.max = set1[set1.length - 1].x
-   }
    const cardinality = set1?.length - 1 || 0
    const data_dataset = {
       datasets: [
@@ -163,7 +171,7 @@ export const escape_r_theta_chart = (click_point, in_cardioid) => {
       const point = new Complex(p.x, p.y)
       const difference = point.offset(-Q_core_neg.x, -Q_core_neg.y)
       let angle = Math.atan2(difference.im, difference.re)
-      while (angle < max_angle - Math.PI) {
+      while (angle < max_angle - Math.PI/2) {
          angle += Math.PI * 2
       }
       max_angle = angle

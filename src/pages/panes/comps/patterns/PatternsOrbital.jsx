@@ -55,6 +55,7 @@ export class PatternsOrbital extends Component {
          orbital_points: fracto_values.orbital_points,
          in_cardioid,
          Q_core_neg,
+         iteration: fracto_values.iteration
       }
    }
 
@@ -81,14 +82,24 @@ export class PatternsOrbital extends Component {
 
    sidebar_info = () => {
       const click_point_info = this.get_click_point_info()
-      const {pattern, orbital_points, Q_core_neg} = click_point_info
+      const {pattern, orbital_points, Q_core_neg, in_cardioid, iteration} = click_point_info
       if (!orbital_points) {
          return ''
       }
       console.log('sidebar_info', click_point_info)
       const r_data = process_r_data(orbital_points, Q_core_neg)
       const cycles = (r_data[r_data.length - 1].x - r_data[0].x) / (Math.PI * 2)
-      return `${pattern} points, ${Math.round(cycles)} cycles`
+      const statements = []
+      if (pattern) {
+         statements.push(`${pattern} points`)
+      } else {
+         statements.push(`escapes in ${iteration} points`)
+      }
+      statements.push(`${Math.round(cycles)} cycles`)
+      statements.push(`${in_cardioid ? 'within' : 'outside of'} main cardioid`)
+      return statements.map(statement => {
+         return <styles.InfoLine>{statement}</styles.InfoLine>
+      })
    }
 
    render() {
