@@ -178,12 +178,12 @@ export class PatternsOrbital extends Component {
          wrapper_dimension = Math.min(page_settings[KEY_COMPS_WIDTH_PX], page_settings[KEY_COMPS_WIDTH_PX])
       }
       const click_point_style = {
-         width: `${wrapper_dimension * 0.55}px`,
-         height: `${wrapper_dimension * 0.55}px`
+         width: `${wrapper_dimension * 0.45}px`,
+         height: `${wrapper_dimension * 0.45}px`
       }
       const r_theta_style = {
-         width: `${wrapper_dimension * 0.75}px`,
-         height: `${wrapper_dimension * 0.35}px`,
+         width: `${wrapper_dimension * 0.85}px`,
+         height: `${wrapper_dimension * 0.30}px`,
          backgroundColor: '#f8f8f8',
       }
       return <styles.ContentWrapper>
