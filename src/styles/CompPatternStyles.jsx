@@ -7,7 +7,12 @@ export class CompPatternStyles {
        padding: 0.5rem 1rem;
    `
    static GraphWrapper = styled(CoolStyles.InlineBlock)`
-      margin: 0;
+       margin: 0;
+       background-color: #f8f8f8;
+   `
+   static SidebarWrapper = styled(CoolStyles.InlineBlock)`
+       margin: 0;
+       background-color: #f8f8f8;
    `
    static InfoBlockWrapper = styled(CoolStyles.Block)`
        padding: 0.5rem 1rem;
