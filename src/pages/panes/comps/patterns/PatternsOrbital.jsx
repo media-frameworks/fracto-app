@@ -97,7 +97,7 @@ export class PatternsOrbital extends Component {
             in_cardioid, false
          )
       }
-      return escape_points_chart(click_point)
+      return escape_points_chart(click_point, in_cardioid)
    }
 
    r_theta_data = () => {
@@ -108,10 +108,11 @@ export class PatternsOrbital extends Component {
       }
       const fracto_values = this.get_fracto_values()
       const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
+      const in_cardioid = FractoFastCalc.point_in_main_cardioid(click_point.x, click_point.y)
       if (fracto_values.pattern) {
-         return r_theta_chart(fracto_values.orbital_points, Q_core_neg)
+         return r_theta_chart(fracto_values.orbital_points, Q_core_neg, in_cardioid)
       }
-      return escape_r_theta_chart(click_point)
+      return escape_r_theta_chart(click_point, in_cardioid)
    }
 
    render_info = () => {
@@ -178,7 +179,7 @@ export class PatternsOrbital extends Component {
          wrapper_dimension = Math.min(page_settings[KEY_COMPS_WIDTH_PX], page_settings[KEY_COMPS_WIDTH_PX])
       }
       const click_point_style = {
-         width: `${wrapper_dimension * 0.45}px`,
+         width: `${wrapper_dimension * 0.65}px`,
          height: `${wrapper_dimension * 0.45}px`
       }
       const r_theta_style = {

@@ -29,7 +29,7 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
          y: {grid: GRID_CONFIG,}
       },
       animation: false,
-      maintainAspectRatio: false,
+      maintainAspectRatio: in_cardioid,
    }
    if (!in_cardioid) {
       options.scales.x.min = -1.5
@@ -65,7 +65,7 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
    />
 }
 
-export const iteration_chart = (set1, set2) => {
+export const iteration_chart = (set1, in_cardioid) => {
    const options = {
       scales: {
          x: {
@@ -80,6 +80,9 @@ export const iteration_chart = (set1, set2) => {
       maintainAspectRatio: false,
    }
    options.scales.y.min = 0
+   if (!in_cardioid) {
+      options.scales.y.max = 2.0
+   }
    options.scales.x.min = set1[0].x
    // options.scales.x.max = set1[set1.length - 1].x
    const cardinality = set1?.length - 1 || 0
@@ -122,37 +125,38 @@ const get_escape_points = (click_point) => {
    return escape_points
 }
 
-export const escape_points_chart = (click_point) => {
+export const escape_points_chart = (click_point, in_cardioid) => {
    const escape_points = get_escape_points(click_point)
    const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
-   return click_point_chart(escape_points, [Q_core_neg], false, true)
+   return click_point_chart(escape_points, [Q_core_neg], in_cardioid, true)
 }
 
-export const r_theta_chart = (orbital_points, Q) => {
+export const r_theta_chart = (orbital_points, Q, in_cardioid) => {
    if (!orbital_points) {
       return []
    }
    let max_angle = 0
+   const progress_offset = in_cardioid ? 0 : -Math.PI
    const r_data = orbital_points.map((p, index) => {
       const point = new Complex(p.x, p.y)
       const difference = point.offset(-Q.x, -Q.y)
       let angle = Math.atan2(difference.im, difference.re)
-      while (angle < max_angle - Math.PI) {
+      while (angle < max_angle - progress_offset) {
          angle += Math.PI * 2
       }
       max_angle = angle
       return {x: angle, y: difference.magnitude()}
    })
-   return iteration_chart(r_data, [])
+   return iteration_chart(r_data, in_cardioid)
 }
 
-export const escape_r_theta_chart = (click_point) => {
+export const escape_r_theta_chart = (click_point, in_cardioid) => {
    const escape_points = get_escape_points(click_point)
    const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
    let max_angle = 0
    const r_data = escape_points.map((p, index) => {
       const point = new Complex(p.x, p.y)
-      const difference = point.offset(-Q_core_neg.x,-Q_core_neg.y)
+      const difference = point.offset(-Q_core_neg.x, -Q_core_neg.y)
       let angle = Math.atan2(difference.im, difference.re)
       while (angle < max_angle - Math.PI) {
          angle += Math.PI * 2
@@ -160,5 +164,5 @@ export const escape_r_theta_chart = (click_point) => {
       max_angle = angle
       return {x: angle, y: difference.magnitude()}
    })
-   return iteration_chart(r_data, [])
+   return iteration_chart(r_data, in_cardioid)
 }
