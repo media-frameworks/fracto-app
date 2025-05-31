@@ -93,6 +93,10 @@ export const iteration_chart = (set1, in_cardioid, escaper) => {
    }
    options.scales.y.min = 0
    const cardinality = set1?.length - 1 || 0
+   if (!escaper && cardinality) {
+      options.scales.x.min = set1[0].x
+      options.scales.x.max = set1[set1.length - 1].x
+   }
    const data_dataset = {
       datasets: [
          {
