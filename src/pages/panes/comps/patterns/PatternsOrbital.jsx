@@ -6,6 +6,7 @@ import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {
+   KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
 } from "settings/AppSettings";
@@ -13,12 +14,21 @@ import {KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
 import {
    calculate_cardioid_Q,
    click_point_chart,
+   get_escape_points,
    escape_points_chart,
-   escape_r_theta_chart, process_r_data,
+   escape_r_theta_chart,
+   process_r_data,
    r_theta_chart
 } from "./PatternsUtils";
 
 ChartJS.register(CategoryScale, BarController)
+
+const ANIMATION_INIT = {
+   in_animation: false,
+   animation_index: -1,
+   page_settings_str: null,
+   animation_click_point: null,
+}
 
 export class PatternsOrbital extends Component {
    static propTypes = {
@@ -28,7 +38,37 @@ export class PatternsOrbital extends Component {
 
    state = {
       orbital_points: [],
+      r_data: [],
       Q_core_neg: null,
+      in_animation: false,
+      animation_index: -1,
+      page_settings_str: null,
+      animation_click_point: null,
+   }
+
+   componentDidMount() {
+      const {page_settings} = this.props
+      this.setState({page_settings_str: JSON.stringify(page_settings)})
+      this.initialize()
+   }
+
+   componentDidUpdate(prevProps, prevState, snapshot) {
+      const {in_animation} = this.state
+      const {page_settings} = this.props;
+      if (prevState.page_settings_str !== JSON.stringify(page_settings) && !in_animation) {
+         setTimeout(this.initialize, 100)
+      }
+   }
+
+   initialize = () => {
+      const click_point_info = this.get_click_point_info()
+      const {orbital_points, Q_core_neg} = click_point_info
+      if (orbital_points) {
+         const r_data = process_r_data(orbital_points, Q_core_neg)
+         if (r_data.length) {
+            this.setState({r_data})
+         }
+      }
    }
 
    get_fracto_values = (set1, set2) => {
@@ -60,35 +100,72 @@ export class PatternsOrbital extends Component {
    }
 
    click_point_data = () => {
+      const {in_animation, animation_index} = this.state
       const click_point_info = this.get_click_point_info()
       const {click_point, pattern, orbital_points, in_cardioid, Q_core_neg} = click_point_info
       if (pattern) {
-         setTimeout(() => {
-            this.setState({orbital_points, Q_core_neg})
-         }, 1000)
-         return click_point_chart(orbital_points, [Q_core_neg], in_cardioid, false)
+         const set2 = [Q_core_neg]
+         if (in_animation && animation_index >= 0) {
+            set2.push(orbital_points[animation_index])
+         }
+         return click_point_chart(orbital_points, set2, in_cardioid, false)
       }
-      return escape_points_chart(click_point, in_cardioid)
+      return escape_points_chart(click_point, in_cardioid, animation_index)
    }
 
    r_theta_data = () => {
+      const {animation_index} = this.state
       const click_point_info = this.get_click_point_info()
       const {click_point, pattern, orbital_points, in_cardioid, Q_core_neg} = click_point_info
       if (pattern) {
-         return r_theta_chart(orbital_points, Q_core_neg, in_cardioid)
+         return r_theta_chart(orbital_points, Q_core_neg, in_cardioid, animation_index)
       }
-      return escape_r_theta_chart(click_point, in_cardioid)
+      return escape_r_theta_chart(click_point, in_cardioid, animation_index)
+   }
+
+   toggle_animation = () => {
+      const {in_animation} = this.state
+      const {page_settings} = this.props
+      if (!in_animation && page_settings[KEY_DISABLED]) {
+         return;
+      }
+      const new_setting = !in_animation
+      const click_point_info = this.get_click_point_info()
+      const {pattern, click_point, Q_core_neg} = click_point_info
+      if (!pattern) {
+         const escape_points = get_escape_points(click_point)
+         const escaped_r_data = process_r_data(escape_points, Q_core_neg)
+         this.setState({r_data: escaped_r_data})
+      }
+      this.setState({
+         in_animation: new_setting,
+         animation_index: new_setting ? 0 : -1,
+         animation_click_point: new_setting ? click_point_info : null,
+      })
+      setTimeout(this.animate, 100)
+   }
+
+   animate = () => {
+      const {in_animation, animation_index, r_data} = this.state
+      // console.log('animate', r_data)
+      const new_index = (animation_index + 1) % (r_data.length - 1)
+      if (!in_animation || new_index >= r_data.length) {
+         this.setState({ANIMATION_INIT})
+         return;
+      }
+      const delta_thetas = Math.abs((r_data[new_index + 1]?.x || 0) - (r_data[new_index]?.x || 0))
+      this.setState({animation_index: new_index})
+      setTimeout(this.animate, delta_thetas * 500)
    }
 
    sidebar_info = () => {
+      const {r_data, in_animation, animation_index} = this.state
       const click_point_info = this.get_click_point_info()
-      const {pattern, orbital_points, Q_core_neg, in_cardioid, iteration} = click_point_info
-      if (!orbital_points) {
-         return ''
+      const {pattern, in_cardioid, iteration} = click_point_info
+      let cycles = '?'
+      if (r_data.length) {
+         cycles = ((r_data[r_data.length - 1]?.x || 0) - (r_data[0]?.x || 0)) / (Math.PI * 2)
       }
-      console.log('sidebar_info', click_point_info)
-      const r_data = process_r_data(orbital_points, Q_core_neg)
-      const cycles = (r_data[r_data.length - 1].x - r_data[0].x) / (Math.PI * 2)
       const statements = []
       if (pattern) {
          statements.push(`${pattern} points`)
@@ -96,7 +173,14 @@ export class PatternsOrbital extends Component {
          statements.push(`escapes in ${iteration} points`)
       }
       statements.push(`${Math.round(cycles)} cycles`)
-      statements.push(`${in_cardioid ? 'within' : 'outside of'} main cardioid`)
+      statements.push(`${in_cardioid ? 'endo' : 'epi'}cardial`)
+      statements.push(<styles.AnimateButton
+         onClick={this.toggle_animation}>
+         {in_animation ? 'stop animation' : 'animate now'}
+      </styles.AnimateButton>)
+      if (in_animation) {
+         statements.push(`animation index: ${animation_index}`)
+      }
       return statements.map(statement => {
          return <styles.InfoLine>{statement}</styles.InfoLine>
       })
