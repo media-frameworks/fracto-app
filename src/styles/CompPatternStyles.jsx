@@ -52,6 +52,10 @@ export class CompPatternStyles {
    static InfoLine = styled(CoolStyles.Block)`
        ${CoolStyles.italic}
    `
+
+   static AnimateButton = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.link}
+   `
 }
 
 export default CompPatternStyles
