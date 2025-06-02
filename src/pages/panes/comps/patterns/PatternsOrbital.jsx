@@ -20,6 +20,7 @@ import {
    process_r_data,
    r_theta_chart
 } from "./PatternsUtils";
+import AppErrorBoundary from "common/app/AppErrorBoundary";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -98,7 +99,7 @@ export class PatternsOrbital extends Component {
       const fracto_values = this.get_fracto_values()
       const in_cardioid = FractoFastCalc.point_in_main_cardioid(click_point.x, click_point.y)
       const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
-       return {
+      return {
          click_point,
          pattern: fracto_values.pattern,
          orbital_points: fracto_values.orbital_points,
@@ -175,7 +176,8 @@ export class PatternsOrbital extends Component {
       const {pattern, in_cardioid, iteration} = click_point_info
       let cycles = '?'
       if (r_data.length) {
-         cycles = ((r_data[r_data.length - 1]?.x || 0) - (r_data[0]?.x || 0)) / (Math.PI * 2)
+         const cycles_portion = ((r_data[r_data.length - 1]?.x || 0) - (r_data[0]?.x || 0)) / (Math.PI * 2)
+         cycles = Math.round(cycles_portion * 100) / 100
       }
       const statements = []
       if (pattern) {
@@ -183,7 +185,7 @@ export class PatternsOrbital extends Component {
       } else {
          statements.push(`escapes in ${iteration} points`)
       }
-      statements.push(`${Math.round(cycles)} cycles`)
+      statements.push(`${cycles} cycles`)
       statements.push(`${in_cardioid ? 'endo' : 'epi'}cardial`)
       statements.push(<styles.AnimateButton
          onClick={this.toggle_animation}>
@@ -215,17 +217,19 @@ export class PatternsOrbital extends Component {
          width: `${wrapper_dimension * 0.20}px`,
          height: `${wrapper_dimension * 0.45}px`,
       }
-      return <styles.ContentWrapper>
-         <styles.GraphWrapper style={click_point_style}>
-            {this.click_point_data()}
-         </styles.GraphWrapper>
-         <styles.SidebarWrapper style={sidebar_style}>
-            {this.sidebar_info()}
-         </styles.SidebarWrapper>
-         <styles.GraphWrapper style={r_theta_style}>
-            {this.r_theta_data()}
-         </styles.GraphWrapper>
-      </styles.ContentWrapper>
+      return [
+         {content: this.click_point_data(), style: click_point_style},
+         {content: this.sidebar_info(), style: sidebar_style},
+         {content: this.r_theta_data(), style: r_theta_style},
+      ].map(portion => {
+         const show_this =
+            <styles.GraphWrapper style={portion.style}>
+               {portion.content}
+            </styles.GraphWrapper>
+         return <AppErrorBoundary fallback={show_this}>
+            {show_this}
+         </AppErrorBoundary>
+      })
    }
 }
 
