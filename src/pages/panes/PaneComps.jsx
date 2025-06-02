@@ -14,7 +14,7 @@ import CompPatterns from "./comps/CompPatterns";
 import CompMinibrot from "./comps/CompMinibrot";
 import CompNursery from "./comps/CompNursery";
 import CompCapture from "./comps/CompCapture";
-import CompColors from "./comps/CompColors";
+// import CompColors from "./comps/CompColors";
 import CompScript from "./comps/CompScript";
 import CoolStyles from "../../common/ui/styles/CoolStyles";
 

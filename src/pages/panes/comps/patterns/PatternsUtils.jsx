@@ -79,10 +79,15 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
          },
       ]
    }
-   return <Scatter
-      datasetIdKey='id1'
-      data={data_dataset} options={options}
-   />
+   try {
+      return <Scatter
+         datasetIdKey='id1'
+         data={data_dataset} options={options}
+      />
+   } catch (e) {
+      debugger;
+      return [e.message]
+   }
 }
 
 export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1) => {
@@ -110,8 +115,8 @@ export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1
    const data_dataset = {datasets: []}
    if (animation_index >= 0 && set1[animation_index]) {
       const set2 = [
-         {x:set1[animation_index]?.x || 0, y: 0},
-         {x:set1[animation_index]?.x || 0, y: set1[animation_index]?.y || 0},
+         {x: set1[animation_index]?.x || 0, y: 0},
+         {x: set1[animation_index]?.x || 0, y: set1[animation_index]?.y || 0},
       ]
       data_dataset.datasets.push(
          {
@@ -134,10 +139,15 @@ export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1
          borderColor: 'lightgrey',
          showLine: true
       })
-   return <Scatter
-      datasetIdKey='id1'
-      data={data_dataset} options={options}
-   />
+   try {
+      return <Scatter
+         datasetIdKey='id1'
+         data={data_dataset} options={options}
+      />
+   } catch (e) {
+      debugger;
+      return [e.message]
+   }
 }
 
 export const get_escape_points = (click_point) => {
