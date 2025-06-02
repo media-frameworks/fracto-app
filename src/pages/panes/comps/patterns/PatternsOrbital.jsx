@@ -44,19 +44,28 @@ export class PatternsOrbital extends Component {
       animation_index: -1,
       page_settings_str: null,
       animation_click_point: null,
+      hover_point: {x: 0, y: 0},
    }
 
    componentDidMount() {
-      const {page_settings} = this.props
-      this.setState({page_settings_str: JSON.stringify(page_settings)})
-      this.initialize()
+      const {page_settings} = this.props;
+      const {hover_point} = page_settings
+      this.setState({
+         page_settings_str: JSON.stringify(page_settings),
+         hover_point: JSON.parse(JSON.stringify(hover_point)),
+      })
+      setTimeout(this.initialize, 250)
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
-      const {in_animation} = this.state
       const {page_settings} = this.props;
-      if (prevState.page_settings_str !== JSON.stringify(page_settings) && !in_animation) {
-         setTimeout(this.initialize, 100)
+      const current_hover_point = page_settings[KEY_HOVER_POINT]
+      const hover_point_changed = (prevState.hover_point?.x || 0) !== (current_hover_point?.x || 0)
+         || (prevState.hover_point?.y || 0) !== (current_hover_point?.y || 0);
+      if (hover_point_changed && prevState.in_animation) {
+         console.log('hover_point_changed')
+         this.setState({in_animation: false, animation_index: -1})
+         setTimeout(this.initialize, 250)
       }
    }
 
@@ -89,13 +98,13 @@ export class PatternsOrbital extends Component {
       const fracto_values = this.get_fracto_values()
       const in_cardioid = FractoFastCalc.point_in_main_cardioid(click_point.x, click_point.y)
       const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
-      return {
+       return {
          click_point,
          pattern: fracto_values.pattern,
          orbital_points: fracto_values.orbital_points,
          in_cardioid,
          Q_core_neg,
-         iteration: fracto_values.iteration
+         iteration: fracto_values.iteration,
       }
    }
 
@@ -131,16 +140,18 @@ export class PatternsOrbital extends Component {
       }
       const new_setting = !in_animation
       const click_point_info = this.get_click_point_info()
-      const {pattern, click_point, Q_core_neg} = click_point_info
+      const {pattern, click_point, Q_core_neg, orbital_points} = click_point_info
       if (!pattern) {
          const escape_points = get_escape_points(click_point)
          const escaped_r_data = process_r_data(escape_points, Q_core_neg)
          this.setState({r_data: escaped_r_data})
+      } else {
+         const r_data = process_r_data(orbital_points, Q_core_neg)
+         this.setState({r_data: r_data})
       }
       this.setState({
          in_animation: new_setting,
          animation_index: new_setting ? 0 : -1,
-         animation_click_point: new_setting ? click_point_info : null,
       })
       setTimeout(this.animate, 100)
    }

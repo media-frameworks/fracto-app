@@ -19,7 +19,7 @@
     "aws-sdk": "^2.1692.0",
     "axios": "^1.8.4",
     "buffer": "^6.0.3",
-    "chart.js": "^4.4.8",
+    "chart.js": "^4.4.9",
     "fflate": "^0.8.2",
     "javascript-time-ago": "^2.5.11",
     "mathjs": "^14.4.0",

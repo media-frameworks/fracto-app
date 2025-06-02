@@ -2,7 +2,7 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompOrbitalStyles as styles} from "styles/CompOrbitalStyles"
-import OrbitalsColorChart from "./orbitals/OrbitalsColorChart";
+// import OrbitalsColorChart from "./orbitals/OrbitalsColorChart";
 import OrbitalsHistogram from "./orbitals/OrbitalsHistogram";
 import OrbitalsColorWheel from "./orbitals/OrbitalsColorWheel";
 import OrbitalsFamilySpan from "./orbitals/OrbitalsFamilySpan";
