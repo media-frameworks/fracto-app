@@ -6,6 +6,7 @@ import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {
+   KEY_AUTOMATION_SCALAR_MS,
    KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
@@ -21,6 +22,7 @@ import {
    r_theta_chart
 } from "./PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
+import {CoolSlider} from "../../../../common/ui/CoolImports";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -63,22 +65,17 @@ export class PatternsOrbital extends Component {
       const current_hover_point = page_settings[KEY_HOVER_POINT]
       const hover_point_changed = (prevState.hover_point?.x || 0) !== (current_hover_point?.x || 0)
          || (prevState.hover_point?.y || 0) !== (current_hover_point?.y || 0);
-      if (hover_point_changed && prevState.in_animation) {
+      if (hover_point_changed) {
          console.log('hover_point_changed')
-         this.setState({in_animation: false, animation_index: -1})
+         if (prevState.in_animation) {
+            this.setState({in_animation: false, animation_index: -1})
+         }
          setTimeout(this.initialize, 250)
       }
    }
 
    initialize = () => {
-      const click_point_info = this.get_click_point_info()
-      const {orbital_points, Q_core_neg} = click_point_info
-      if (orbital_points) {
-         const r_data = process_r_data(orbital_points, Q_core_neg)
-         if (r_data.length) {
-            this.setState({r_data})
-         }
-      }
+      this.update_r_data()
    }
 
    get_fracto_values = (set1, set2) => {
@@ -106,6 +103,7 @@ export class PatternsOrbital extends Component {
          in_cardioid,
          Q_core_neg,
          iteration: fracto_values.iteration,
+         animation_scalar_ms: 500
       }
    }
 
@@ -133,6 +131,21 @@ export class PatternsOrbital extends Component {
       return escape_r_theta_chart(click_point, in_cardioid, animation_index)
    }
 
+   update_r_data = () => {
+      const click_point_info = this.get_click_point_info()
+      const {pattern, click_point, Q_core_neg, orbital_points} = click_point_info
+      if (!pattern) {
+         const escape_points = get_escape_points(click_point)
+         const escaped_r_data = process_r_data(escape_points, Q_core_neg)
+         this.setState({r_data: escaped_r_data})
+         console.log('update_r_data', escaped_r_data.length)
+      } else {
+         const r_data = process_r_data(orbital_points, Q_core_neg)
+         this.setState({r_data: r_data})
+         console.log('update_r_data', r_data.length)
+      }
+   }
+
    toggle_animation = () => {
       const {in_animation} = this.state
       const {page_settings} = this.props
@@ -140,16 +153,7 @@ export class PatternsOrbital extends Component {
          return;
       }
       const new_setting = !in_animation
-      const click_point_info = this.get_click_point_info()
-      const {pattern, click_point, Q_core_neg, orbital_points} = click_point_info
-      if (!pattern) {
-         const escape_points = get_escape_points(click_point)
-         const escaped_r_data = process_r_data(escape_points, Q_core_neg)
-         this.setState({r_data: escaped_r_data})
-      } else {
-         const r_data = process_r_data(orbital_points, Q_core_neg)
-         this.setState({r_data: r_data})
-      }
+      this.update_r_data()
       this.setState({
          in_animation: new_setting,
          animation_index: new_setting ? 0 : -1,
@@ -159,6 +163,7 @@ export class PatternsOrbital extends Component {
 
    animate = () => {
       const {in_animation, animation_index, r_data} = this.state
+      const {page_settings} = this.props
       // console.log('animate', r_data)
       const new_index = (animation_index + 1) % (r_data.length - 1)
       if (!in_animation || new_index >= r_data.length) {
@@ -167,25 +172,34 @@ export class PatternsOrbital extends Component {
       }
       const delta_thetas = Math.abs((r_data[new_index + 1]?.x || 0) - (r_data[new_index]?.x || 0))
       this.setState({animation_index: new_index})
-      setTimeout(this.animate, delta_thetas * 500)
+      setTimeout(this.animate, delta_thetas * page_settings[KEY_AUTOMATION_SCALAR_MS] || 200)
+   }
+
+   set_animation_rate = (e) => {
+      const {on_settings_changed} = this.props
+      const animation_scalar_ms = e.target.value
+      on_settings_changed({[KEY_AUTOMATION_SCALAR_MS]: animation_scalar_ms})
    }
 
    sidebar_info = () => {
       const {r_data, in_animation, animation_index} = this.state
+      const {page_settings} = this.props
       const click_point_info = this.get_click_point_info()
       const {pattern, in_cardioid, iteration} = click_point_info
       let cycles = '?'
+      console.log('sidebar_info', r_data.length)
       if (r_data.length) {
          const cycles_portion = ((r_data[r_data.length - 1]?.x || 0) - (r_data[0]?.x || 0)) / (Math.PI * 2)
          cycles = Math.round(cycles_portion * 100) / 100
       }
       const statements = []
       if (pattern) {
-         statements.push(`${pattern} points`)
+         statements.push(`${pattern} point${pattern !== 1 ? 's' : ''}`)
+         statements.push(`${iteration} iterations`)
       } else {
-         statements.push(`escapes in ${iteration} points`)
+         statements.push(`escapes in ${iteration}`)
       }
-      statements.push(`${cycles} cycles`)
+      statements.push(`${cycles} cycle${cycles !== 1 ? 's' : ''}`)
       statements.push(`${in_cardioid ? 'endo' : 'epi'}cardial`)
       statements.push(<styles.AnimateButton
          onClick={this.toggle_animation}>
@@ -193,6 +207,16 @@ export class PatternsOrbital extends Component {
       </styles.AnimateButton>)
       if (in_animation) {
          statements.push(`animation index: ${animation_index}`)
+         const current_cycle = (r_data[animation_index].x - r_data[0].x) / (Math.PI * 2)
+         statements.push(`phase: ${Math.round(current_cycle * 100) / 100}`)
+         const slider = <CoolSlider
+            value={page_settings[KEY_AUTOMATION_SCALAR_MS] || 200}
+            min={10}
+            max={500}
+            is_vertical={false}
+            on_change={this.set_animation_rate}
+         />
+         statements.push(slider)
       }
       return statements.map(statement => {
          return <styles.InfoLine>{statement}</styles.InfoLine>
@@ -206,24 +230,24 @@ export class PatternsOrbital extends Component {
          wrapper_dimension = Math.min(page_settings[KEY_COMPS_WIDTH_PX], page_settings[KEY_COMPS_WIDTH_PX])
       }
       const click_point_style = {
-         width: `${wrapper_dimension * 0.65}px`,
+         width: `${wrapper_dimension * 0.63}px`,
          height: `${wrapper_dimension * 0.45}px`,
       }
       const r_theta_style = {
-         width: `${wrapper_dimension * 0.85}px`,
+         width: `${wrapper_dimension * 0.88}px`,
          height: `${wrapper_dimension * 0.30}px`,
       }
       const sidebar_style = {
-         width: `${wrapper_dimension * 0.20}px`,
+         width: `${wrapper_dimension * 0.22}px`,
          height: `${wrapper_dimension * 0.45}px`,
       }
       return [
          {content: this.click_point_data(), style: click_point_style},
          {content: this.sidebar_info(), style: sidebar_style},
          {content: this.r_theta_data(), style: r_theta_style},
-      ].map(portion => {
+      ].map((portion, i) => {
          const show_this =
-            <styles.GraphWrapper style={portion.style}>
+            <styles.GraphWrapper style={portion.style} key={`part-${i}`}>
                {portion.content}
             </styles.GraphWrapper>
          return <AppErrorBoundary fallback={show_this}>
