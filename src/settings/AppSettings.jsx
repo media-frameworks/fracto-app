@@ -15,6 +15,7 @@ export const KEY_BAD_TILES = 'bad_tiles'
 export const KEY_CACHE_SIZE = 'cache_size'
 export const KEY_UPDATE_INDEX = 'update_index'
 export const KEY_MODAL = 'modal'
+export const KEY_AUTOMATION_SCALAR_MS = 'automation_scalar_ms'
 
 export const APP_KEYED_SETTINGS = {
    [KEY_FOCAL_POINT]: {
@@ -83,4 +84,10 @@ export const APP_KEYED_SETTINGS = {
       description: 'modal popup instance to be opened and activated',
       persist: false,
    },
+   [KEY_AUTOMATION_SCALAR_MS]: {
+      data_type: TYPE_NUMBER,
+      default_value: 500,
+      description: 'the relative speed of animation of the orbital visualizations',
+      persist: true,
+   }
 }

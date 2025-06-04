@@ -46,6 +46,11 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
       },
       animation: false,
       maintainAspectRatio: false,
+      plugins: {
+         legend: {
+            display: false,
+         },
+      },
    }
    if (!in_cardioid && escaper) {
       options.scales.x.min = -1.5
@@ -54,15 +59,15 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
       options.scales.y.max = 1.25
    }
    const cardinality = set1?.length - 1 || 0
-   const set1_label = escaper
-      ? `escapes in ${cardinality || '?'} steps`
-      : `${cardinality || '?'} point${in_cardioid ? 's in cardiod' : ' orbital'}`
+   // const set1_label = escaper
+   //    ? `escapes in ${cardinality || '?'} steps`
+   //    : `${cardinality || '?'} point${in_cardioid ? 's in cardiod' : ' orbital'}`
    const in_animation = set2?.length > 1
    const data_dataset = {
       datasets: [
          {
             Id: 2,
-            label: in_cardioid ? 'Q' : 'Q',
+            // label: in_cardioid ? 'Q' : 'Q',
             data: JSON.parse(JSON.stringify(set2)),
             backgroundColor: in_animation ? ANIMATION_COLOR : 'black',
             pointRadius: in_animation ? 4 : 3,
@@ -71,7 +76,7 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
          },
          {
             Id: 1,
-            label: set1_label,
+            // label: set1_label,
             data: JSON.parse(JSON.stringify(set1)),
             backgroundColor: FractoUtil.fracto_pattern_color(cardinality || 0),
             pointRadius: in_animation ? 2 : 3,
@@ -103,8 +108,20 @@ export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1
       },
       animation: false,
       maintainAspectRatio: false,
+      plugins: {
+         legend: {
+            display: false,
+         },
+      },
    }
-   options.scales.y.min = 0
+   let min_y = 1000
+   set1.forEach(point => {
+      if (point.y < min_y) {
+         min_y = point.y
+      }
+   })
+   min_y *= 0.95
+   options.scales.y.min = min_y
    const cardinality = set1?.length - 1 || 0
    if (cardinality) {
       options.scales.x.min = set1[0]?.x || 0
@@ -115,7 +132,7 @@ export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1
    const data_dataset = {datasets: []}
    if (animation_index >= 0 && set1[animation_index]) {
       const set2 = [
-         {x: set1[animation_index]?.x || 0, y: 0},
+         {x: set1[animation_index]?.x || 0, y: min_y},
          {x: set1[animation_index]?.x || 0, y: set1[animation_index]?.y || 0},
       ]
       data_dataset.datasets.push(
