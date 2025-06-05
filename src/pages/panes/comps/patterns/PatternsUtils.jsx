@@ -52,11 +52,36 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
          },
       },
    }
-   if (!in_cardioid && escaper) {
-      options.scales.x.min = -1.5
-      options.scales.x.max = 1
-      options.scales.y.min = -1.25
-      options.scales.y.max = 1.25
+   let min_y = 2
+   let max_y = -2
+   let min_x = 2
+   let max_x = -2
+   set1.forEach(point => {
+      if (point.y < min_y && point.y > -2) {
+         min_y = point.y
+      }
+      if (point.y > max_y && point.y < 2) {
+         max_y = point.y
+      }
+      if (point.x < min_x && point.x > -2) {
+         min_x = point.x
+      }
+      if (point.x > max_x && point.x < 2) {
+         max_x = point.x
+      }
+   })
+   if (!in_cardioid) {
+      const delta_y = max_y - min_y
+      min_y -= delta_y * 0.05
+      max_y += delta_y * 0.05
+      options.scales.y.min = min_y < -2 ? -2 : min_y
+      options.scales.y.max = max_y > 2 ? 2 : max_y
+
+      const delta_x = max_x - min_x
+      min_x -= delta_x * 0.05
+      max_x += delta_x * 0.05
+      options.scales.x.min = min_x < -2 ? -2 : min_x
+      options.scales.x.max = max_x > 2 ? 2 : max_x
    }
    const cardinality = set1?.length - 1 || 0
    // const set1_label = escaper
@@ -115,19 +140,44 @@ export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1
       },
    }
    let min_y = 1000
+   let max_y = 0
+   let min_x = 1000
+   let max_x = 0
    set1.forEach(point => {
       if (point.y < min_y) {
          min_y = point.y
       }
+      if (point.y > max_y) {
+         max_y = point.y
+      }
+      if (point.x < min_x) {
+         min_x = point.x
+      }
+      if (point.x > max_x) {
+         max_x = point.x
+      }
    })
-   min_y *= 0.95
+   const delta_y = max_y - min_y
+   min_y -= delta_y * 0.15
+   max_y += delta_y * 0.15
    options.scales.y.min = min_y
+   options.scales.y.max = max_y
+
+   const delta_x = max_x - min_x
+   options.scales.x.min = min_x
+   options.scales.x.max = max_x
+
    const cardinality = set1?.length - 1 || 0
-   if (cardinality) {
-      options.scales.x.min = set1[0]?.x || 0
-      options.scales.x.max = set1[set1.length - 1]?.x || 0
+   if (cardinality && !escaper) {
+      min_x -= cardinality ? 0 : delta_x * 0.15
+      max_x += cardinality ? 0 : delta_x * 0.15
+      options.scales.x.min = min_x
+      options.scales.x.max = max_x
    } else if (escaper) {
       options.scales.y.max = 2.0
+      options.scales.x.min = min_x
+      max_x += delta_x * 0.01
+      options.scales.x.max = max_x
    }
    const data_dataset = {datasets: []}
    if (animation_index >= 0 && set1[animation_index]) {
@@ -187,6 +237,17 @@ export const get_escape_points = (click_point) => {
       escape_points.push({x: Q_x, y: Q_y})
    }
    return escape_points
+}
+
+export const normalize_angle = (angle) => {
+   let result = angle
+   while (result < -Math.PI) {
+      result += Math.PI * 2
+   }
+   while (result > Math.PI) {
+      result -= Math.PI * 2
+   }
+   return result
 }
 
 export const escape_points_chart = (click_point, in_cardioid, animation_index = -1) => {

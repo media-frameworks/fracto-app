@@ -7,7 +7,7 @@ export class CompPatternStyles {
        padding: 0.5rem 1rem;
    `
    static GraphWrapper = styled(CoolStyles.InlineBlock)`
-       margin: 0.5rem 0.5rem 0 0 ;
+       margin: 0.5rem 0.5rem 0 0;
        background-color: #fcfcfc;
        border: 0.12rem solid #aaaaaa;
        border-radius: 0.125rem;
@@ -58,6 +58,11 @@ export class CompPatternStyles {
 
    static AnimateButton = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.link}
+   `
+   static ZoomerWrapper = styled(CoolStyles.InlineBlock)`
+       margin: 1rem 0.5rem 0 0;
+       width: 1.5rem;
+       font-size: 1rem;
    `
 }
 
