@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
+import {CoolSlider} from "common/ui/CoolImports";
+
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {
    KEY_AUTOMATION_SCALAR_MS,
@@ -19,10 +21,10 @@ import {
    escape_points_chart,
    escape_r_theta_chart,
    process_r_data,
-   r_theta_chart
+   r_theta_chart,
+   normalize_angle,
 } from "./PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
-import {CoolSlider} from "../../../../common/ui/CoolImports";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -103,7 +105,6 @@ export class PatternsOrbital extends Component {
          in_cardioid,
          Q_core_neg,
          iteration: fracto_values.iteration,
-         animation_scalar_ms: 500
       }
    }
 
@@ -206,13 +207,17 @@ export class PatternsOrbital extends Component {
          {in_animation ? 'stop animation' : 'animate now'}
       </styles.AnimateButton>)
       if (in_animation) {
-         statements.push(`animation index: ${animation_index}`)
+         statements.push(`index: ${animation_index}`)
          const current_cycle = (r_data[animation_index].x - r_data[0].x) / (Math.PI * 2)
          statements.push(`phase: ${Math.round(current_cycle * 100) / 100}`)
+         const next_animation_index = (animation_index + 1) % r_data.length
+         const theta_1 = r_data[animation_index].x
+         const theta_2 = r_data[next_animation_index].x
+         statements.push(`step: ${Math.round(normalize_angle(theta_2 - theta_1) * 10000) / 10000}`)
          const slider = <CoolSlider
             value={page_settings[KEY_AUTOMATION_SCALAR_MS] || 200}
             min={10}
-            max={500}
+            max={1500}
             is_vertical={false}
             on_change={this.set_animation_rate}
          />
@@ -230,28 +235,57 @@ export class PatternsOrbital extends Component {
          wrapper_dimension = Math.min(page_settings[KEY_COMPS_WIDTH_PX], page_settings[KEY_COMPS_WIDTH_PX])
       }
       const click_point_style = {
-         width: `${wrapper_dimension * 0.63}px`,
-         height: `${wrapper_dimension * 0.45}px`,
+         width: `${wrapper_dimension * 0.61}px`,
+         height: `${wrapper_dimension * 0.40}px`,
       }
       const r_theta_style = {
-         width: `${wrapper_dimension * 0.88}px`,
-         height: `${wrapper_dimension * 0.30}px`,
+         width: `${wrapper_dimension * 0.85}px`,
+         height: `${wrapper_dimension * 0.25}px`,
       }
       const sidebar_style = {
-         width: `${wrapper_dimension * 0.22}px`,
-         height: `${wrapper_dimension * 0.45}px`,
+         width: `${wrapper_dimension * 0.20}px`,
+         height: `${wrapper_dimension * 0.40}px`,
       }
       return [
-         {content: this.click_point_data(), style: click_point_style},
-         {content: this.sidebar_info(), style: sidebar_style},
-         {content: this.r_theta_data(), style: r_theta_style},
+         {
+            content: this.click_point_data(),
+            style: click_point_style,
+            zoomer: <CoolSlider
+               value={1}
+               min={1}
+               max={100}
+               is_vertical={true}
+               // on_change={}
+            />
+         },
+         {
+            content: this.sidebar_info(),
+            style: sidebar_style,
+            zoomer: null,
+         },
+         {
+            content: this.r_theta_data(),
+            style: r_theta_style,
+            zoomer: <CoolSlider
+               value={1}
+               min={1}
+               max={100}
+               is_vertical={true}
+               // on_change={}
+            />
+         },
       ].map((portion, i) => {
          const show_this =
             <styles.GraphWrapper style={portion.style} key={`part-${i}`}>
                {portion.content}
             </styles.GraphWrapper>
+         const zoomer = portion.zoomer ? <styles.ZoomerWrapper
+            style={{height: portion.style.height}}>
+            {portion.zoomer}
+         </styles.ZoomerWrapper> : ''
          return <AppErrorBoundary fallback={show_this}>
             {show_this}
+            {zoomer}
          </AppErrorBoundary>
       })
    }
