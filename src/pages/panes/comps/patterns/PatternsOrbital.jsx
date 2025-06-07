@@ -50,6 +50,8 @@ export class PatternsOrbital extends Component {
       page_settings_str: null,
       animation_click_point: null,
       hover_point: {x: 0, y: 0},
+      point_zoom: 1,
+      r_theta_zoom: 1,
    }
 
    componentDidMount() {
@@ -228,59 +230,74 @@ export class PatternsOrbital extends Component {
       })
    }
 
+   change_point_zoom = (e) => {
+      // console.log('change_point_zoom', e.target.value)
+      this.setState({point_zoom: e.target.value})
+   }
+
+   change_r_theta_zoom = (e) => {
+      // console.log('change_point_zoom', e.target.value)
+      this.setState({r_theta_zoom: e.target.value})
+   }
+
    render() {
+      const {point_zoom, r_theta_zoom, r_data} = this.state
       const {page_settings} = this.props
-      let wrapper_dimension = page_settings[KEY_COMPS_WIDTH_PX]
-      if (page_settings[KEY_COMPS_WIDTH_PX]) {
-         wrapper_dimension = Math.min(page_settings[KEY_COMPS_WIDTH_PX], page_settings[KEY_COMPS_WIDTH_PX])
-      }
-      const click_point_style = {
-         width: `${wrapper_dimension * 0.61}px`,
-         height: `${wrapper_dimension * 0.40}px`,
-      }
-      const r_theta_style = {
-         width: `${wrapper_dimension * 0.85}px`,
-         height: `${wrapper_dimension * 0.25}px`,
-      }
-      const sidebar_style = {
-         width: `${wrapper_dimension * 0.20}px`,
-         height: `${wrapper_dimension * 0.40}px`,
-      }
-      return [
+      const wrapper_dimension = page_settings[KEY_COMPS_WIDTH_PX]
+      const parts = [
          {
             content: this.click_point_data(),
-            style: click_point_style,
+            width_px: wrapper_dimension * 0.6,
+            height_px: wrapper_dimension * 0.41,
+            width_offset_px: (point_zoom - 1) * 10,
+            height_offset_px: (point_zoom - 1) * 10,
             zoomer: <CoolSlider
-               value={1}
+               value={point_zoom}
                min={1}
                max={100}
                is_vertical={true}
-               // on_change={}
+               on_change={this.change_point_zoom}
             />
          },
          {
             content: this.sidebar_info(),
-            style: sidebar_style,
+            width_px: wrapper_dimension * 0.19,
+            height_px: wrapper_dimension * 0.40,
+            width_offset_px: 0,
+            height_offset_px: 0,
             zoomer: null,
          },
          {
             content: this.r_theta_data(),
-            style: r_theta_style,
+            width_px: wrapper_dimension * 0.86,
+            height_px: wrapper_dimension * 0.28,
+            width_offset_px: (r_theta_zoom - 1) * 10,
+            height_offset_px: r_theta_zoom > 1 ? -15 : 0,
             zoomer: <CoolSlider
-               value={1}
+               value={r_theta_zoom}
                min={1}
-               max={100}
+               max={Math.min(r_data.length * 5, 3000)}
                is_vertical={true}
-               // on_change={}
+               on_change={this.change_r_theta_zoom}
             />
          },
       ].map((portion, i) => {
+         const sheath_style = {
+            height: `${portion.height_px + portion.height_offset_px}px`,
+            width: `${portion.width_px + portion.width_offset_px}px`,
+         }
+         const portion_style = {
+            height: `${portion.height_px}px`,
+            width: `${portion.width_px}px`,
+         }
          const show_this =
-            <styles.GraphWrapper style={portion.style} key={`part-${i}`}>
-               {portion.content}
+            <styles.GraphWrapper style={portion_style} key={`part-${i}`}>
+               <styles.ZoomerSheath style={sheath_style}>
+                  {portion.content}
+               </styles.ZoomerSheath>
             </styles.GraphWrapper>
          const zoomer = portion.zoomer ? <styles.ZoomerWrapper
-            style={{height: portion.style.height}}>
+            style={{height: portion_style.height}}>
             {portion.zoomer}
          </styles.ZoomerWrapper> : ''
          return <AppErrorBoundary fallback={show_this}>
@@ -288,6 +305,7 @@ export class PatternsOrbital extends Component {
             {zoomer}
          </AppErrorBoundary>
       })
+      return <styles.PatternPartsWrapper>{parts}</styles.PatternPartsWrapper>
    }
 }
 
