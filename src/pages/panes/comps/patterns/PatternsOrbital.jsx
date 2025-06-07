@@ -9,7 +9,7 @@ import {CoolSlider} from "common/ui/CoolImports";
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {
    KEY_AUTOMATION_SCALAR_MS,
-   KEY_DISABLED,
+   KEY_DISABLED, KEY_FIELD_CROSSHAIRS,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
 } from "settings/AppSettings";
@@ -52,6 +52,7 @@ export class PatternsOrbital extends Component {
       hover_point: {x: 0, y: 0},
       point_zoom: 1,
       r_theta_zoom: 1,
+      r_theta_scroll_ref: React.createRef(),
    }
 
    componentDidMount() {
@@ -74,11 +75,18 @@ export class PatternsOrbital extends Component {
          if (prevState.in_animation) {
             this.setState({in_animation: false, animation_index: -1})
          }
-         setTimeout(this.initialize, 250)
+         setTimeout(this.initialize, 50)
       }
    }
 
+   componentWillUnmount() {
+      const {on_settings_changed} = this.props
+      on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
+   }
+
    initialize = () => {
+      const {on_settings_changed} = this.props
+      on_settings_changed({[KEY_FIELD_CROSSHAIRS]: true})
       this.update_r_data()
    }
 
@@ -165,7 +173,7 @@ export class PatternsOrbital extends Component {
    }
 
    animate = () => {
-      const {in_animation, animation_index, r_data} = this.state
+      const {in_animation, animation_index, r_data, r_theta_scroll_ref} = this.state
       const {page_settings} = this.props
       // console.log('animate', r_data)
       const new_index = (animation_index + 1) % (r_data.length - 1)
@@ -175,6 +183,11 @@ export class PatternsOrbital extends Component {
       }
       const delta_thetas = Math.abs((r_data[new_index + 1]?.x || 0) - (r_data[new_index]?.x || 0))
       this.setState({animation_index: new_index})
+      if (r_theta_scroll_ref.current) {
+         r_theta_scroll_ref.current.scrollTo({
+            left: (new_index * r_theta_scroll_ref.current.scrollWidth) / (1.25 * r_data.length)
+         })
+      }
       setTimeout(this.animate, delta_thetas * page_settings[KEY_AUTOMATION_SCALAR_MS] || 200)
    }
 
@@ -190,7 +203,7 @@ export class PatternsOrbital extends Component {
       const click_point_info = this.get_click_point_info()
       const {pattern, in_cardioid, iteration} = click_point_info
       let cycles = '?'
-      console.log('sidebar_info', r_data.length)
+      // console.log('sidebar_info', r_data.length)
       if (r_data.length) {
          const cycles_portion = ((r_data[r_data.length - 1]?.x || 0) - (r_data[0]?.x || 0)) / (Math.PI * 2)
          cycles = Math.round(cycles_portion * 100) / 100
@@ -241,7 +254,7 @@ export class PatternsOrbital extends Component {
    }
 
    render() {
-      const {point_zoom, r_theta_zoom, r_data} = this.state
+      const {point_zoom, r_theta_zoom, r_data, r_theta_scroll_ref} = this.state
       const {page_settings} = this.props
       const wrapper_dimension = page_settings[KEY_COMPS_WIDTH_PX]
       const parts = [
@@ -273,6 +286,7 @@ export class PatternsOrbital extends Component {
             height_px: wrapper_dimension * 0.28,
             width_offset_px: (r_theta_zoom - 1) * 10,
             height_offset_px: r_theta_zoom > 1 ? -15 : 0,
+            scroll_ref: r_theta_scroll_ref,
             zoomer: <CoolSlider
                value={r_theta_zoom}
                min={1}
@@ -291,8 +305,12 @@ export class PatternsOrbital extends Component {
             width: `${portion.width_px}px`,
          }
          const show_this =
-            <styles.GraphWrapper style={portion_style} key={`part-${i}`}>
-               <styles.ZoomerSheath style={sheath_style}>
+            <styles.GraphWrapper
+               ref={portion.scroll_ref}
+               style={portion_style}
+               key={`part-${i}`}>
+               <styles.ZoomerSheath
+                  style={sheath_style}>
                   {portion.content}
                </styles.ZoomerSheath>
             </styles.GraphWrapper>
@@ -300,7 +318,7 @@ export class PatternsOrbital extends Component {
             style={{height: portion_style.height}}>
             {portion.zoomer}
          </styles.ZoomerWrapper> : ''
-         return <AppErrorBoundary fallback={show_this}>
+         return <AppErrorBoundary fallback={[show_this, zoomer]}>
             {show_this}
             {zoomer}
          </AppErrorBoundary>

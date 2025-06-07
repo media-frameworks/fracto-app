@@ -28,6 +28,8 @@ import {
 } from 'settings/CompSettings'
 import FractoUtil from "fracto/FractoUtil";
 import {COLORS_EXTERNAL} from "../comps/CompColors";
+import {CoolDropdown} from "common/ui/CoolImports";
+import FieldContextMenu from "./FieldContextMenu";
 
 const IMAGE_SIZE_DELTA = 50
 const ZOOM_FACTOR = 1.5
@@ -42,6 +44,7 @@ export class FieldImage extends Component {
 
    state = {
       image_ref: React.createRef(),
+      context_menu_client_pos: {},
    }
 
    componentDidMount() {
@@ -93,27 +96,44 @@ export class FieldImage extends Component {
       on_settings_changed({[KEY_HOVER_POINT]: null})
    }
 
-   on_click = (e) => {
+   client_click = (e) => {
       const {image_ref} = this.state
+      const container_bounds = image_ref.current.getBoundingClientRect()
+      const x = Math.floor(e.clientX - container_bounds.left)
+      const y = Math.floor(e.clientY - container_bounds.top)
+      return {x, y, container_bounds, clientX: e.clientX, clientY: e.clientY}
+   }
+
+   on_click = (e) => {
       const {page_settings, on_settings_changed} = this.props
       const {focal_point, scope, disabled} = page_settings
       if (disabled) {
          return
       }
-      const container_bounds = image_ref.current.getBoundingClientRect()
-      const img_x = Math.floor(e.clientX - container_bounds.left)
-      const img_y = Math.floor(e.clientY - container_bounds.top)
+      const client_click = this.client_click(e)
       const leftmost = focal_point.x - scope / 2
       const topmost = focal_point.y + scope / 2
-      const increment = scope / container_bounds.width
+      const increment = scope / client_click.container_bounds.width
       let settings = {[KEY_DISABLED]: true}
       settings[KEY_FOCAL_POINT] = {
-         x: leftmost + increment * img_x, y: topmost - increment * img_y,
+         x: leftmost + increment * client_click.x, y: topmost - increment * client_click.y,
       }
       if (e.ctrlKey) {
          settings[KEY_SCOPE] = page_settings[KEY_SCOPE] / ZOOM_FACTOR
       }
       on_settings_changed(settings)
+   }
+
+   on_context_menu = (e) => {
+      const {page_settings} = this.props
+      const {disabled} = page_settings
+      e.preventDefault()
+      if (disabled) {
+         this.setState({context_menu_client_pos: null})
+         return
+      }
+      const context_menu_client_pos = this.client_click(e)
+      this.setState({context_menu_client_pos})
    }
 
    on_wheel = (e) => {
@@ -146,13 +166,13 @@ export class FieldImage extends Component {
    on_plan_complete = (canvas_buffer, ctx) => {
       const {page_settings, on_settings_changed} = this.props
       on_settings_changed({
-         [KEY_CANVAS_BUFFER] : canvas_buffer,
-         [KEY_CTX] : ctx,
-         [KEY_DISABLED] : false,
-         [KEY_BAD_TILES] : Object.keys(BAD_TILES).length,
-         [KEY_CACHE_SIZE] : Object.keys(CACHED_TILES).length,
-         [KEY_UPDATE_INDEX] : 1 + page_settings[KEY_UPDATE_INDEX] || 0,
-         [KEY_IMAGE_WIDTH] : this.get_image_width(),
+         [KEY_CANVAS_BUFFER]: canvas_buffer,
+         [KEY_CTX]: ctx,
+         [KEY_DISABLED]: false,
+         [KEY_BAD_TILES]: Object.keys(BAD_TILES).length,
+         [KEY_CACHE_SIZE]: Object.keys(CACHED_TILES).length,
+         [KEY_UPDATE_INDEX]: 1 + page_settings[KEY_UPDATE_INDEX] || 0,
+         [KEY_IMAGE_WIDTH]: this.get_image_width(),
       })
    }
 
@@ -172,35 +192,49 @@ export class FieldImage extends Component {
       }
    }
 
+   on_context_menu_select = (code) => {
+      console.log('on_context_menu', code)
+   }
+
    render() {
-      const {image_ref} = this.state
+      const {image_ref, context_menu_client_pos} = this.state
       const {page_settings} = this.props
       const {focal_point, scope, disabled} = page_settings
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
       const field_height = page_settings[KEY_FIELD_HEIGHT_PX] - HEADER_HEIGHT_PX
       // console.log('update_index', update_index)
-      return <styles.FieldWrapper
-         style={{width: field_width, height: field_height}}>
-         <styles.ImageWrapper
-            ref={image_ref}
-            onClick={this.on_click}
-            onMouseMove={this.on_mousemove}
-            onMouseLeave={this.on_mouseleave}
-            onWheel={this.on_wheel}
-            style={{width: image_width, marginTop: (field_height - image_width) / 2}}>
-            <FractoRasterImage
-               width_px={image_width}
-               scope={scope}
-               focal_point={focal_point}
-               aspect_ratio={1.0}
-               on_plan_complete={this.on_plan_complete}
-               disabled={disabled}
-               color_handler={this.color_handler}
-               update_counter={page_settings[KEY_UPDATE_INDEX]}
-            />
-         </styles.ImageWrapper>
-      </styles.FieldWrapper>
+      const context_menu = context_menu_client_pos ?
+         <CoolDropdown
+            items={FieldContextMenu.get_menu_items(page_settings)}
+            reference_rect={{top: context_menu_client_pos.clientY, left: context_menu_client_pos.clientX}}
+            callback={this.on_context_menu_select}
+         /> : []
+      return [
+         <styles.FieldWrapper
+            style={{width: field_width, height: field_height}}>
+            <styles.ImageWrapper
+               ref={image_ref}
+               onClick={this.on_click}
+               onContextMenu={this.on_context_menu}
+               onMouseMove={this.on_mousemove}
+               onMouseLeave={this.on_mouseleave}
+               onWheel={this.on_wheel}
+               style={{width: image_width, marginTop: (field_height - image_width) / 2}}>
+               <FractoRasterImage
+                  width_px={image_width}
+                  scope={scope}
+                  focal_point={focal_point}
+                  aspect_ratio={1.0}
+                  on_plan_complete={this.on_plan_complete}
+                  disabled={disabled}
+                  color_handler={this.color_handler}
+                  update_counter={page_settings[KEY_UPDATE_INDEX]}
+               />
+            </styles.ImageWrapper>
+         </styles.FieldWrapper>,
+         context_menu
+      ]
    }
 }
 

@@ -3,6 +3,7 @@ export const TYPE_STRING = typeof 'abc'
 export const TYPE_NUMBER = typeof 123
 export const TYPE_OBJECT = typeof {abc: 123}
 export const TYPE_ARRAY = typeof ['abc', 123]
+export const TYPE_BOOLEAN = typeof true
 
 export const KEY_FOCAL_POINT = 'focal_point'
 export const KEY_SCOPE = 'scope'
@@ -16,6 +17,7 @@ export const KEY_CACHE_SIZE = 'cache_size'
 export const KEY_UPDATE_INDEX = 'update_index'
 export const KEY_MODAL = 'modal'
 export const KEY_AUTOMATION_SCALAR_MS = 'automation_scalar_ms'
+export const KEY_FIELD_CROSSHAIRS = 'field_crosshairs'
 
 export const APP_KEYED_SETTINGS = {
    [KEY_FOCAL_POINT]: {
@@ -89,5 +91,11 @@ export const APP_KEYED_SETTINGS = {
       default_value: 500,
       description: 'the relative speed of animation of the orbital visualizations',
       persist: true,
+   },
+   [KEY_FIELD_CROSSHAIRS]: {
+      data_type: TYPE_BOOLEAN,
+      default_value: false,
+      description: 'tells whether to temporarily use crosshairs on the main field',
+      persist: false,
    }
 }
