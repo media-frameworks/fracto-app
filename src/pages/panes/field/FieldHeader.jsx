@@ -17,7 +17,7 @@ export class FieldHeader extends Component {
       if (page_settings[KEY_DISABLED]) {
          return;
       }
-      const magnifier = e.shiftKey ? 2 : 1.618
+      const magnifier = e.shiftKey ? 5 : 3
       const mag_factor = is_up ? magnifier : 1 / magnifier
       on_settings_changed({[KEY_SCOPE]: page_settings[KEY_SCOPE] * mag_factor})
    }

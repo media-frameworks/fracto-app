@@ -3,8 +3,8 @@ import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompPatternStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
-       overflow: scroll;
        padding: 0.5rem 1rem;
+       overflow: hidden;
    `
    static GraphWrapper = styled(CoolStyles.InlineBlock)`
        margin: 0.5rem 0.5rem 0 0;
@@ -12,6 +12,11 @@ export class CompPatternStyles {
        border: 0.12rem solid #aaaaaa;
        border-radius: 0.125rem;
        padding: 0.5rem;
+       overflow: auto;
+   `
+   static ZoomerSheath = styled(CoolStyles.InlineBlock)`
+       overflow: hidden;
+       margin: 0;
    `
    static SidebarWrapper = styled(CoolStyles.InlineBlock)`
        margin: 0;
@@ -26,7 +31,6 @@ export class CompPatternStyles {
    static DescriptorWrapper = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.italic};
    `
-
    static InfoPrompt = styled(CoolStyles.Block)`
        ${CoolStyles.italic};
        ${CoolStyles.align_center};
@@ -61,8 +65,9 @@ export class CompPatternStyles {
    `
    static ZoomerWrapper = styled(CoolStyles.InlineBlock)`
        margin: 1rem 0.5rem 0 0;
-       width: 1.5rem;
-       font-size: 1rem;
+   `
+   static PatternPartsWrapper = styled(CoolStyles.Block)`
+       overflow: hidden;
    `
 }
 
