@@ -33,8 +33,8 @@ export class PaneLegend extends Component {
    on_plan_complete = (canvas_buffer, ctx) => {
       const {page_settings} = this.props
       const focal_point = {
-         x: page_settings[KEY_FOCAL_POINT].x,
-         y: page_settings[KEY_FOCAL_POINT].y,
+         x: page_settings[KEY_FOCAL_POINT]?.x || 0,
+         y: page_settings[KEY_FOCAL_POINT]?.y || 0,
       }
       if (ctx) {
          FractoCanvasOverlay.render_highlights(

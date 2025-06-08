@@ -1,4 +1,3 @@
-
 export const TYPE_STRING = typeof 'abc'
 export const TYPE_NUMBER = typeof 123
 export const TYPE_OBJECT = typeof {abc: 123}
@@ -11,6 +10,7 @@ export const KEY_DISABLED = 'disabled'
 export const KEY_CANVAS_BUFFER = 'canvas_buffer'
 export const KEY_CTX = 'ctx'
 export const KEY_HOVER_POINT = 'hover_point'
+export const KEY_CLIENT_POINT = 'client_point'
 export const KEY_STEPS_ZOOM = 'steps_zoom'
 export const KEY_BAD_TILES = 'bad_tiles'
 export const KEY_CACHE_SIZE = 'cache_size'
@@ -18,6 +18,8 @@ export const KEY_UPDATE_INDEX = 'update_index'
 export const KEY_MODAL = 'modal'
 export const KEY_AUTOMATION_SCALAR_MS = 'automation_scalar_ms'
 export const KEY_FIELD_CROSSHAIRS = 'field_crosshairs'
+export const KEY_FIELD_COVERAGE = 'field_coverage'
+export const KEY_IMAGE_BOUNDS = 'image_bounds'
 
 export const APP_KEYED_SETTINGS = {
    [KEY_FOCAL_POINT]: {
@@ -53,7 +55,13 @@ export const APP_KEYED_SETTINGS = {
    [KEY_HOVER_POINT]: {
       data_type: TYPE_OBJECT,
       default_value: {},
-      description: 'live position of cursor over main frame',
+      description: 'live position of cursor over main frame, in image coordinates',
+      persist: false,
+   },
+   [KEY_CLIENT_POINT]: {
+      data_type: TYPE_OBJECT,
+      default_value: {x: -1, y: -1},
+      description: 'live position of cursor over main frame, in client coordinates',
       persist: false,
    },
    [KEY_STEPS_ZOOM]: {
@@ -97,5 +105,18 @@ export const APP_KEYED_SETTINGS = {
       default_value: false,
       description: 'tells whether to temporarily use crosshairs on the main field',
       persist: false,
-   }
+      debug: false,
+   },
+   [KEY_FIELD_COVERAGE]: {
+      data_type: TYPE_ARRAY,
+      default_value: [],
+      description: 'the number of tiles available for a given frame of field',
+      persist: false,
+   },
+   [KEY_IMAGE_BOUNDS]: {
+      data_type: TYPE_OBJECT,
+      default_value: {},
+      description: 'the bounding rectangle of the field image, in screen coordinates',
+      persist: false,
+   },
 }

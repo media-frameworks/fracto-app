@@ -3,8 +3,9 @@ import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompAdminStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
-       overflow-y: auto;
+       //overflow-y: scroll;
        padding: 0.5rem 1rem;
+       //background-color: lightseagreen;
    `
    static TileBlockWrapper = styled(CoolStyles.InlineBlock)`
        padding: 0;

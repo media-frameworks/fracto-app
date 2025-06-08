@@ -37,7 +37,7 @@ export class AdminSettings extends Component {
       const table_data = settings_keys
          .sort()
          .map(key => {
-            let value = page_settings[key] ? page_settings[key] : 'null'
+            let value = page_settings[key]
             switch (typeof value) {
                case "object":
                   const json_obj = JSON.stringify(value, '', 2)
