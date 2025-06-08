@@ -16,6 +16,8 @@ import {
    KEY_HOVER_POINT,
    KEY_CACHE_SIZE,
    KEY_UPDATE_INDEX,
+   KEY_FIELD_CROSSHAIRS,
+   KEY_CLIENT_POINT, KEY_IMAGE_BOUNDS,
 } from "settings/AppSettings";
 import {
    KEY_FIELD_WIDTH_PX,
@@ -30,6 +32,7 @@ import FractoUtil from "fracto/FractoUtil";
 import {COLORS_EXTERNAL} from "../comps/CompColors";
 import {CoolDropdown} from "common/ui/CoolImports";
 import FieldContextMenu from "./FieldContextMenu";
+import FieldCrossHairs from "./FieldCrossHairs";
 
 const IMAGE_SIZE_DELTA = 50
 const ZOOM_FACTOR = 1.5
@@ -37,19 +40,20 @@ const ZOOM_FACTOR_MINOR = 1.5
 const ZOOM_FACTOR_MAJOR = 3.0
 
 export class FieldImage extends Component {
-
    static propTypes = {
-      page_settings: PropTypes.object.isRequired, on_settings_changed: PropTypes.func.isRequired,
+      page_settings: PropTypes.object.isRequired,
+      on_settings_changed: PropTypes.func.isRequired,
    }
 
    state = {
       image_ref: React.createRef(),
+      main_field_ref: React.createRef(),
       context_menu_client_pos: {},
    }
 
    componentDidMount() {
       const {on_settings_changed} = this.props
-      on_settings_changed({[KEY_UPDATE_INDEX]: 0})
+      on_settings_changed({[KEY_UPDATE_INDEX]: 0,})
       window.addEventListener('keydown', this.key_listener)
    }
 
@@ -82,18 +86,25 @@ export class FieldImage extends Component {
       const x = inspector_bounds.left + increment * (e.clientX - bounds.x)
       const y = inspector_bounds.top - increment * (e.clientY - bounds.y)
       // console.log('x, y', x, y)
-      return {x: x, y: y}
+      return {x: x, y: y, clientX: e.clientX, clientY: e.clientY, image_bounds: bounds}
    }
 
    on_mousemove = (e) => {
       const {on_settings_changed} = this.props
       const location = this.get_mouse_pos(e)
-      on_settings_changed({[KEY_HOVER_POINT]: {x: location.x, y: location.y}})
+      setTimeout(() => {
+         on_settings_changed({
+            [KEY_HOVER_POINT]: {x: location.x, y: location.y},
+            [KEY_CLIENT_POINT]: {x: location.clientX, y: location.clientY},
+            [KEY_FIELD_CROSSHAIRS]: true,
+            [KEY_IMAGE_BOUNDS]: JSON.parse(JSON.stringify(location.image_bounds)),
+         })
+      }, 10)
    }
 
-   on_mouseleave = (e) => {
+   on_mousemove_margin = (e) => {
       const {on_settings_changed} = this.props
-      on_settings_changed({[KEY_HOVER_POINT]: null})
+      on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
    }
 
    client_click = (e) => {
@@ -194,11 +205,12 @@ export class FieldImage extends Component {
 
    on_context_menu_select = (code) => {
       console.log('on_context_menu', code)
+      this.setState({context_menu_client_pos: null})
    }
 
    render() {
-      const {image_ref, context_menu_client_pos} = this.state
-      const {page_settings} = this.props
+      const {image_ref, main_field_ref, context_menu_client_pos} = this.state
+      const {page_settings, on_settings_changed} = this.props
       const {focal_point, scope, disabled} = page_settings
       const image_width = this.get_image_width()
       const field_width = page_settings[KEY_FIELD_WIDTH_PX]
@@ -210,15 +222,22 @@ export class FieldImage extends Component {
             reference_rect={{top: context_menu_client_pos.clientY, left: context_menu_client_pos.clientX}}
             callback={this.on_context_menu_select}
          /> : []
+      const crosshairs = page_settings[KEY_FIELD_CROSSHAIRS]
+         ? <FieldCrossHairs
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}/>
+         : ''
       return [
          <styles.FieldWrapper
+            key={'field-wrapper'}
+            ref={main_field_ref}
+            onMouseMove={this.on_mousemove_margin}
             style={{width: field_width, height: field_height}}>
             <styles.ImageWrapper
                ref={image_ref}
                onClick={this.on_click}
                onContextMenu={this.on_context_menu}
                onMouseMove={this.on_mousemove}
-               onMouseLeave={this.on_mouseleave}
                onWheel={this.on_wheel}
                style={{width: image_width, marginTop: (field_height - image_width) / 2}}>
                <FractoRasterImage
@@ -233,7 +252,8 @@ export class FieldImage extends Component {
                />
             </styles.ImageWrapper>
          </styles.FieldWrapper>,
-         context_menu
+         context_menu,
+         crosshairs,
       ]
    }
 }

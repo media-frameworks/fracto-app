@@ -8,7 +8,8 @@ import {
    KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
-   KEY_SCOPE
+   KEY_SCOPE,
+   KEY_FIELD_COVERAGE,
 } from 'settings/AppSettings'
 import {
    KEY_FIELD_WIDTH_PX,
@@ -44,7 +45,7 @@ export class LegendTabStats extends Component {
    }
 
    render_stats = () => {
-      const {page_settings} = this.props
+      const {page_settings, on_settings_changed} = this.props
       const focal_point_x = page_settings[KEY_FOCAL_POINT]?.x || 0.0
       const focal_point_y = page_settings[KEY_FOCAL_POINT]?.y || 0.0
       const hover_point_x = page_settings[KEY_HOVER_POINT]?.x || null
@@ -55,12 +56,22 @@ export class LegendTabStats extends Component {
          page_settings[KEY_SCOPE],
          1.0)
       // console.log('coverage_data', coverage_data)
-      const coverage_str = coverage_data
+      const coverage = coverage_data
          .sort((a, b) => b.level - a.level)
          .slice(0, 8)
          .map((item) => {
             return `${item.level}:${item.level_tiles.length}`
-         }).join(', ')
+         })
+      const coverage_str = coverage.join(',')
+      setTimeout(() => {
+         if (!page_settings[KEY_FIELD_COVERAGE]) {
+            return;
+         }
+         const current_coverage_str = page_settings[KEY_FIELD_COVERAGE].join(',')
+         if (current_coverage_str !== coverage_str) {
+            on_settings_changed({[KEY_FIELD_COVERAGE]: coverage});
+         }
+      }, 100)
       const mode = page_settings[KEY_DISABLED]
          ? <styles.WaitSpan>loading...</styles.WaitSpan>
          : <styles.ReadySpan>ready</styles.ReadySpan>
@@ -93,7 +104,7 @@ export class LegendTabStats extends Component {
          },
          {
             label: 'coverage',
-            content: <NumberSpan>{coverage_str}</NumberSpan>,
+            content: <NumberSpan>{coverage.join(', ')}</NumberSpan>,
          },
          {
             label: 'image width',

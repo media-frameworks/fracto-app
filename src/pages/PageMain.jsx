@@ -13,12 +13,11 @@ import PaneField from "./panes/PaneField";
 import PaneSteps from "./panes/PaneSteps";
 import PaneLegend from "./panes/PaneLegend";
 import PaneComps from "./panes/PaneComps";
-import PageSettings, {
-   TYPE_OBJECT,
-   TYPE_ARRAY,
-} from "./PageSettings";
 import {
-   KEY_DISABLED
+   KEY_DISABLED, KEY_FIELD_CROSSHAIRS, KEY_IMAGE_BOUNDS,
+   TYPE_ARRAY,
+   TYPE_BOOLEAN,
+   TYPE_OBJECT
 } from "../settings/AppSettings";
 import {
    KEY_STEPS_WIDTH_PX,
@@ -30,18 +29,17 @@ import {
    KEY_LEGEND_WIDTH_PX,
    KEY_LEGEND_HEIGHT_PX
 } from "../settings/PaneSettings";
+import PageSettings from "./PageSettings";
 
 const getViewportDimensions = () => {
    let viewport = {}
    if (typeof window.innerWidth != 'undefined') {
       viewport.width = window.innerWidth;
       viewport.height = window.innerHeight;
-   }
-   else if (typeof document.documentElement !== 'undefined' && typeof document.documentElement.clientWidth !== 'undefined' && document.documentElement.clientWidth !== 0) {
+   } else if (typeof document.documentElement !== 'undefined' && typeof document.documentElement.clientWidth !== 'undefined' && document.documentElement.clientWidth !== 0) {
       viewport.width = document.documentElement.clientWidth;
       viewport.height = document.documentElement.clientHeight;
-   }
-   else {
+   } else {
       viewport.width = document.getElementsByTagName('body')[0].clientWidth;
       viewport.height = document.getElementsByTagName('body')[0].clientHeight;
    }
@@ -93,6 +91,7 @@ export class PageMain extends Component {
    }
 
    on_settings_changed = (new_settings) => {
+      // console.log('on_settings_changed', new_settings)
       let new_state = {page_settings: this.state.page_settings}
       const new_settings_keys = Object.keys(new_settings)
       new_settings_keys.forEach((key) => {
@@ -102,9 +101,21 @@ export class PageMain extends Component {
             return
          }
          // console.log(`${key}=>${new_settings[key]}`)
+         if (key_definition.debug) {
+            debugger;
+         }
          switch (key_definition.data_type) {
+            case TYPE_BOOLEAN:
+               // if (typeof new_settings[key] !== 'boolean') {
+               //    break;
+               // }
+               new_state.page_settings[key] = !!new_settings[key]
+               break
             case TYPE_ARRAY:
             case TYPE_OBJECT:
+               if (typeof new_settings[key] !== 'object') {
+                  break;
+               }
                new_state.page_settings[key] =
                   JSON.parse(JSON.stringify(new_settings[key]))
                break
@@ -136,6 +147,18 @@ export class PageMain extends Component {
       this.setState(new_state)
    }
 
+   on_mouse_move = (e) => {
+      const {page_settings} = this.state
+      if (!page_settings[KEY_IMAGE_BOUNDS]) {
+         return;
+      }
+      const bounds = page_settings[KEY_IMAGE_BOUNDS]
+      if (e.clientX < bounds.left || e.clientX > bounds.right) {
+         console.log('crosshairs go away!')
+         this.on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
+      }
+   }
+
    render() {
       const {app_name} = this.props
       const {left_width_px, height_px, page_settings} = this.state
@@ -164,7 +187,7 @@ export class PageMain extends Component {
          on_settings_changed={this.on_settings_changed}
       />
       const modal = []// page_settings[KEY_MODAL] || []
-      return <div>
+      return <div onMouseMove={this.on_mouse_move}>
          <AppPageMain
             app_name={app_name}
             on_resize={this.on_resize}

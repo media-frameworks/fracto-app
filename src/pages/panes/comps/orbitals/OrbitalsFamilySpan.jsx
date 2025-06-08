@@ -115,7 +115,7 @@ export class OrbitalsFamilySpan extends Component {
             }
          }
       })
-      console.log('families, highest_family_count', families, highest_family_count)
+      // console.log('families, highest_family_count', families, highest_family_count)
       const log_highest_count = Math.log(highest_family_count) * 2
       let least_base_y = wrapper_height_px
       Object.keys(families).forEach(key => {
@@ -154,7 +154,7 @@ export class OrbitalsFamilySpan extends Component {
                least_base_y = base_y
             }
          })
-         console.log('family', family, leftmost, wrapper_height_px)
+         // console.log('family', family, leftmost, wrapper_height_px)
       })
 
       setTimeout(() => {

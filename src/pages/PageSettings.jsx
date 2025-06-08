@@ -1,11 +1,13 @@
-import {APP_KEYED_SETTINGS} from "../settings/AppSettings";
+import {
+   APP_KEYED_SETTINGS,
+   TYPE_ARRAY,
+   TYPE_BOOLEAN,
+   TYPE_NUMBER,
+   TYPE_OBJECT,
+   TYPE_STRING
+} from "../settings/AppSettings";
 import {COMP_KEYED_SETTINGS} from "../settings/CompSettings";
 import {PANE_KEYED_SETTINGS} from "../settings/PaneSettings";
-
-export const TYPE_STRING = typeof 'abc'
-export const TYPE_NUMBER = typeof 123
-export const TYPE_OBJECT = typeof {abc: 123}
-export const TYPE_ARRAY = typeof ['abc', 123]
 
 export class PageSettings {
 
@@ -36,6 +38,9 @@ export class PageSettings {
                   break
                case TYPE_ARRAY:
                   page_settings[key] = [];
+                  break
+               case TYPE_BOOLEAN:
+                  page_settings[key] = PageSettings.all_settings[key].default_value;
                   break
                default:
                   break;

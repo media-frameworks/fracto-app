@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {PaneFieldStyles as styles} from 'styles/PaneFieldStyles'
 import {HEADER_HEIGHT_PX} from "styles/PageAppStyles";
 import {faCaretDown, faCaretUp} from "@fortawesome/free-solid-svg-icons";
-import {KEY_DISABLED, KEY_SCOPE} from "settings/AppSettings";
+import {KEY_DISABLED, KEY_FIELD_COVERAGE, KEY_SCOPE} from "settings/AppSettings";
 
 export class FieldHeader extends Component {
    static propTypes = {
@@ -28,7 +28,16 @@ export class FieldHeader extends Component {
          cursor: page_settings[KEY_DISABLED] ? 'wait' : 'pointer',
          height: `${HEADER_HEIGHT_PX - 2}px`
       }
+      const field_coverage = page_settings[KEY_FIELD_COVERAGE]
+      let highest_level = '='
+      if (field_coverage && field_coverage.length > 0) {
+         highest_level = field_coverage[0].split(':')[0]
+      }
       return <styles.HeaderWrapper>
+         <styles.HighestLevelBadge
+            title={'Highest render level for this frame'}>
+            {highest_level}
+         </styles.HighestLevelBadge>
          <styles.MagnifyButton
             style={buttonStyles}
             title={'zoom out (boost w/shift)'}

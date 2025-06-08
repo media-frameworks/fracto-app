@@ -39,6 +39,32 @@ export class PaneFieldStyles {
        color: white;
        text-shadow: 0.125rem 0.125rem 0.125rem #222222;
    `;
+   static HighestLevelBadge = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.monospace}
+       ${CoolStyles.noselect}
+       text-shadow: 0.125rem 0.125rem 0.125rem #666666;
+       font-size: 1rem;
+       margin-left: 0.25rem;
+       color: #eeeeee;
+   `;
+   static VerticalCrossHair = styled(CoolStyles.InlineBlock)`
+       position: fixed;
+       width: 2px;
+       top: 0;
+       bottom: 0;
+       background-color: white;
+       opacity: 0.40;
+       cursor: crosshair;
+   `
+   static HorizontalCrossHair = styled(CoolStyles.InlineBlock)`
+       position: fixed;
+       height: 2px;
+       left: 0;
+       right: 0;
+       background-color: white;
+       opacity: 0.40;
+       cursor: crosshair;
+   `
 }
 
 export default PaneFieldStyles

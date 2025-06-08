@@ -9,7 +9,7 @@ import {CoolSlider} from "common/ui/CoolImports";
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {
    KEY_AUTOMATION_SCALAR_MS,
-   KEY_DISABLED, KEY_FIELD_CROSSHAIRS,
+   KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
 } from "settings/AppSettings";
@@ -68,25 +68,21 @@ export class PatternsOrbital extends Component {
    componentDidUpdate(prevProps, prevState, snapshot) {
       const {page_settings} = this.props;
       const current_hover_point = page_settings[KEY_HOVER_POINT]
-      const hover_point_changed = (prevState.hover_point?.x || 0) !== (current_hover_point?.x || 0)
-         || (prevState.hover_point?.y || 0) !== (current_hover_point?.y || 0);
+      const hover_point_changed = (prevState.hover_point.x) !== (current_hover_point.x)
+         || (prevState.hover_point.y) !== (current_hover_point.y);
       if (hover_point_changed) {
-         console.log('hover_point_changed')
+         this.setState({
+            hover_point: JSON.parse(JSON.stringify(current_hover_point)),
+         })
+         console.log('hover_point_changed', prevState.hover_point, current_hover_point)
          if (prevState.in_animation) {
             this.setState({in_animation: false, animation_index: -1})
          }
-         setTimeout(this.initialize, 50)
+         setTimeout(this.initialize, 10)
       }
    }
 
-   componentWillUnmount() {
-      const {on_settings_changed} = this.props
-      on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
-   }
-
    initialize = () => {
-      const {on_settings_changed} = this.props
-      on_settings_changed({[KEY_FIELD_CROSSHAIRS]: true})
       this.update_r_data()
    }
 
