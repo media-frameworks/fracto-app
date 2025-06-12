@@ -9,7 +9,7 @@ import {CoolSlider} from "common/ui/CoolImports";
 import FractoFastCalc from "fracto/FractoFastCalc";
 import {
    KEY_AUTOMATION_SCALAR_MS,
-   KEY_DISABLED,
+   KEY_DISABLED, KEY_FIELD_CROSSHAIRS,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
 } from "settings/AppSettings";
@@ -25,6 +25,7 @@ import {
    normalize_angle,
 } from "./PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
+import CoolMediaTransport from "common/ui/CoolMediaTransport";
 
 ChartJS.register(CategoryScale, BarController)
 
@@ -74,7 +75,7 @@ export class PatternsOrbital extends Component {
          this.setState({
             hover_point: JSON.parse(JSON.stringify(current_hover_point)),
          })
-         console.log('hover_point_changed', prevState.hover_point, current_hover_point)
+         // console.log('hover_point_changed', prevState.hover_point, current_hover_point)
          if (prevState.in_animation) {
             this.setState({in_animation: false, animation_index: -1})
          }
@@ -89,7 +90,7 @@ export class PatternsOrbital extends Component {
    get_fracto_values = (set1, set2) => {
       const {page_settings} = this.props
       let click_point = page_settings[KEY_HOVER_POINT]
-      if (!click_point) {
+      if (!page_settings[KEY_FIELD_CROSSHAIRS]) {
          click_point = page_settings[KEY_FOCAL_POINT]
       }
       return FractoFastCalc.calc(click_point.x, click_point.y)
@@ -98,18 +99,20 @@ export class PatternsOrbital extends Component {
    get_click_point_info = () => {
       const {page_settings} = this.props
       let click_point = page_settings[KEY_HOVER_POINT]
-      if (!click_point) {
+      if (!page_settings[KEY_FIELD_CROSSHAIRS]) {
          click_point = page_settings[KEY_FOCAL_POINT]
       }
       const fracto_values = this.get_fracto_values()
       const in_cardioid = FractoFastCalc.point_in_main_cardioid(click_point.x, click_point.y)
       const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
+      const Q_core_pos = calculate_cardioid_Q(click_point.x, click_point.y, 1)
       return {
          click_point,
          pattern: fracto_values.pattern,
          orbital_points: fracto_values.orbital_points,
          in_cardioid,
          Q_core_neg,
+         Q_core_pos,
          iteration: fracto_values.iteration,
       }
    }
@@ -193,7 +196,7 @@ export class PatternsOrbital extends Component {
       on_settings_changed({[KEY_AUTOMATION_SCALAR_MS]: animation_scalar_ms})
    }
 
-   sidebar_info = () => {
+   sidebar_info = (width_px) => {
       const {r_data, in_animation, animation_index} = this.state
       const {page_settings} = this.props
       const click_point_info = this.get_click_point_info()
@@ -234,6 +237,13 @@ export class PatternsOrbital extends Component {
          />
          statements.push(slider)
       }
+      statements.push(<CoolMediaTransport
+         width_px={width_px}
+         on_play={this.on_play}
+         on_pause={this.on_pause}
+         on_stop={this.on_stop}
+      />)
+
       return statements.map(statement => {
          return <styles.InfoLine>{statement}</styles.InfoLine>
       })
@@ -269,7 +279,7 @@ export class PatternsOrbital extends Component {
             />
          },
          {
-            content: this.sidebar_info(),
+            content: this.sidebar_info(wrapper_dimension * 0.19),
             width_px: wrapper_dimension * 0.19,
             height_px: wrapper_dimension * 0.40,
             width_offset_px: 0,

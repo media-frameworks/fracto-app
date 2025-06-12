@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {PaneFieldStyles as styles} from 'styles/PaneFieldStyles'
 import {HEADER_HEIGHT_PX} from "styles/PageAppStyles";
 import {faCaretDown, faCaretUp} from "@fortawesome/free-solid-svg-icons";
-import {KEY_DISABLED, KEY_FIELD_COVERAGE, KEY_SCOPE} from "settings/AppSettings";
+import {KEY_DISABLED, KEY_FIELD_COVERAGE, KEY_FIELD_CROSSHAIRS, KEY_SCOPE} from "settings/AppSettings";
 
 export class FieldHeader extends Component {
    static propTypes = {
@@ -22,6 +22,11 @@ export class FieldHeader extends Component {
       on_settings_changed({[KEY_SCOPE]: page_settings[KEY_SCOPE] * mag_factor})
    }
 
+   on_mouse_move = () => {
+      const {on_settings_changed} = this.props
+      on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
+   }
+
    render() {
       const {page_settings} = this.props
       const buttonStyles = {
@@ -33,7 +38,7 @@ export class FieldHeader extends Component {
       if (field_coverage && field_coverage.length > 0) {
          highest_level = field_coverage[0].split(':')[0]
       }
-      return <styles.HeaderWrapper>
+      return <styles.HeaderWrapper onMouseMove={this.on_mouse_move}>
          <styles.HighestLevelBadge
             title={'Highest render level for this frame'}>
             {highest_level}
