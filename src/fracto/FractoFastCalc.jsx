@@ -116,10 +116,21 @@ export class FractoFastCalc {
             }
          }
       }
+      const orbital_points = []
+      for (let i = 0; i < best_orbital + 1; i++) {
+         Q_y = 2 * Q_x * Q_y + P_y;
+         Q_x = Q_x_squared - Q_y_squared + P_x;
+         Q_x_squared = Q_x * Q_x
+         Q_y_squared = Q_y * Q_y
+         orbital_points.push({
+            x: Q_x,
+            y: Q_y
+         })
+      }
       return {
          pattern: best_orbital,
          iteration: iteration,
-         Q_s: []
+         orbital_points: orbital_points,
       };
    }
 

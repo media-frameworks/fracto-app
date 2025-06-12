@@ -253,6 +253,7 @@ export const normalize_angle = (angle) => {
 export const escape_points_chart = (click_point, in_cardioid, animation_index = -1) => {
    const escape_points = get_escape_points(click_point)
    const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
+   // const Q_core_pos = calculate_cardioid_Q(click_point.x, click_point.y, 1)
    const set2 = [Q_core_neg]
    if (animation_index >= 0) {
       set2.push(escape_points[animation_index])

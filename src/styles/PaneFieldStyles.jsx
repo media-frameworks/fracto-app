@@ -3,6 +3,9 @@ import {CoolStyles} from '../common/ui/CoolImports'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {HEADER_HEIGHT_PX} from "./PageAppStyles";
 
+const WIDTH_CROSSHAIR_LINE_PX = 2
+const OPACITY_LINE_PCT = 45
+
 export class PaneFieldStyles {
    static HeaderWrapper = styled(CoolStyles.Block)`
        padding: 0 2px;
@@ -49,20 +52,41 @@ export class PaneFieldStyles {
    `;
    static VerticalCrossHair = styled(CoolStyles.InlineBlock)`
        position: fixed;
-       width: 2px;
+       width: ${WIDTH_CROSSHAIR_LINE_PX}px;
        top: 0;
        bottom: 0;
        background-color: white;
-       opacity: 0.40;
+       opacity: 0.${OPACITY_LINE_PCT};
        cursor: crosshair;
    `
    static HorizontalCrossHair = styled(CoolStyles.InlineBlock)`
        position: fixed;
-       height: 2px;
+       height: ${WIDTH_CROSSHAIR_LINE_PX}px;
        left: 0;
        right: 0;
        background-color: white;
-       opacity: 0.40;
+       opacity: 0.${OPACITY_LINE_PCT};
+       cursor: crosshair;
+   `
+   static CenterBox = styled(CoolStyles.InlineBlock)`
+       position: fixed;
+       border: ${WIDTH_CROSSHAIR_LINE_PX}px solid rgba(255,255,255,${2 * OPACITY_LINE_PCT}%);
+       cursor: crosshair;
+       background-color: transparent;
+       border-radius: 3px;
+   `
+   static BoxTopBottom = styled(CoolStyles.InlineBlock)`
+       position: fixed;
+       height: ${WIDTH_CROSSHAIR_LINE_PX}px;
+       background-color: white;
+       opacity: 0.${OPACITY_LINE_PCT};
+       cursor: crosshair;
+   `
+   static BoxLeftRight = styled(CoolStyles.InlineBlock)`
+       position: fixed;
+       width: ${WIDTH_CROSSHAIR_LINE_PX}px;
+       background-color: white;
+       opacity: 0.${OPACITY_LINE_PCT};
        cursor: crosshair;
    `
 }

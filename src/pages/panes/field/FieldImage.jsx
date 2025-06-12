@@ -102,11 +102,6 @@ export class FieldImage extends Component {
       }, 10)
    }
 
-   on_mousemove_margin = (e) => {
-      const {on_settings_changed} = this.props
-      on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
-   }
-
    client_click = (e) => {
       const {image_ref} = this.state
       const container_bounds = image_ref.current.getBoundingClientRect()
@@ -231,7 +226,6 @@ export class FieldImage extends Component {
          <styles.FieldWrapper
             key={'field-wrapper'}
             ref={main_field_ref}
-            onMouseMove={this.on_mousemove_margin}
             style={{width: field_width, height: field_height}}>
             <styles.ImageWrapper
                ref={image_ref}
