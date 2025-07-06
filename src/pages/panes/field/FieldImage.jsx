@@ -17,7 +17,7 @@ import {
    KEY_CACHE_SIZE,
    KEY_UPDATE_INDEX,
    KEY_FIELD_CROSSHAIRS,
-   KEY_CLIENT_POINT, KEY_IMAGE_BOUNDS,
+   KEY_CLIENT_POINT, KEY_IMAGE_BOUNDS, KEY_LOCATE_CENTER,
 } from "settings/AppSettings";
 import {
    KEY_FIELD_WIDTH_PX,
@@ -33,6 +33,7 @@ import {COLORS_EXTERNAL} from "../comps/CompColors";
 import {CoolDropdown} from "common/ui/CoolImports";
 import FieldContextMenu from "./FieldContextMenu";
 import FieldCrossHairs from "./FieldCrossHairs";
+import FieldUtils from "./FieldUtils";
 
 const IMAGE_SIZE_DELTA = 50
 const ZOOM_FACTOR = 1.5
@@ -97,6 +98,7 @@ export class FieldImage extends Component {
             [KEY_HOVER_POINT]: {x: location.x, y: location.y},
             [KEY_CLIENT_POINT]: {x: location.clientX, y: location.clientY},
             [KEY_FIELD_CROSSHAIRS]: true,
+            [KEY_LOCATE_CENTER]: false,
             [KEY_IMAGE_BOUNDS]: JSON.parse(JSON.stringify(location.image_bounds)),
          })
       }, 10)
@@ -203,6 +205,20 @@ export class FieldImage extends Component {
       this.setState({context_menu_client_pos: null})
    }
 
+   render_center_crosshairs = () => {
+      const {page_settings} = this.props
+      if (page_settings[KEY_FIELD_CROSSHAIRS]) {
+         return []
+      }
+      const image_bounds = page_settings[KEY_IMAGE_BOUNDS]
+      const center = {
+         x: image_bounds.left + image_bounds.width / 2,
+         y: image_bounds.top + image_bounds.height / 2,
+      }
+      return FieldUtils.render_cross_hairs(
+         image_bounds, center, this.on_click)
+   }
+
    render() {
       const {image_ref, main_field_ref, context_menu_client_pos} = this.state
       const {page_settings, on_settings_changed} = this.props
@@ -222,6 +238,7 @@ export class FieldImage extends Component {
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}/>
          : ''
+      const locate_center = page_settings[KEY_LOCATE_CENTER] ? this.render_center_crosshairs() : ''
       return [
          <styles.FieldWrapper
             key={'field-wrapper'}
@@ -248,6 +265,7 @@ export class FieldImage extends Component {
          </styles.FieldWrapper>,
          context_menu,
          crosshairs,
+         locate_center,
       ]
    }
 }

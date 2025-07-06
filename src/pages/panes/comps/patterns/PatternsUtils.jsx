@@ -3,6 +3,7 @@ import {Scatter} from "react-chartjs-2";
 
 import Complex from "common/math/Complex";
 import FractoUtil from "fracto/FractoUtil";
+import FractoFastCalc from "fracto/FractoFastCalc";
 
 const EPSILON = 0.0001
 const ANIMATION_COLOR = 'red'
@@ -26,23 +27,49 @@ const GRID_CONFIG = {
    }
 };
 
-export const calculate_cardioid_Q = (x, y, scalar = 1) => {
-   const P = new Complex(x, y)
-   const negative_four_P = P.scale(-4.0)
-   const under_radical = negative_four_P.offset(1, 0)
-   const radical = under_radical.sqrt().scale(scalar)
-   const result = radical.offset(1.0, 0).scale(0.5)
-   return {x: result.re, y: result.im}
+const find_bounds = (set, center, in_cardioid, escaper) => {
+   // console.log('find_radius = (set, center', set, center)
+   let max_radius = 0
+   set.forEach(point => {
+      const diff_x = center.x - point.x
+      const diff_y = center.y - point.y
+      const test_radius = Math.sqrt(diff_x * diff_x + diff_y * diff_y)
+      if (test_radius > max_radius) {
+         max_radius = test_radius
+      }
+   })
+   if (escaper) {
+      max_radius /= 2.5
+   } else if (in_cardioid) {
+      max_radius *= 1.1
+   }
+   return {
+      min_x: center.x - max_radius,
+      max_x: center.x + max_radius,
+      min_y: center.y - max_radius,
+      max_y: center.y + max_radius,
+   }
 }
 
 export const click_point_chart = (set1, set2, in_cardioid = false, escaper = false) => {
    if (!set1) {
       return []
    }
+   const bounds = find_bounds(set1, set2[0], in_cardioid, escaper)
    const options = {
       scales: {
-         x: {grid: GRID_CONFIG,},
-         y: {grid: GRID_CONFIG,}
+         x: {
+            grid: GRID_CONFIG,
+            ticks: {display: false},
+            min: bounds.min_x,
+            max: bounds.max_x,
+         },
+         y: {
+            grid: GRID_CONFIG,
+            ticks: {display: false},
+            min: bounds.min_y,
+            max: bounds.max_y,
+         },
       },
       animation: false,
       maintainAspectRatio: false,
@@ -52,41 +79,7 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
          },
       },
    }
-   let min_y = 2
-   let max_y = -2
-   let min_x = 2
-   let max_x = -2
-   set1.forEach(point => {
-      if (point.y < min_y && point.y > -2) {
-         min_y = point.y
-      }
-      if (point.y > max_y && point.y < 2) {
-         max_y = point.y
-      }
-      if (point.x < min_x && point.x > -2) {
-         min_x = point.x
-      }
-      if (point.x > max_x && point.x < 2) {
-         max_x = point.x
-      }
-   })
-   if (!in_cardioid) {
-      const delta_y = max_y - min_y
-      min_y -= delta_y * 0.05
-      max_y += delta_y * 0.05
-      options.scales.y.min = min_y < -2 ? -2 : min_y
-      options.scales.y.max = max_y > 2 ? 2 : max_y
-
-      const delta_x = max_x - min_x
-      min_x -= delta_x * 0.05
-      max_x += delta_x * 0.05
-      options.scales.x.min = min_x < -2 ? -2 : min_x
-      options.scales.x.max = max_x > 2 ? 2 : max_x
-   }
    const cardinality = set1?.length - 1 || 0
-   // const set1_label = escaper
-   //    ? `escapes in ${cardinality || '?'} steps`
-   //    : `${cardinality || '?'} point${in_cardioid ? 's in cardiod' : ' orbital'}`
    const in_animation = set2?.length > 1
    const data_dataset = {
       datasets: [
@@ -125,11 +118,12 @@ export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1
       scales: {
          x: {
             grid: GRID_CONFIG,
-            ticks: {
-               stepSize: Math.PI / 2,
-            },
+            ticks: {display: false},
          },
-         y: {grid: GRID_CONFIG,},
+         y: {
+            grid: GRID_CONFIG,
+            ticks: {display: false},
+         },
       },
       animation: false,
       maintainAspectRatio: false,
@@ -207,6 +201,7 @@ export const iteration_chart = (set1, in_cardioid, escaper, animation_index = -1
          showLine: true
       })
    try {
+      // console.log('data_dataset', data_dataset)
       return <Scatter
          datasetIdKey='id1'
          data={data_dataset} options={options}
@@ -252,8 +247,8 @@ export const normalize_angle = (angle) => {
 
 export const escape_points_chart = (click_point, in_cardioid, animation_index = -1) => {
    const escape_points = get_escape_points(click_point)
-   const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
-   // const Q_core_pos = calculate_cardioid_Q(click_point.x, click_point.y, 1)
+   const Q_core_neg = FractoFastCalc.calculate_cardioid_Q(click_point.x, click_point.y, -1)
+   // const Q_core_pos = FractoFastCalc.calculate_cardioid_Q(click_point.x, click_point.y, 1)
    const set2 = [Q_core_neg]
    if (animation_index >= 0) {
       set2.push(escape_points[animation_index])
@@ -261,13 +256,27 @@ export const escape_points_chart = (click_point, in_cardioid, animation_index = 
    return click_point_chart(escape_points, set2, in_cardioid, true, animation_index)
 }
 
+export const rotateArray = (arr, n) => {
+   const copy_arr = JSON.parse(JSON.stringify(arr))
+   const len = copy_arr.length;
+   n = n % len; // Handle cases where n > len
+   return copy_arr.slice(len - n).concat(copy_arr.slice(0, len - n));
+}
+
 export const process_r_data = (orbital_points, Q, progress_offset = Math.PI / 4) => {
    if (!orbital_points) {
       return []
    }
    let max_angle = 0
-   return orbital_points.map((p, index) => {
+   let best_distance = 0
+   // let best_index = 0
+   const mapping = orbital_points.map((p, index) => {
       const point = new Complex(p.x, p.y)
+      const magnitude_point = point.magnitude()
+      if (magnitude_point > best_distance) {
+         best_distance = magnitude_point
+         // best_index = index
+      }
       const difference = point.offset(-Q.x, -Q.y)
       let angle = Math.atan2(difference.im, difference.re)
       while (angle < max_angle - progress_offset) {
@@ -276,6 +285,10 @@ export const process_r_data = (orbital_points, Q, progress_offset = Math.PI / 4)
       max_angle = angle
       return {x: angle, y: difference.magnitude()}
    })
+   // if (best_index !== 0) {
+   //    return rotateArray(mapping, best_index)
+   // }
+   return mapping
 }
 
 export const r_theta_chart = (orbital_points, Q, in_cardioid, animation_index) => {
@@ -288,7 +301,7 @@ export const r_theta_chart = (orbital_points, Q, in_cardioid, animation_index) =
 
 export const escape_r_theta_chart = (click_point, in_cardioid, animation_index) => {
    const escape_points = get_escape_points(click_point)
-   const Q_core_neg = calculate_cardioid_Q(click_point?.x || 0, click_point?.y || 0, -1)
+   const Q_core_neg = FractoFastCalc.calculate_cardioid_Q(click_point?.x || 0, click_point?.y || 0, -1)
    const r_data = process_r_data(escape_points, Q_core_neg, Math.PI / 2)
    return iteration_chart(r_data, in_cardioid, true, animation_index)
 }

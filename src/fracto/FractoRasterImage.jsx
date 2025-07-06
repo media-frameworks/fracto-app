@@ -248,7 +248,7 @@ export class FractoRasterImage extends Component {
                   break;
                }
             }
-            const out_of_bounds = (x <= -2) || (x > 0.5) || (y >= 1) || (y <= 1)
+            const out_of_bounds = (x <= -2) || (x > 0.5) || (y >= 1) || (y <= -1)
             if (!found_point && out_of_bounds) {
                const {pattern, iteration} = FractoFastCalc.calc(x, y)
                canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]

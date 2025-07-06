@@ -11,11 +11,12 @@ import {PaneCompsStyles as styles} from 'styles/PaneCompsStyles'
 import CompAdmin from "./comps/CompAdmin";
 import CompOrbitals from "./comps/CompOrbitals";
 import CompPatterns from "./comps/CompPatterns";
-import CompMinibrot from "./comps/CompMinibrot";
+// import CompMinibrot from "./comps/CompMinibrot";
 import CompNursery from "./comps/CompNursery";
-import CompCapture from "./comps/CompCapture";
+import CompInspect from "./comps/CompInspect";
 // import CompColors from "./comps/CompColors";
 import CompScript from "./comps/CompScript";
+import CompPoints from "./comps/CompPoints";
 import CoolStyles from "../../common/ui/styles/CoolStyles";
 
 export const TAB_HEIGHT_PX = 20
@@ -44,6 +45,13 @@ export class PaneComps extends Component {
       }
       const all_tabs = [
          {
+            label: 'points',
+            content: <CompPoints
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         },
+         {
             label: 'orbitals',
             content: <CompOrbitals
                page_settings={page_settings}
@@ -58,19 +66,19 @@ export class PaneComps extends Component {
             />
          },
          {
-            label: 'capture',
-            content: <CompCapture
+            label: 'inspect',
+            content: <CompInspect
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
          },
-         {
-            label: 'minibrot',
-            content: <CompMinibrot
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-         },
+         // {
+         //    label: 'minibrot',
+         //    content: <CompMinibrot
+         //       page_settings={page_settings}
+         //       on_settings_changed={on_settings_changed}
+         //    />
+         // },
          // {
          //    label: 'colors',
          //    content: <CompColors

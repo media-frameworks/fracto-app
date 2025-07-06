@@ -1,4 +1,5 @@
 import Complex from "common/math/Complex";
+import BigComplex from "../common/math/BigComplex";
 
 const MAX_ORBITAL_SIZE = 25000
 const MIN_ITERATION = 1200000
@@ -159,6 +160,59 @@ export class FractoFastCalc {
       return -1
    }
 
+   static best_big_iteration = (pattern, x, y) => {
+      let P = new BigComplex(x, y)
+      let Q = new BigComplex(0, 0)
+      let Q_squared = new BigComplex(0, 0)
+      let first_pos = new BigComplex(0, 0)
+      const all_points = new Array(pattern)
+      for (let iteration = 0; iteration < 100000000; iteration++) {
+         Q_squared = Q.mul(Q)
+         Q = Q_squared.add(P)
+         all_points[iteration % pattern] = Q
+         if (iteration % pattern === 0 && iteration) {
+            if (Q.compare(first_pos, 20)) {
+               return all_points
+            }
+            first_pos = Q
+         }
+      }
+      return -1
+   }
+
+   static calculate_cardioid_Q = (x, y, scalar = 1) => {
+      const P = new Complex(x, y)
+      const negative_four_P = P.scale(-4.0)
+      const under_radical = negative_four_P.offset(1, 0)
+      const radical = under_radical.sqrt().scale(scalar)
+      const result = radical.offset(1.0, 0).scale(0.5)
+      return {x: result.re, y: result.im}
+   }
+
+   static calculate_big_cardioid_Q = (x, y, scalar = 1) => {
+      const P = new BigComplex(x, y)
+      const negative_four_P = P.scale(-4.0)
+      const under_radical = negative_four_P.offset(1, 0)
+      const radical = under_radical.sqrt().scale(scalar)
+      const result = radical.offset(1.0, 0).scale(0.5)
+      return {x: result.get_re(), y: result.get_im()}
+   }
+   
+   static get_meridian_point = (m, theta_num, theta_den) => {
+      const m_squared = m * m
+      const theta = theta_num / theta_den
+      const two_pi_theta = 2 * Math.PI * theta
+      const four_pi_theta = 2 * two_pi_theta
+      const cos_two_pi_theta = Math.cos(two_pi_theta)
+      const cos_four_pi_theta = Math.cos(four_pi_theta)
+      const sin_two_pi_theta = Math.sin(two_pi_theta)
+      // const sin_four_pi_theta = Math.sin(four_pi_theta)
+      const m_by_2 = m / 2
+      const m_squared_by_four = m_squared / 4
+      const x = m_by_2 * cos_two_pi_theta - m_squared_by_four * cos_four_pi_theta
+      const y = -m_by_2 * sin_two_pi_theta * (m * cos_two_pi_theta - 1)
+      return {x: x, y: y}
+   }
 }
 
 export default FractoFastCalc

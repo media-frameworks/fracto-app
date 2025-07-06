@@ -154,7 +154,7 @@ export class PageMain extends Component {
       }
       const bounds = page_settings[KEY_IMAGE_BOUNDS]
       if (e.clientX < bounds.left || e.clientX > bounds.right) {
-         console.log('crosshairs go away!')
+         // console.log('crosshairs go away!')
          this.on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
       }
    }
