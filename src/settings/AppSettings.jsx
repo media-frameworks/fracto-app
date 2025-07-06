@@ -20,6 +20,7 @@ export const KEY_AUTOMATION_SCALAR_MS = 'automation_scalar_ms'
 export const KEY_FIELD_CROSSHAIRS = 'field_crosshairs'
 export const KEY_FIELD_COVERAGE = 'field_coverage'
 export const KEY_IMAGE_BOUNDS = 'image_bounds'
+export const KEY_LOCATE_CENTER = 'locate_center'
 
 export const APP_KEYED_SETTINGS = {
    [KEY_FOCAL_POINT]: {
@@ -117,6 +118,12 @@ export const APP_KEYED_SETTINGS = {
       data_type: TYPE_OBJECT,
       default_value: {},
       description: 'the bounding rectangle of the field image, in screen coordinates',
+      persist: false,
+   },
+   [KEY_LOCATE_CENTER]: {
+      data_type: TYPE_BOOLEAN,
+      default_value: false,
+      description: 'displays crosshairs in the exact center of the main field',
       persist: false,
    },
 }

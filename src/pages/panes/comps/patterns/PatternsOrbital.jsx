@@ -15,7 +15,6 @@ import {
 } from "settings/AppSettings";
 import {KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
 import {
-   calculate_cardioid_Q,
    click_point_chart,
    get_escape_points,
    escape_points_chart,
@@ -104,8 +103,14 @@ export class PatternsOrbital extends Component {
       }
       const fracto_values = this.get_fracto_values()
       const in_cardioid = FractoFastCalc.point_in_main_cardioid(click_point.x, click_point.y)
-      const Q_core_neg = calculate_cardioid_Q(click_point.x, click_point.y, -1)
-      const Q_core_pos = calculate_cardioid_Q(click_point.x, click_point.y, 1)
+      // const big_calc_obj = FractoFastCalc.best_big_iteration(
+      //    fracto_values.pattern, click_point.x, click_point.y)
+      // const big_calc = big_calc_obj.map(p => {
+      //    return {x: p.get_re(), y: p.get_im()}
+      // })
+      // console.log('big_calc', big_calc_obj)
+      const Q_core_neg = FractoFastCalc.calculate_cardioid_Q(click_point.x, click_point.y, -1)
+      const Q_core_pos = FractoFastCalc.calculate_cardioid_Q(click_point.x, click_point.y, 1)
       return {
          click_point,
          pattern: fracto_values.pattern,
@@ -114,6 +119,7 @@ export class PatternsOrbital extends Component {
          Q_core_neg,
          Q_core_pos,
          iteration: fracto_values.iteration,
+         // big_calc
       }
    }
 
@@ -196,13 +202,31 @@ export class PatternsOrbital extends Component {
       on_settings_changed({[KEY_AUTOMATION_SCALAR_MS]: animation_scalar_ms})
    }
 
+   big_calc_info = (pattern, click_point) =>{
+      const big_calc_obj = FractoFastCalc.best_big_iteration(
+         pattern, click_point.x, click_point.y)
+      console.log('big_calc_obj', big_calc_obj)
+      const big_calc = big_calc_obj.map(p => {
+         return {x: p.get_re(), y: p.get_im()}
+      })
+      const big_Q_neg = FractoFastCalc.calculate_big_cardioid_Q(
+         click_point.x, click_point.y, -1)
+      const big_calc_radii = big_calc_obj.map(p => {
+         const negative_p = p.scale(-1)
+         const diff_Q_p = negative_p.offset(big_Q_neg.x, big_Q_neg.y)
+         return diff_Q_p.magnitude().toString()
+      })
+      console.log('big_calc', big_calc)
+      console.log('big_calc_radii', big_calc_radii)
+      return big_calc
+   }
+
    sidebar_info = (width_px) => {
       const {r_data, in_animation, animation_index} = this.state
       const {page_settings} = this.props
       const click_point_info = this.get_click_point_info()
       const {pattern, in_cardioid, iteration} = click_point_info
       let cycles = '?'
-      // console.log('sidebar_info', r_data.length)
       if (r_data.length) {
          const cycles_portion = ((r_data[r_data.length - 1]?.x || 0) - (r_data[0]?.x || 0)) / (Math.PI * 2)
          cycles = Math.round(cycles_portion * 100) / 100
