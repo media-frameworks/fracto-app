@@ -27,35 +27,59 @@ const GRID_CONFIG = {
    }
 };
 
-const find_bounds = (set, center, in_cardioid, escaper) => {
+const find_bounds = (set1, other_sets, in_cardioid, escaper) => {
    // console.log('find_radius = (set, center', set, center)
-   let max_radius = 0
-   set.forEach(point => {
-      const diff_x = center.x - point.x
-      const diff_y = center.y - point.y
-      const test_radius = Math.sqrt(diff_x * diff_x + diff_y * diff_y)
-      if (test_radius > max_radius) {
-         max_radius = test_radius
+   let min_x = 1000
+   let max_x = -1000
+   let min_y = 1000
+   let max_y = -1000
+   set1.forEach(point => {
+      if (point.x > max_x) {
+         max_x = point.x
+      }
+      if (point.x < min_x) {
+         min_x = point.x
+      }
+      if (point.y > max_y) {
+         max_y = point.y
+      }
+      if (point.y < min_y) {
+         min_y = point.y
       }
    })
-   if (escaper) {
-      max_radius /= 2.5
-   } else if (in_cardioid) {
-      max_radius *= 1.1
-   }
-   return {
-      min_x: center.x - max_radius,
-      max_x: center.x + max_radius,
-      min_y: center.y - max_radius,
-      max_y: center.y + max_radius,
-   }
+   other_sets.forEach(points => {
+      if (!Array.isArray(points)) {
+         return;
+      }
+      points.forEach(point => {
+         if (point.x > max_x) {
+            max_x = point.x
+         }
+         if (point.x < min_x) {
+            min_x = point.x
+         }
+         if (point.y > max_y) {
+            max_y = point.y
+         }
+         if (point.y < min_y) {
+            min_y = point.y
+         }
+      })
+   })
+   const x_extent = max_x - min_x
+   const y_extent = max_y - min_y
+   min_x -= x_extent / 10
+   max_x += x_extent / 10
+   min_y -= y_extent / 10
+   max_y += y_extent / 10
+   return {min_x, max_x, min_y, max_y}
 }
 
-export const click_point_chart = (set1, set2, in_cardioid = false, escaper = false) => {
+export const click_point_chart = (set1, other_sets, in_cardioid = false, escaper = false) => {
    if (!set1) {
       return []
    }
-   const bounds = find_bounds(set1, set2[0], in_cardioid, escaper)
+   const bounds = find_bounds(set1, other_sets, in_cardioid, escaper)
    const options = {
       scales: {
          x: {
@@ -80,16 +104,15 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
       },
    }
    const cardinality = set1?.length - 1 || 0
-   const in_animation = set2?.length > 1
+   const in_animation = false // set2?.length > 1
    const data_dataset = {
       datasets: [
          {
             Id: 2,
             // label: in_cardioid ? 'Q' : 'Q',
-            data: JSON.parse(JSON.stringify(set2)),
+            data: JSON.parse(JSON.stringify(other_sets[0])),
             backgroundColor: in_animation ? ANIMATION_COLOR : 'black',
-            pointRadius: in_animation ? 4 : 3,
-            borderColor: ANIMATION_COLOR,
+            pointRadius: in_animation ? 2 : 1,
             showLine: true
          },
          {
@@ -97,7 +120,7 @@ export const click_point_chart = (set1, set2, in_cardioid = false, escaper = fal
             // label: set1_label,
             data: JSON.parse(JSON.stringify(set1)),
             backgroundColor: FractoUtil.fracto_pattern_color(cardinality || 0),
-            pointRadius: in_animation ? 2 : 3,
+            pointRadius: in_animation ? 2 : 4,
             showLine: true
          },
       ]

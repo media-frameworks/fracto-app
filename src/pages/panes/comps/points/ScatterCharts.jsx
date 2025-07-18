@@ -12,7 +12,7 @@ import {
 } from "../patterns/PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {CoolSlider} from "common/ui/CoolImports";
-import {get_click_point_info} from "./PointUtils";
+import {get_click_point_info, interpolate_orbital} from "./PointUtils";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
@@ -54,15 +54,17 @@ export class ScatterCharts extends Component {
       zoomer_stealth_ref: React.createRef(),
       scatter_scroll_top_px: 100,
       scatter_option: OPTION_SCATTER_EMPIRICAL,
-      column_width_px: 0,
-      column_height_px: 0,
+      width_px: 0,
+      height_px: 0,
+      click_point_info: null,
    }
 
    componentDidMount() {
       const {page_settings} = this.props
-      const column_width_px = Math.round(page_settings[KEY_COMPS_WIDTH_PX] / WIDTH_FACTOR) - WIDTH_OFFSET_PX
-      const column_height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR) - HEIGHT_OFFSET_PX
-      this.setState({column_width_px, column_height_px})
+      const width_px = Math.round(page_settings[KEY_COMPS_WIDTH_PX] / WIDTH_FACTOR) - WIDTH_OFFSET_PX
+      const height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR) - HEIGHT_OFFSET_PX
+      this.setState({width_px, height_px})
+      setTimeout(this.initialize, 150)
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
@@ -71,18 +73,24 @@ export class ScatterCharts extends Component {
          - WIDTH_OFFSET_PX
       const new_height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR)
          - HEIGHT_OFFSET_PX
-      if (prevState.column_width_px !== new_width_px) {
-         this.setState({column_width_px: new_width_px})
+      if (prevState.width_px !== new_width_px) {
+         this.setState({width_px: new_width_px})
       }
-      if (prevState.column_height_px !== new_height_px) {
-         this.setState({column_height_px: new_height_px})
+      if (prevState.height_px !== new_height_px) {
+         this.setState({height_px: new_height_px})
       }
+      setTimeout(this.initialize, 150)
    }
 
-   render_scatter_chart = () => {
-      // const {in_animation, animation_index} = this.state
+   initialize = () => {
       const {page_settings} = this.props
       const click_point_info = get_click_point_info(page_settings)
+      this.setState({click_point_info})
+   }
+
+
+   render_scatter_chart = () => {
+      const {click_point_info} = this.state
       if (!click_point_info) {
          return []
       }
@@ -92,14 +100,14 @@ export class ScatterCharts extends Component {
          // if (in_animation && animation_index >= 0) {
          //    set2.push(orbital_points[animation_index])
          // }
-         return click_point_chart(orbital_points, set2, in_cardioid, false)
+         const interpolation = interpolate_orbital(orbital_points, Q_core_neg)
+         return click_point_chart(orbital_points, [interpolation, set2], in_cardioid, false)
       }
       return escape_points_chart(click_point, in_cardioid)
    }
 
    scatter_caption_text = () => {
-      const {page_settings} = this.props
-      const click_point_info = get_click_point_info(page_settings)
+      const {click_point_info} = this.state
       if (!click_point_info) {
          return []
       }
@@ -118,11 +126,11 @@ export class ScatterCharts extends Component {
          {subject_text}
       </styles.CaptionSubject>
       const qualifier = <styles.CaptionQualifier
-         key={'caption-qualifier'}>
+         key={'scatter-aption-qualifier'}>
          {', in the vacinity of '}
       </styles.CaptionQualifier>
       const click_point_text = <styles.ClickPoint
-         key={'caption-click-point'}>
+         key={'scatter-caption-click-point'}>
          {`${Q_core_neg_x} + ${Q_core_neg_y}`}
       </styles.ClickPoint>
       return [subject, qualifier, click_point_text, i]
@@ -219,10 +227,10 @@ export class ScatterCharts extends Component {
    }
 
    render = () => {
-      const {column_width_px, point_zoom} = this.state
-      const scatter_chart_height_px = column_width_px * 1.01
+      const {width_px, point_zoom} = this.state
+      const scatter_chart_height_px = width_px * 1.01
       const scatter_chart_style = {
-         width: `${column_width_px}px`,
+         width: `${width_px}px`,
          height: `${scatter_chart_height_px}px`,
       }
       const scatter_chart = this.render_scatter_chart()
@@ -236,7 +244,7 @@ export class ScatterCharts extends Component {
       return <styles.ChartWrapper style={scatter_chart_style}>
          {this.render_chart(
             scatter_chart, zoomer,
-            column_width_px,
+            width_px,
             scatter_chart_height_px - 20)}
       </styles.ChartWrapper>
    }

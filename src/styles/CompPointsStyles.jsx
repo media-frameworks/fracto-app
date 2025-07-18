@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {CoolStyles} from '../common/ui/CoolImports'
+import {CoolColors, CoolStyles} from '../common/ui/CoolImports'
 
 export class CompPointsStyles {
    static   ContentWrapper = styled(CoolStyles.Block)`
@@ -9,11 +9,14 @@ export class CompPointsStyles {
        margin: 0.25rem;
    `
    static ChartWrapper = styled(CoolStyles.InlineBlock)`
-       margin: 0;
+       margin-bottom: 0.5rem;
+   `
+   static DashboardWrapper = styled(CoolStyles.InlineBlock)`
+       margin-top: 0.5rem;
    `
    static GraphWrapper = styled(CoolStyles.InlineBlock)`
        margin: 0;
-       background-color: #fcfcfc;
+       background-color: #f4f4f4;
        overflow: auto;
    `
    static ZoomerStealth = styled(CoolStyles.InlineBlock)`
@@ -76,6 +79,54 @@ export class CompPointsStyles {
        ${CoolStyles.pointer}
        ${CoolStyles.align_middle}
        font-size: 0.75rem;
+   `
+   static DashboardContent = styled(CoolStyles.Block)`
+       padding: 0.5rem;
+       border-style: double;
+       border-color: hsla(200, 90%, 50%, 35%);
+       border-width: 5px;
+       border-radius: 0.5rem;
+       background-color: #f4f4f4;
+   `
+   static VertexListContent = styled(CoolStyles.Block)`
+       padding: 0.5rem;
+       margin-top: 0.5rem;
+       background-color: #f4f4f4;
+   `
+   static DeclarationWrapper = styled(CoolStyles.Block)`
+       ${CoolStyles.italic}
+       font-size: 1rem;
+       color: #888888;
+   `
+   static PreambleWrapper = styled(CoolStyles.InlineBlock)`
+       font-family: serif;
+       font-size: 0.75rem;
+       margin-left: 0.5rem;
+       border-bottom: 2px solid rgba(0, 0, 0, 15%);
+       padding-bottom: 0.25rem;
+   `
+   static EmboldenedPreamble = styled.span`
+       ${CoolStyles.bold}
+       ${CoolStyles.uppercase}
+       font-style: normal;
+       color: #666666;
+       letter-spacing: 1px;
+   `
+   static NotPreambleWrapper = styled(CoolStyles.Block)`
+       margin-top: 0.5rem;
+       font-size: 1rem;
+       color: #444444;
+   `
+   static SeekButton = styled.button`
+       ${CoolStyles.italic}
+       ${CoolStyles.pointer}
+       ${CoolStyles.noselect}
+       margin: 5% 10%;
+       padding: 0.25rem 0.5rem;
+       color: white;
+       font-size: 1rem;
+       border-radius: 0.25rem;
+       background-color: ${CoolColors.cool_blue};
    `
 }
 

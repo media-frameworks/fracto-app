@@ -6,8 +6,12 @@ import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX
 } from "settings/PaneSettings";
+
 import ScatterCharts from "./points/ScatterCharts";
 import PolarCharts from "./points/PolarCharts";
+import DashboardControl from "./points/DashboardControl";
+import VertexList from "./points/VertexList";
+import {KEY_CONNECT_DOTS} from "./points/PointUtils";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
@@ -76,6 +80,32 @@ export class CompPoints extends Component {
    }
 
    render_right_column = () => {
+      const {column_width_px, column_height_px} = this.state
+      const {page_settings, on_settings_changed} = this.props
+      const dashboard_height_px = column_height_px / 2.618
+      const remainder_px = column_height_px - dashboard_height_px - 10
+      const dashboard_style = {
+         width: `${column_width_px}px`,
+         height: `${dashboard_height_px}px`,
+      }
+      const vertex_list_style = {
+         width: `${column_width_px}px`,
+         height: `${remainder_px}px`,
+      }
+      return [
+         <styles.DashboardWrapper style={dashboard_style}>
+            <DashboardControl
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         </styles.DashboardWrapper>,
+         <styles.ChartWrapper style={vertex_list_style}>
+            <VertexList
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         </styles.ChartWrapper>
+      ]
    }
 
    render() {
@@ -87,12 +117,13 @@ export class CompPoints extends Component {
       const right_column_style = {
          width: `${column_width_px}px`,
          height: `${column_height_px}px`,
-         backgroundColor: 'skyblue',
       }
-      const left_panel = <styles.ColumnWrapper style={left_column_style}>
+      const left_panel = <styles.ColumnWrapper
+         style={left_column_style}>
          {this.render_left_column()}
       </styles.ColumnWrapper>
-      const right_panel = <styles.ColumnWrapper style={right_column_style}>
+      const right_panel = <styles.ColumnWrapper
+         style={right_column_style}>
          {this.render_right_column()}
       </styles.ColumnWrapper>
       return <styles.ContentWrapper>
