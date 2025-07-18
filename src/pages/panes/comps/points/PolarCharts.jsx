@@ -14,6 +14,8 @@ import {
 } from "./PointUtils";
 import {iteration_chart} from "../patterns/PatternsUtils";
 import {CoolSlider} from "../../../../common/ui/CoolImports";
+import FractoRootsOfUnity from "../../../../fracto/FractoRootsOfUnity";
+import {KEY_FOCAL_POINT} from "../../../../settings/AppSettings";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
@@ -54,15 +56,18 @@ export class PolarCharts extends Component {
       point_zoom: 0,
       zoomer_stealth_ref: React.createRef(),
       polar_option: OPTION_POLAR_R_THETA,
-      column_width_px: 0,
-      column_height_px: 0,
+      roots_focal_point: null,
+      width_px: 0,
+      height_px: 0,
+      click_point_info: null
    }
 
    componentDidMount() {
       const {page_settings} = this.props
-      const column_width_px = Math.round(page_settings[KEY_COMPS_WIDTH_PX] / WIDTH_FACTOR) - WIDTH_OFFSET_PX
-      const column_height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR) - HEIGHT_OFFSET_PX
-      this.setState({column_width_px, column_height_px})
+      const width_px = Math.round(page_settings[KEY_COMPS_WIDTH_PX] / WIDTH_FACTOR) - WIDTH_OFFSET_PX
+      const height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR) - HEIGHT_OFFSET_PX
+      this.setState({width_px, height_px})
+      setTimeout(this.initialize, 150)
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
@@ -71,12 +76,37 @@ export class PolarCharts extends Component {
          - WIDTH_OFFSET_PX
       const new_height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR)
          - HEIGHT_OFFSET_PX
-      if (prevState.column_width_px !== new_width_px) {
-         this.setState({column_width_px: new_width_px})
+      let dims_changed = false
+      if (prevState.width_px !== new_width_px) {
+         this.setState({width_px: new_width_px})
+         dims_changed = true
       }
-      if (prevState.column_height_px !== new_height_px) {
-         this.setState({column_height_px: new_height_px})
+      if (prevState.height_px !== new_height_px) {
+         this.setState({height_px: new_height_px})
+         dims_changed = true
       }
+      if (dims_changed) {
+         setTimeout(this.initialize, 150)
+      }
+      const click_point_info = get_click_point_info(page_settings)
+      const {click_point} = click_point_info
+      if (click_point && prevState.click_point_info) {
+         const click_point_x_changed = click_point.x !== prevState.click_point_info?.click_point?.x
+         const click_point_y_changed = click_point.y !== prevState.click_point_info?.click_point?.y
+         if (click_point_x_changed || click_point_y_changed) {
+            setTimeout(() => {
+               this.setState({roots_focal_point: null})
+            }, 100)
+         }
+      }
+   }
+
+   initialize = () => {
+      const {page_settings} = this.props
+      const current_click_point_info = get_click_point_info(page_settings)
+      this.setState({
+         click_point_info: JSON.parse(JSON.stringify(current_click_point_info))
+      })
    }
 
    set_polar_option = (polar_option) => {
@@ -109,21 +139,43 @@ export class PolarCharts extends Component {
       </styles.OptionsWrapper>
    }
 
-   render_charts = (width_px, height_px) => {
-      const {point_zoom, zoomer_stealth_ref} = this.state
+   seek_orbitals = () => {
+      const {click_point_info} = this.state
       const {page_settings} = this.props
-      const click_point_info = get_click_point_info(page_settings)
+      const {in_cardioid} = click_point_info
+      if (!in_cardioid) {
+         console.log('seek_orbitals not in cardioid')
+         return
+      }
+      const roots_focal_point = JSON.parse(JSON.stringify(page_settings[KEY_FOCAL_POINT]))
+      setTimeout(() => {
+         const start = performance.now()
+         FractoRootsOfUnity.seek_best_ratio(roots_focal_point, 0.25, 0.25)
+         const end = performance.now()
+         console.log(`seek_best_ratio ${end - start}ms`)
+      }, 100)
+      this.setState({roots_focal_point})
+   }
+
+   render_charts = (width_px, height_px) => {
+      const {point_zoom, zoomer_stealth_ref, click_point_info, polar_option} = this.state
       if (!click_point_info) {
          return []
       }
       const {click_point, orbital_points, Q_core_neg, pattern, in_cardioid} = click_point_info
-      let r_data_set = null
-      if (!pattern) {
-         const escape_sets = process_escape_sets(click_point, Q_core_neg)
-         r_data_set = escape_sets.r_set
-      } else {
-         const orbital_sets = process_orbital_sets(orbital_points, Q_core_neg)
-         r_data_set = orbital_sets.r_set
+      let r_data_set = []
+      if (polar_option === OPTION_POLAR_R_THETA) {
+         if (!pattern) {
+            const escape_sets = process_escape_sets(click_point, Q_core_neg)
+            r_data_set = escape_sets.r_set
+         } else {
+            const orbital_sets = process_orbital_sets(orbital_points, Q_core_neg)
+            r_data_set = orbital_sets.r_set
+         }
+      } else if (polar_option === OPTION_POLAR_ROOTS_OF_UNITY) {
+         return <styles.SeekButton onClick={this.seek_orbitals}>
+            seek orbitals
+         </styles.SeekButton>
       }
       // console.log('r_data_set', r_data_set)
       const r_chart = iteration_chart(r_data_set, in_cardioid, !pattern)
@@ -134,7 +186,7 @@ export class PolarCharts extends Component {
       }
       const stealth_style = {
          width: `${width_px - ZOOMER_WIDTH_PX + point_zoom * POINT_ZOOM_FACTOR}px`,
-         height: `${height_px  - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
+         height: `${height_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
       }
       return <styles.GraphWrapper
          key={'scatter-chart'}
@@ -162,8 +214,7 @@ export class PolarCharts extends Component {
    }
 
    polar_caption_text = () => {
-      const {page_settings} = this.props
-      const click_point_info = get_click_point_info(page_settings)
+      const {click_point_info} = this.state
       if (!click_point_info) {
          return []
       }
@@ -197,19 +248,19 @@ export class PolarCharts extends Component {
       min_y = `${Math.round(min_y * ROUNDING_FACTOR) / ROUNDING_FACTOR}`
       max_y = `${Math.round(max_y * ROUNDING_FACTOR) / ROUNDING_FACTOR}`
       const qualifier = <styles.CaptionQualifier
-         key={'caption-qualifier'}>
+         key={'polar-caption-qualifier'}>
          {', in the range of '}
       </styles.CaptionQualifier>
       const min_y_styled = <styles.ClickPoint
-         key={'caption-click-point'}>
+         key={'polar-caption-click-point-min'}>
          {`${min_y}`}
       </styles.ClickPoint>
       const max_y_styled = <styles.ClickPoint
-         key={'caption-click-point'}>
+         key={'polar-caption-click-point-max'}>
          {`${max_y}`}
       </styles.ClickPoint>
       const and = <styles.CaptionQualifier
-         key={'caption-qualifier'}>
+         key={'polar-caption-qualifier-and'}>
          {' and '}
       </styles.CaptionQualifier>
       return [
@@ -222,13 +273,13 @@ export class PolarCharts extends Component {
    }
 
    render() {
-      const {column_width_px, column_height_px, point_zoom} = this.state
+      const {width_px, height_px, point_zoom} = this.state
       const polar_chart_style = {
-         width: `${column_width_px - ZOOMER_WIDTH_PX}px`,
-         height: `${column_height_px - column_width_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
+         width: `${width_px - ZOOMER_WIDTH_PX}px`,
+         height: `${height_px - width_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
       }
       const options = this.render_options()
-      const charts = this.render_charts(column_width_px, column_height_px - column_width_px)
+      const charts = this.render_charts(width_px, height_px - width_px)
       const chart_stack = <styles.ChartWrapper style={polar_chart_style}>
          {charts}
       </styles.ChartWrapper>
@@ -241,7 +292,7 @@ export class PolarCharts extends Component {
       />
       const wrapped_zoomer = <styles.ZoomerWrapper
          key={'polar-zoomer'}
-         style={{height: `${column_height_px - column_width_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX - 20}px`}}>
+         style={{height: `${height_px - width_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX - 20}px`}}>
          {zoomer}
       </styles.ZoomerWrapper>
       const caption_text = this.polar_caption_text()

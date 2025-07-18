@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import {CoolButton, CoolStyles, CoolTable} from "common/ui/CoolImports";
 import {CELL_ALIGN_CENTER, CELL_TYPE_NUMBER, TABLE_CAN_SELECT} from "common/ui/CoolTable";
-import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_IN_ANIMATION, KEY_SCOPE, KEY_UPDATE_INDEX} from "../../PageSettings";
+import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_IN_ANIMATION, KEY_SCOPE, KEY_UPDATE_INDEX} from "../../../PageSettings";
 
 const ContentWrapper = styled(CoolStyles.Block)`
     padding: 0.5rem;

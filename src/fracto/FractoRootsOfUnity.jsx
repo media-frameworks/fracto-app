@@ -1,8 +1,8 @@
 import Complex from "../common/math/Complex";
 
-const INITIAL_RUN = 20000
+const INITIAL_RUN = 5000
 
-const EPSILON = 0.0000001
+const EPSILON = 0.000000001
 
 const SAMPLE_SIZE = 555
 const MIN_RATIO = EPSILON
@@ -35,20 +35,88 @@ export class FractoRootsOfUnity {
    static zs_given_x = (P, x) => {
       const negative_four_P = P.scale(-4)
       const negative_one = new Complex(-1, 0)
-      const two_x = x * 2
-      const two_x_reciprocal = 1 / two_x
-      const negative_one_to_the_two_x = negative_one.nth_root(two_x_reciprocal)
+      const negative_one_to_the_two_x = negative_one.pow(x * 2)
       const under_radical = negative_one_to_the_two_x.add(negative_four_P)
       const radical = under_radical.sqrt()
       const negative_radical = radical.scale(-1)
-      const x_reciprocal = 1 / x
-      const negative_one_to_the_x = negative_one.nth_root(x_reciprocal)
-      const negative_one_to_the_x_plus_radical = negative_one_to_the_x.add(radical)
+      const negative_one_to_the_x = negative_one.pow(x)
       const negative_one_to_the_x_minus_radical = negative_one_to_the_x.add(negative_radical)
       return {
-         up: negative_one_to_the_x_plus_radical.scale(0.5),
          down: negative_one_to_the_x_minus_radical.scale(0.5),
       }
+   }
+
+   static product_of_sums = (P, Q) => {
+      let current_sum = Q.scale(1)
+      let current_product = new Complex(1, 0)
+      let lowest_magnitude = 1000
+      let cardinality = 0
+      for (let i = 1; i < INITIAL_RUN; i++) {
+         const next_current_sum = current_sum.mul(current_sum).add(P)
+         current_product = current_product.mul(next_current_sum.add(current_sum))
+         current_sum = next_current_sum.scale(1)
+         const test_magnitude = current_product.offset(-1, 0).magnitude()
+         if (test_magnitude < 0) {
+            return {cardinality, magnitude: -1}
+         }
+         if (test_magnitude < lowest_magnitude * 0.9999) {
+            cardinality = i
+            lowest_magnitude = test_magnitude
+            // console.log('current_product, current_sum, i', current_product, current_sum, i)
+         }
+      }
+      // console.log('current_product, current_sum, i', current_product, current_sum, cardinality)
+      return {cardinality, magnitude: lowest_magnitude}
+   }
+
+   static seek_best_ratio = (p, center, radius, divisions = 350) => {
+      const P = new Complex(p.re || p.x, p.im || p.y)
+      console.log('radius', radius)
+      let leftmost = center - radius
+      if (leftmost <= MIN_RATIO) {
+         leftmost = MIN_RATIO
+      }
+      let rightmost = center + radius
+      if (rightmost >= MAX_RATIO) {
+         rightmost = MAX_RATIO
+      }
+      const increment = (rightmost - leftmost) / divisions
+      const best_ratios = []
+      let lowest_magnitude = 1000
+      for (let ratio_index = 1; ratio_index < divisions; ratio_index++) {
+         const x = leftmost + ratio_index * increment
+         const zs = FractoRootsOfUnity.zs_given_x(P, x)
+         const down_values = FractoRootsOfUnity.product_of_sums(P, zs.down)
+         if (down_values.magnitude > 0 && down_values.magnitude < lowest_magnitude) {
+            const ratio = {
+               cardinality: down_values.cardinality,
+               ratio: x,
+               variance: down_values.magnitude,
+               seed: zs.down.toString()
+            }
+            lowest_magnitude = down_values.magnitude
+            // console.log(ratio)
+            best_ratios.push(ratio)
+         }
+      }
+      const sorted = best_ratios
+         .sort((a, b) => a.variance - b.variance)
+         .slice(0, 5)
+      if (radius > 0.0000000000001 && sorted.length > 0) {
+         const new_center = sorted[0].ratio
+         if (center !== new_center) {
+            const next_level = FractoRootsOfUnity.seek_best_ratio(
+               p,
+               sorted[0].ratio,
+               radius / Math.PI,
+               10 + divisions / Math.PI)
+            if (next_level.length) {
+               return next_level
+            }
+         }
+      }
+      console.log('sorted', sorted)
+      return sorted
    }
 
    static propagate = (P, Q, Q_neg, cardinality) => {

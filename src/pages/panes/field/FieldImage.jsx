@@ -29,7 +29,7 @@ import {
    KEY_COLOR_PHASE
 } from 'settings/CompSettings'
 import FractoUtil from "fracto/FractoUtil";
-import {COLORS_EXTERNAL} from "../comps/CompColors";
+import {COLORS_EXTERNAL} from "../comps/archive/CompColors";
 import {CoolDropdown} from "common/ui/CoolImports";
 import FieldContextMenu from "./FieldContextMenu";
 import FieldCrossHairs from "./FieldCrossHairs";

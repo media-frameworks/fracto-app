@@ -4,6 +4,7 @@ import * as prime_factors from "prime-factors"
 import {CoolStyles, CoolColors} from "common/ui/CoolImports";
 
 import FractoUtil from "../FractoUtil";
+import {round_places} from "../../pages/panes/comps/points/PointUtils";
 
 const TitleBar = styled(CoolStyles.Block)`
     background: linear-gradient(120deg, #999999, #eeeeee);
@@ -69,10 +70,14 @@ const BigPatternBlock = styled(CoolStyles.InlineBlock)`
 
 const FRACTO_COLOR_ITERATIONS = 200;
 
-export const render_pattern_block = (pattern) => {
+export const render_pattern_block = (pattern, font_size_px = 20) => {
    const pattern_color = FractoUtil.fracto_pattern_color(pattern, FRACTO_COLOR_ITERATIONS);
+   const block_style = {
+      backgroundColor: pattern_color,
+      fontSize: `${font_size_px}px`,
+   }
    return <PatternBlock
-      style={{backgroundColor: pattern_color}}>
+      style={block_style}>
       {pattern}
    </PatternBlock>
 }
@@ -162,9 +167,11 @@ const ItalicSpan = styled.span`
     font-size: 0.95rem;
 `;
 
-export const render_coordinates = (x, y) => {
+export const render_coordinates = (x, y, digits = 10) => {
+   const x_rounded = round_places(x, digits);
+   const y_rounded = round_places(y, digits);
    return [
-      <NumberSpan key={'number-part'}>{`${x} + ${y}`}</NumberSpan>,
+      <NumberSpan key={'number-part'}>{`${x_rounded}+${y_rounded}`}</NumberSpan>,
       <ItalicSpan key={'just-i'}>i</ItalicSpan>
    ]
 }

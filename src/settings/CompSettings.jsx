@@ -11,7 +11,7 @@ import {
 import {
    COLORS_INTERNAL,
    COLORS_EXTERNAL
-} from "../pages/panes/comps/CompColors";
+} from "../pages/panes/comps/archive/CompColors";
 import {
    SCRIPT_VIEWER_MODE_TEXT,
    SCRIPT_VIEWER_MODE_UI
