@@ -1,0 +1,4 @@
+{
+  "presets": ["@babel/preset-react"],
+  "extensions": [".ts", ".tsx", ".js", ".jsx"]
+}
