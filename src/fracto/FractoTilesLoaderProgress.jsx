@@ -11,7 +11,7 @@ import FractoIndexedTiles, {MAX_LEVEL} from "./FractoIndexedTiles";
 import axios from "axios";
 
 const FRACTO_PROD = network["fracto-prod"];
-const TIMEOUT_MS = 50
+const TIMEOUT_MS = 35
 
 export const LS_TILE_LOADER_PROGRESS_PCT = 'LS_TILE_LOADER_PROGRESS_PCT';
 export const LS_TILE_LOADER_LEVEL = 'LS_TILE_LOADER_LEVEL';
