@@ -1,7 +1,7 @@
 import fs from 'fs'
 
-const ROUNDING_FACTOR = 100000000
-const MAX_DEN = 2500
+const ROUNDING_FACTOR = 1000000000
+const MAX_DEN = 5000
 let all_ratios = {}
 let past_ratios = {}
 
@@ -47,7 +47,7 @@ const write_file = (all_keys, file_name) => {
    all_files.push(file_name)
 }
 
-let max_length = 150
+let max_length = 100
 let first_den = 2
 let den = 2
 for (; den < MAX_DEN; den++) {
@@ -65,7 +65,7 @@ for (; den < MAX_DEN; den++) {
       const power_double_ratio = negative_one.pow(2 * ratio)
       all_ratios[ratio_key] = {
          ratio,
-         text: `${num},${den},${ratio},${power_ratio.re},${power_ratio.im},${power_double_ratio.re},${power_double_ratio.im}]`
+         text: `${num},${den},${ratio},${power_ratio.re},${power_ratio.im},${power_double_ratio.re},${power_double_ratio.im}`
       }
    }
    const all_keys = Object.keys(all_ratios)

@@ -11,7 +11,6 @@ import ScatterCharts from "./points/ScatterCharts";
 import PolarCharts from "./points/PolarCharts";
 import DashboardControl from "./points/DashboardControl";
 import VertexList from "./points/VertexList";
-import {KEY_CONNECT_DOTS} from "./points/PointUtils";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60

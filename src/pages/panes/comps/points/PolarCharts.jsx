@@ -6,16 +6,16 @@ import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX
 } from "settings/PaneSettings";
-import AppErrorBoundary from "../../../../common/app/AppErrorBoundary";
+import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {
    get_click_point_info,
    process_escape_sets,
    process_orbital_sets,
 } from "./PointUtils";
 import {iteration_chart} from "../patterns/PatternsUtils";
-import {CoolSlider} from "../../../../common/ui/CoolImports";
-import FractoRootsOfUnity from "../../../../fracto/FractoRootsOfUnity";
-import {KEY_FOCAL_POINT} from "../../../../settings/AppSettings";
+import {CoolSlider} from "common/ui/CoolImports";
+import {KEY_FIELD_CROSSHAIRS, KEY_FOCAL_POINT} from "settings/AppSettings";
+import FractoCardioid from "fracto/FractoCardioid";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
@@ -85,19 +85,9 @@ export class PolarCharts extends Component {
          this.setState({height_px: new_height_px})
          dims_changed = true
       }
-      if (dims_changed) {
+      const in_crosshairs = page_settings[KEY_FIELD_CROSSHAIRS]
+      if (dims_changed || in_crosshairs) {
          setTimeout(this.initialize, 150)
-      }
-      const click_point_info = get_click_point_info(page_settings)
-      const {click_point} = click_point_info
-      if (click_point && prevState.click_point_info) {
-         const click_point_x_changed = click_point.x !== prevState.click_point_info?.click_point?.x
-         const click_point_y_changed = click_point.y !== prevState.click_point_info?.click_point?.y
-         if (click_point_x_changed || click_point_y_changed) {
-            setTimeout(() => {
-               this.setState({roots_focal_point: null})
-            }, 100)
-         }
       }
    }
 
@@ -150,7 +140,7 @@ export class PolarCharts extends Component {
       const roots_focal_point = JSON.parse(JSON.stringify(page_settings[KEY_FOCAL_POINT]))
       setTimeout(() => {
          const start = performance.now()
-         FractoRootsOfUnity.seek_best_ratio(roots_focal_point, 0.25, 0.25)
+         FractoCardioid.calc(roots_focal_point.x, roots_focal_point.y)
          const end = performance.now()
          console.log(`seek_best_ratio ${end - start}ms`)
       }, 100)
