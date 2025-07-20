@@ -1,9 +1,10 @@
 import fs from 'fs'
 
 const ROUNDING_FACTOR = 1000000000
-const MAX_DEN = 5000
+const MAX_DEN = 7000
+const FULLEST_MAX_LENGTH = 200000
 let all_ratios = {}
-let past_ratios = {}
+const past_ratios = {}
 
 class Complex {
 
@@ -74,7 +75,10 @@ for (; den < MAX_DEN; den++) {
       write_file(all_keys, file_name)
       first_den = den + 1
       all_ratios = {}
-      max_length *= 1.5
+      max_length *= 1.25
+      if (max_length > FULLEST_MAX_LENGTH){
+         max_length = FULLEST_MAX_LENGTH
+      }
    }
 }
 
