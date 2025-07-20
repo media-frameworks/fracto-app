@@ -1,8 +1,8 @@
 import fs from 'fs'
 
 const ROUNDING_FACTOR = 1000000000
-const MAX_DEN = 7000
-const FULLEST_MAX_LENGTH = 200000
+const MAX_DEN = 5000
+const FULLEST_MAX_LENGTH = 100000
 let all_ratios = {}
 const past_ratios = {}
 
