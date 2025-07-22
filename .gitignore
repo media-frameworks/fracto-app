@@ -27,3 +27,6 @@ yarn-error.log*
 
 # acw-common repo goes here
 /src/common
+
+# to be generated on-site
+/public/comp_data

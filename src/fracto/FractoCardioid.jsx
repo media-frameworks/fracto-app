@@ -9,13 +9,14 @@ const FETCH_CSV_HEADERS = {
    'Accept': 'text/javascript'
 }
 
-const TEST_RANGE = 50
-const MAX_CARDINALITY = 1000
+const TEST_RANGE = 25
+const MAX_CARDINALITY = 1200
 
 export class FractoCardioid {
 
    static rational_powers = []
    static power_sets = []
+   static vertex_sums = new Array(MAX_CARDINALITY + 1).fill({x: 0, y: 0})
 
    static process_power_set = (string_list) => {
       const header = string_list.shift()
@@ -24,7 +25,7 @@ export class FractoCardioid {
          const result = {}
          const item_list = item.split(',')
          key_list.forEach((key, index) => {
-            result[key] = index < 2
+            result[key] = key === 'num' || key === 'dem'
                ? parseInt(item_list.at(index))
                : parseFloat(item_list.at(index))
          })
@@ -40,6 +41,7 @@ export class FractoCardioid {
       }
       const item = set_list.shift()
       const filename = `comp_data/${item}`
+      console.log(filename)
       fetch(filename, FETCH_CSV_HEADERS)
          .then(response => {
             if (!response.ok) {
@@ -69,7 +71,7 @@ export class FractoCardioid {
             return response.json();
          })
          .then(jsonData => {
-            // console.log('files_manifest', jsonData);
+            console.log('files_manifest', jsonData);
             FractoCardioid.rational_powers = jsonData
             FractoCardioid.load_power_sets(jsonData)
          })
@@ -90,18 +92,6 @@ export class FractoCardioid {
          return false
       }
       return magnitude <= 1;
-   }
-
-   static z_from_ratio = (P, ratio) => {
-      const negative_four_P = P.scale(-4)
-      const negative_one = new Complex(-1, 0)
-      const negative_one_to_the_two_ratio = negative_one.pow(ratio * 2)
-      const under_radical = negative_one_to_the_two_ratio.add(negative_four_P)
-      const radical = under_radical.sqrt()
-      const negative_radical = radical.scale(-1)
-      const negative_one_to_the_ratio = negative_one.pow(ratio)
-      const negative_one_to_the_ratio_minus_radical = negative_one_to_the_ratio.add(negative_radical)
-      return negative_one_to_the_ratio_minus_radical.scale(0.5)
    }
 
    static seek_closest_powerset_index = (arr, targetValue) => {
@@ -149,40 +139,58 @@ export class FractoCardioid {
       return full_powerset.slice(first_index, final_index)
    }
 
-   static product_of_sums = (P, Q) => {
-      let current_sum = Q.scale(1)
-      let current_product = new Complex(1, 0)
-      let lowest_variance = 1000
-      let cardinality = 0
-      for (let i = 1; i < MAX_CARDINALITY; i++) {
-         const next_current_sum = current_sum.mul(current_sum).add(P)
-         // if (next_current_sum.magnitude() > 2) {
-         //    return {cardinality, variance: -1}
-         // }
-         current_product = current_product.mul(next_current_sum.add(current_sum))
-         const test_product = current_product.mul(next_current_sum.add(Q))
-         current_sum = next_current_sum.scale(1)
-         const test_variance = test_product.offset(-1, 0).magnitude()
-         if (test_variance < 0) {
-            return {cardinality, variance: -1}
+   static get_variance = (P, Q) => {
+      const P_x = P.re
+      const P_y = P.im
+      let Q_x = Q.re
+      let Q_y = Q.im
+      let Q_x_squared = Q_x * Q_x
+      let Q_y_squared = Q_y * Q_y
+      for (let i = 0; i <= MAX_CARDINALITY; i++) {
+         Q_y = 2 * Q_x * Q_y + P_y;
+         Q_x = Q_x_squared - Q_y_squared + P_x;
+         FractoCardioid.vertex_sums[i].x = Q_x
+         FractoCardioid.vertex_sums[i].y = Q_y
+         if (i > 0) {
+            FractoCardioid.vertex_sums[i - 1].x += Q_x
+            FractoCardioid.vertex_sums[i - 1].y += Q_y
          }
-         if (test_variance < lowest_variance * 0.9999) {
-            cardinality = i
-            lowest_variance = test_variance
-            // console.log('current_product, current_sum, i', current_product, current_sum, i)
+         Q_x_squared = Q_x * Q_x
+         Q_y_squared = Q_y * Q_y
+         const sum_squares = Q_x_squared + Q_y_squared
+         if (sum_squares > 4) {
+            return {cardinality: 0, variance: -1}
          }
       }
-      // console.log('current_product, current_sum, i', current_product, current_sum, cardinality)
-      return {cardinality, variance: lowest_variance}
+      let least_variance = 1000
+      let cardinality = 0
+      let product_x = 1
+      let product_y = 0
+      for (let i = 1; i <= MAX_CARDINALITY; i++) {
+         const sum_x = FractoCardioid.vertex_sums[i].x
+         const sum_y = FractoCardioid.vertex_sums[i].y
+         const new_product_x = product_x * sum_x - product_y * sum_y
+         const new_product_y = product_x * sum_y + product_y * sum_x
+         const product_x_minus_one = new_product_x - 1
+         product_x = new_product_x
+         product_y = new_product_y
+         const variance = Math.sqrt(
+            product_x_minus_one * product_x_minus_one
+            + product_y * product_y)
+         if (variance < least_variance) {
+            least_variance = variance
+            cardinality = i
+         }
+      }
+      return {cardinality, variance: least_variance}
    }
 
    static test_powersets = (P, powerset_index, center) => {
       const negative_four_P = P.scale(-4)
       const test_set = FractoCardioid.reduce_powerset(powerset_index, center)
-      // console.log('powerset_index, center, test_set', powerset_index, center, test_set)
       let best_variance = 1000
       let best_variance_set = null
-      test_set.forEach(set=>{
+      test_set.forEach(set => {
          const power_double_ratio = new Complex(
             set['power_double_ratio.re'],
             set['power_double_ratio.im'])
@@ -194,10 +202,10 @@ export class FractoCardioid {
             set['power_ratio.im'])
          const negative_radical_plus_power_ratio = negative_radical.add(power_ratio)
          const z = negative_radical_plus_power_ratio.scale(0.5)
-         const completion = FractoCardioid.product_of_sums(P, z)
+         const completion = FractoCardioid.get_variance(P, z)
          if (completion.variance > 0 && completion.variance < best_variance) {
             best_variance = completion.variance
-            best_variance_set = {completion, power_set: set }
+            best_variance_set = {completion, power_set: set}
          }
       })
       if (!best_variance_set) {
@@ -211,8 +219,6 @@ export class FractoCardioid {
          if (!further_testing) {
             return best_variance_set
          }
-         // console.log('further_testing.completion.variance, best_variance_set.completion.variance',
-         //    further_testing.completion.variance, best_variance_set.completion.variance)
          if (further_testing.completion.variance < best_variance_set.completion.variance) {
             return further_testing
          }

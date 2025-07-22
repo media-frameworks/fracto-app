@@ -1,10 +1,22 @@
 import fs from 'fs'
+import MegaHash from 'megahash'
 
-const ROUNDING_FACTOR = 1000000000
-const MAX_DEN = 5000
-const FULLEST_MAX_LENGTH = 100000
-let all_ratios = {}
-const past_ratios = {}
+const MAX_DEN = 12000
+const FULLEST_MAX_LENGTH = 250000
+
+const all_ratios = []
+const all_files = []
+
+const megahash = new MegaHash();
+
+const ratio_has_been_used = (ratio) => {
+   const key = `key_${ratio}`
+   const has_key = megahash.has(key)
+   if (!has_key) {
+      megahash.set(key, true)
+   }
+   return has_key
+}
 
 class Complex {
 
@@ -31,18 +43,18 @@ class Complex {
    }
 
 }
-const all_files = []
 
-const write_file = (all_keys, file_name) => {
+const write_file = (file_name) => {
    const csv_contents = []
-   all_keys
-      .sort((a, b) => all_ratios[a].ratio - all_ratios[b].ratio)
-      .forEach((key) => {
-         csv_contents.push(all_ratios[key].text)
+   const header = ['ratio,num,den,power_ratio.re,power_ratio.im,power_double_ratio.re,power_double_ratio.im']
+   csv_contents.push(header)
+   all_ratios
+      .sort()
+      .forEach((item) => {
+         csv_contents.push(item)
       })
-   const header = ['num,den,ratio,power_ratio.re,power_ratio.im,power_double_ratio.re,power_double_ratio.im']
-   csv_contents.unshift(header)
 
+   console.log(file_name)
    const file_path = `./public/comp_data/${file_name}`
    fs.writeFileSync(file_path, csv_contents.join('\n'))
    all_files.push(file_name)
@@ -51,41 +63,35 @@ const write_file = (all_keys, file_name) => {
 let max_length = 100
 let first_den = 2
 let den = 2
+const negative_one = new Complex(-1, 0)
 for (; den < MAX_DEN; den++) {
-   console.log(den)
+   // console.log(den)
    for (let num = 1; num <= den / 2; num++) {
-      const ratio_slug = Math.round(num * ROUNDING_FACTOR / den) / ROUNDING_FACTOR
-      const ratio_key = `ratio_${ratio_slug}`
-      if (past_ratios[ratio_key]) {
+      const ratio = num / den
+      if (ratio_has_been_used(ratio)) {
          continue
       }
-      past_ratios[ratio_key] = true
-      const ratio = num / den
-      const negative_one = new Complex(-1, 0)
       const power_ratio = negative_one.pow(ratio)
       const power_double_ratio = negative_one.pow(2 * ratio)
-      all_ratios[ratio_key] = {
-         ratio,
-         text: `${num},${den},${ratio},${power_ratio.re},${power_ratio.im},${power_double_ratio.re},${power_double_ratio.im}`
-      }
+      all_ratios.push(`${ratio},${num},${den},${power_ratio.re},${power_ratio.im},${power_double_ratio.re},${power_double_ratio.im}`)
    }
-   const all_keys = Object.keys(all_ratios)
-   if (all_keys.length > max_length) {
+   if (all_ratios.length > max_length) {
       const file_name = `rational_powers_${first_den}-${den}.csv`
-      write_file(all_keys, file_name)
+      write_file(file_name)
       first_den = den + 1
-      all_ratios = {}
+      all_ratios.splice(0, all_ratios.length);
       max_length *= 1.25
-      if (max_length > FULLEST_MAX_LENGTH){
+      if (max_length > FULLEST_MAX_LENGTH) {
          max_length = FULLEST_MAX_LENGTH
       }
    }
 }
 
 const file_name = `rational_powers_${first_den}-${den}.csv`
-const all_keys = Object.keys(all_ratios)
-write_file(all_keys, file_name)
+write_file(file_name)
 
 const manifest_path = `./public/comp_data/files_manifest.json`
 const file_contents = JSON.stringify(all_files)
 fs.writeFileSync(manifest_path, file_contents)
+
+console.log(`hash length: ${megahash.length()}`)

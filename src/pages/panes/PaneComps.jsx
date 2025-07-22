@@ -29,7 +29,7 @@ export class PaneComps extends Component {
    }
 
    state = {
-      selected_tab: 0,
+      selected_tab: 5,
    }
 
    on_tab_select = (selected_tab) => {

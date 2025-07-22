@@ -28,6 +28,7 @@
     "fflate": "^0.8.2",
     "javascript-time-ago": "^2.5.11",
     "mathjs": "^14.4.0",
+    "megahash": "^1.0.5",
     "moment": "^2.30.1",
     "prime-factors": "^0.1.0",
     "rc-slider": "^11.1.8",
