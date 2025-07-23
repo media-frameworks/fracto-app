@@ -9,7 +9,7 @@ const FETCH_CSV_HEADERS = {
    'Accept': 'text/javascript'
 }
 
-const TEST_RANGE = 25
+const TEST_RANGE = 35
 const MAX_CARDINALITY = 1200
 
 export class FractoCardioid {
@@ -41,7 +41,7 @@ export class FractoCardioid {
       }
       const item = set_list.shift()
       const filename = `comp_data/${item}`
-      console.log(filename)
+      // console.log(filename)
       fetch(filename, FETCH_CSV_HEADERS)
          .then(response => {
             if (!response.ok) {
@@ -71,7 +71,7 @@ export class FractoCardioid {
             return response.json();
          })
          .then(jsonData => {
-            console.log('files_manifest', jsonData);
+            // console.log('files_manifest', jsonData);
             FractoCardioid.rational_powers = jsonData
             FractoCardioid.load_power_sets(jsonData)
          })

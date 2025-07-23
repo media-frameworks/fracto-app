@@ -1,7 +1,7 @@
 import fs from 'fs'
 import MegaHash from 'megahash'
 
-const MAX_DEN = 12000
+const MAX_DEN = process.argv[2] || 12000
 const FULLEST_MAX_LENGTH = 250000
 
 const all_ratios = []
