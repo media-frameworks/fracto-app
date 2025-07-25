@@ -1,6 +1,4 @@
-import {Component} from 'react';
-
-import network from "common/config/network.json";
+import network from "../common/config/network.json" with { type: "json" };
 
 const URL_BASE = network['fracto-prod'];
 // const SERVER_BASE = network.fracto_server_url;
@@ -22,7 +20,7 @@ const ALL_TILE_SETS = [
 
 export const MAX_LEVEL = 35
 
-export class FractoIndexedTiles extends Component {
+export class FractoIndexedTiles {
 
    static tile_set = null;
    static tile_sets_loaded = [];

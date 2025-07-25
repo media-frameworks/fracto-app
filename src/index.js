@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import PageMain from "pages/PageMain";
-import FractoIndexedTilesLoader from "./fracto/FractoIndexedTilesLoader";
-import AppLoginPage from "./common/app/AppLoginPage";
+import PageMain from "pages/PageMain.jsx";
+import FractoIndexedTilesLoader from "./fracto/FractoIndexedTilesLoader.jsx";
+import AppLoginPage from "./common/app/AppLoginPage.jsx";
 
 const APP_NAME = 'FRACTO'
 

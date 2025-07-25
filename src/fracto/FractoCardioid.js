@@ -1,4 +1,4 @@
-import Complex from "common/math/Complex";
+import Complex from "../common/math/Complex.js";
 
 const FETCH_JSON_HEADERS = {
    'Content-Type': 'application/json',

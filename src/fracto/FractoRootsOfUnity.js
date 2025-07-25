@@ -1,4 +1,4 @@
-import Complex from "../common/math/Complex";
+import Complex from "../common/math/Complex.js";
 
 const INITIAL_RUN = 5000
 
