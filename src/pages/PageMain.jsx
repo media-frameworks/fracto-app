@@ -61,7 +61,7 @@ export class PageMain extends Component {
    };
 
    componentDidMount() {
-      FractoCardioid.load_rational_powers()
+      // FractoCardioid.load_rational_powers()
       const page_settings = PageSettings.initialize()
       this.setState({page_settings})
       setTimeout(() => {

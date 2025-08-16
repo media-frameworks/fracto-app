@@ -119,7 +119,7 @@ export class FractoColors {
          })
 
       all_pattern_pixels
-         .forEach((pixel, pixel_index) => {
+         .forEach((pixel) => {
             const key = `_${pixel.iteration}`
             const lum_factor = pattern_greys_map[key]
             const hue = FractoColors.pattern_hue(pixel.pattern)

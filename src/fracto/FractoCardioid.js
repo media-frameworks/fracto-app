@@ -1,4 +1,5 @@
 import Complex from "../common/math/Complex.js";
+// import fs from "fs";
 
 const FETCH_JSON_HEADERS = {
    'Content-Type': 'application/json',
@@ -9,8 +10,9 @@ const FETCH_CSV_HEADERS = {
    'Accept': 'text/javascript'
 }
 
-const TEST_RANGE = 35
-const MAX_CARDINALITY = 1200
+const EPSILON = 0.000000001
+const TEST_RANGE = 250
+const MAX_CARDINALITY = 600
 
 export class FractoCardioid {
 
@@ -32,6 +34,24 @@ export class FractoCardioid {
          return result
       })
       FractoCardioid.power_sets.push(power_set)
+   }
+
+   static load_power_sets_local = (set_list) => {
+      if (!set_list.length) {
+         console.log('local power sets are loaded')
+         return
+      }
+      set_list.forEach((item) => {
+         console.log(item)
+         const filename = `./comp_data/${item}`
+         const textData = null // fs.readFileSync(filename)
+         if (!textData) {
+            console.log(`error reading ${filename}`)
+         } else {
+            const str_data = textData.toString()
+            FractoCardioid.process_power_set(str_data.split('\n'))
+         }
+      })
    }
 
    static load_power_sets = (set_list) => {
@@ -99,6 +119,9 @@ export class FractoCardioid {
       let high = arr.length - 1;
       while (low <= high) {
          let mid = Math.floor((low + high) / 2);
+         if (mid === arr.length - 1) {
+            return mid
+         }
          let guess = arr[mid];
          const guess_next = arr[mid + 1];
          const guess_previous = arr[mid - 1];
@@ -185,9 +208,39 @@ export class FractoCardioid {
       return {cardinality, variance: least_variance}
    }
 
-   static test_powersets = (P, powerset_index, center) => {
+   static generate_powerset = (powerset_index, center) => {
+      const radius = 0.5 / Math.pow(1.618, powerset_index)
+      let lowest = center - radius
+      if (lowest <= 0) {
+         lowest = EPSILON
+      }
+      let highest = center + radius
+      if (highest >= 0.5) {
+         highest = 0.5 - EPSILON
+      }
+      const range = 100000
+      const increment = (highest - lowest) / range
+      const negative_one = new Complex(-1, 0)
+      const power_set = []
+      for (let i = 0; i <= range; i++) {
+         const ratio = lowest + i * increment
+         const power_ratio = negative_one.pow(ratio)
+         const power_double_ratio = negative_one.pow(2 * ratio)
+         const set = {}
+         set['power_ratio.re'] = power_ratio.re
+         set['power_ratio.im'] = power_ratio.im
+         set['power_double_ratio.re'] = power_double_ratio.re
+         set['power_double_ratio.im'] = power_double_ratio.im
+         power_set.push(set)
+      }
+      return power_set
+   }
+
+   static test_powersets = (P, powerset_index, center, incremental = false) => {
       const negative_four_P = P.scale(-4)
-      const test_set = FractoCardioid.reduce_powerset(powerset_index, center)
+      const test_set = incremental
+         ? FractoCardioid.generate_powerset(powerset_index, center)
+         : FractoCardioid.reduce_powerset(powerset_index, center)
       let best_variance = 1000
       let best_variance_set = null
       test_set.forEach(set => {
@@ -205,7 +258,7 @@ export class FractoCardioid {
          const completion = FractoCardioid.get_variance(P, z)
          if (completion.variance > 0 && completion.variance < best_variance) {
             best_variance = completion.variance
-            best_variance_set = {completion, power_set: set}
+            best_variance_set = {completion, power_set: set, seed: z}
          }
       })
       if (!best_variance_set) {
@@ -215,7 +268,8 @@ export class FractoCardioid {
          const further_testing = FractoCardioid.test_powersets(
             P,
             powerset_index + 1,
-            best_variance_set.power_set.ratio)
+            best_variance_set.power_set.ratio,
+            incremental)
          if (!further_testing) {
             return best_variance_set
          }

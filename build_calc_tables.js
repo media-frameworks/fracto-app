@@ -1,8 +1,8 @@
 import fs from 'fs'
 import MegaHash from 'megahash'
 
-const MAX_DEN = process.argv[2] || 12000
-const FULLEST_MAX_LENGTH = 250000
+const MAX_DEN = process.argv[2] || 16000
+const FULLEST_MAX_LENGTH = 120000
 
 const all_ratios = []
 const all_files = []
@@ -60,7 +60,7 @@ const write_file = (file_name) => {
    all_files.push(file_name)
 }
 
-let max_length = 100
+let max_length = 650
 let first_den = 2
 let den = 2
 const negative_one = new Complex(-1, 0)

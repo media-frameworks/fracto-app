@@ -1,5 +1,5 @@
-import Complex from "common/math/Complex";
-import BigComplex from "../common/math/BigComplex";
+import Complex from "../common/math/Complex.js";
+import BigComplex from "../common/math/BigComplex.js";
 
 const MAX_ORBITAL_SIZE = 25000
 const MIN_ITERATION = 1200000
