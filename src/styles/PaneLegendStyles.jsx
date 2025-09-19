@@ -97,6 +97,9 @@ export class PaneLegendStyles {
        padding-top: 0.5rem;
        border-bottom: 1px solid #cccccc;
    `
+   static TransitWrapper = styled(CoolStyles.Block)`
+       ${CoolStyles.align_center}
+   `
 }
 
 export default PaneLegendStyles

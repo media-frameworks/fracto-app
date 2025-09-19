@@ -18,7 +18,7 @@ import {
    TYPE_ARRAY,
    TYPE_BOOLEAN,
    TYPE_OBJECT
-} from "../settings/AppSettings";
+} from "settings/AppSettings";
 import {
    KEY_STEPS_WIDTH_PX,
    KEY_STEPS_HEIGHT_PX,
@@ -30,7 +30,6 @@ import {
    KEY_LEGEND_HEIGHT_PX
 } from "../settings/PaneSettings";
 import PageSettings from "./PageSettings";
-import FractoCardioid from "../fracto/FractoCardioid";
 
 const getViewportDimensions = () => {
    let viewport = {}
@@ -61,7 +60,6 @@ export class PageMain extends Component {
    };
 
    componentDidMount() {
-      // FractoCardioid.load_rational_powers()
       const page_settings = PageSettings.initialize()
       this.setState({page_settings})
       setTimeout(() => {

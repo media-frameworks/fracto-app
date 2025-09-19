@@ -157,12 +157,14 @@ export class FractoIndexedTiles {
             return true;
          })
       let short_codes = []
+      const max_y = viewport.top > Math.abs(viewport.bottom)
+         ? viewport.top : Math.abs(viewport.bottom)
       for (let column_index = 0; column_index < columns.length; column_index++) {
          const tiles_in_column = columns[column_index].tiles
          const column_left = columns[column_index].left
          const column_tiles = tiles_in_column
             .filter(tile => {
-                  if (tile.bottom > viewport.top) {
+                  if (tile.bottom > max_y) {
                      return false
                   }
                   if (tile.bottom + set_level.tile_size < viewport.bottom) {

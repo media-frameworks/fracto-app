@@ -11,8 +11,8 @@ setInterval(() => {
 
 const CACHE_TIMEOUT = 2 * 1000 * 60;
 const QUICK_CACHE_TIMEOUT = 1000 * 60;
-const MIN_CACHE = 250
-const MAX_CACHE = 750
+const MIN_CACHE = 750
+const MAX_CACHE = 1250
 
 const AXIOS_CONFIG = {
    responseType: 'blob',

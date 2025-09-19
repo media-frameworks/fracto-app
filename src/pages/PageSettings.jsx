@@ -9,6 +9,7 @@ import {
 import {COMP_KEYED_SETTINGS} from "../settings/CompSettings";
 import {PANE_KEYED_SETTINGS} from "../settings/PaneSettings";
 import {IMAGE_KEYED_SETTINGS} from "../settings/ImageSettings";
+import {LORE_KEYED_SETTINGS} from "../settings/LoreSettings";
 
 export class PageSettings {
 
@@ -21,6 +22,7 @@ export class PageSettings {
          COMP_KEYED_SETTINGS,
          PANE_KEYED_SETTINGS,
          IMAGE_KEYED_SETTINGS,
+         LORE_KEYED_SETTINGS,
       )
       const page_settings_keys = Object.keys(PageSettings.all_settings)
       const page_settings = {}

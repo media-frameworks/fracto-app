@@ -22,7 +22,7 @@ import {
    LABEL_WIDTH_PX,
    HEADER_HEIGHT_PX
 } from 'styles/PaneLegendStyles'
-import {get_tiles} from "fracto/FractoRasterImage";
+import {get_tiles} from "fracto/FractoTileData";
 import CoolStyles from "common/ui/styles/CoolStyles";
 import {LS_INDEXED_TILE_COUNT} from "fracto/FractoTilesLoaderProgress";
 import FractoTileCache from "fracto/FractoTileCache";

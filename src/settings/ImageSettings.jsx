@@ -13,6 +13,7 @@ export const KEY_IMAGE_CAPTURE_ASPECT_RATIO = 'image_capture_aspect_ratio'
 export const IMAGE_MODE_EXTERIOR = 'image_mode_exterior'
 export const IMAGE_MODE_INTERIOR = 'image_mode_interior'
 export const IMAGE_MODE_CAPTURE_FIELD = 'image_mode_capture_field'
+export const IMAGE_MODE_GALLERY = 'image_mode_gallery'
 
 // values for KEY_IMAGE_INTERIOR_HUE_MAPPING
 export const IMAGE_HUE_BY_CARDINALITY = 'hue_by_cardinality'

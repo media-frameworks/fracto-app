@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompScriptStyles as styles} from "styles/CompScriptStyles"
-import {TAB_HEIGHT_PX} from "../../PaneComps";
+import {TAB_HEIGHT_PX} from "../../../PaneComps";
 import {SPLITTER_WIDTH_PX} from "styles/PageAppStyles";
 import {
    KEY_SCRIPT_TREE_HEIGHT_PX,

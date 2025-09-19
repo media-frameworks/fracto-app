@@ -99,13 +99,13 @@ export class AdminInventory extends Component {
 
    get_db_totals = async (cb) => {
       const url = `${FRACTO_DB_URL}/tile_counts`
-      fetch(url)
-         .then(response => response.text())
-         .then((str) => {
-            const json = JSON.parse(str)
-            // console.log('get_db_totals', json)
-            cb(json)
-         })
+      // fetch(url)
+      //    .then(response => response.text())
+      //    .then((str) => {
+      //       const json = JSON.parse(str)
+      //       // console.log('get_db_totals', json)
+      //       cb(json)
+      //    })
    }
 
    render() {

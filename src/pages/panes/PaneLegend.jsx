@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {KEY_FOCAL_POINT} from "settings/AppSettings";
+import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_SCOPE} from "settings/AppSettings";
 import {
    KEY_LEGEND_HEIGHT_PX, KEY_LEGEND_WIDTH_PX
 } from "settings/PaneSettings";
@@ -15,6 +15,7 @@ import FractoRasterImage from "fracto/FractoRasterImage";
 import FractoCanvasOverlay from "fracto/FractoCanvasOverlay";
 
 import LegendTabStats from "./legend/LegendTabStats";
+import FractoFocalTransit from "../../fracto/FractoFocalTransit";
 
 const DEFAULT_FRACTO_VALUES = {
    focal_point: {x: -0.75, y: 0.0001},
@@ -44,6 +45,15 @@ export class PaneLegend extends Component {
       }
    }
 
+   focal_point_changed = (delta) => {
+      const {on_settings_changed} = this.props
+      on_settings_changed({
+         [KEY_FOCAL_POINT]: delta,
+         [KEY_DISABLED]: true,
+      })
+      console.log('focal_point_changed delta', delta)
+   }
+
    render_thumbnail = () => {
       const {page_settings} = this.props
       const wrapper_style = {
@@ -68,6 +78,14 @@ export class PaneLegend extends Component {
             <styles.BrandName>fracto</styles.BrandName>
             <styles.BrandBlurb>atlas of chaos</styles.BrandBlurb>
          </styles.BrandWrapper>
+         <styles.TransitWrapper>
+            <FractoFocalTransit
+               width_px={THUMBNAIL_WIDTH_PX - 50}
+               scope={page_settings[KEY_SCOPE]}
+               focal_point={page_settings[KEY_FOCAL_POINT]}
+               on_focal_point_changed={this.focal_point_changed}
+               in_wait={page_settings[KEY_DISABLED]}/>
+         </styles.TransitWrapper>
       </styles.ThumbnailWrapper>
    }
 

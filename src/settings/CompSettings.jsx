@@ -7,7 +7,7 @@ import {
 import {
    SORT_TYPE_BY_ORBITAL,
    SORT_TYPE_BY_SIZE
-} from "../pages/panes/comps/CompMinibrot";
+} from "../pages/panes/comps/archive/CompMinibrot";
 import {
    COLORS_INTERNAL,
    COLORS_EXTERNAL
@@ -15,7 +15,7 @@ import {
 import {
    SCRIPT_VIEWER_MODE_TEXT,
    SCRIPT_VIEWER_MODE_UI
-} from "../pages/panes/comps/scripts/ScriptsViewerBar";
+} from "../pages/panes/comps/archive/scripts/ScriptsViewerBar";
 import {PATTERN_TYPE_ORBITALS} from "../pages/panes/comps/CompPatterns";
 import {ADMIN_TYPE_SETTINGS} from "../pages/panes/comps/CompAdmin";
 

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolInputText} from "common/ui/CoolImports";
-import FractoFastCalc from "../../../fracto/FractoFastCalc";
-import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_LOCATE_CENTER} from "../../../settings/AppSettings";
+import FractoFastCalc from "../../../../fracto/FractoFastCalc";
+import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_LOCATE_CENTER} from "../../../../settings/AppSettings";
 // import FractoCardioidCalc from "fracto/FractoCardioidCalc";
 import FractoRootsOfUnity from "fracto/FractoRootsOfUnity";
 

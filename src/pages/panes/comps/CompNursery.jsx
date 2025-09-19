@@ -38,10 +38,10 @@ export class CompNursery extends Component {
       try {
          const fetched = await fetch(url)
          const recent_tiles = await fetched.json()
-         const item_keys = Object.keys(recent_tiles.updated)
+         const item_keys = Object.keys(recent_tiles.new)
          item_keys.forEach(key => {
             const short_code = key.slice(0, key.lastIndexOf("."));
-            tile_blocks[short_code] = recent_tiles.updated[key]
+            tile_blocks[short_code] = recent_tiles.new[key]
          })
          this.setState({
             new_tiles: recent_tiles.new,

@@ -12,12 +12,11 @@ import CoolStyles from "common/ui/styles/CoolStyles";
 import CompAdmin from "./comps/CompAdmin";
 import CompOrbitals from "./comps/CompOrbitals";
 import CompPatterns from "./comps/CompPatterns";
-import CompMinibrot from "./comps/CompMinibrot";
 import CompNursery from "./comps/CompNursery";
-import CompTest from "./comps/CompTest";
-import CompScript from "./comps/CompScript";
+import CompLore from "./comps/CompLore";
 import CompPoints from "./comps/CompPoints";
 import CompImages from "./comps/CompImages";
+import CompMinibrot from "./comps/CompMinibrot";
 
 export const TAB_HEIGHT_PX = 20
 
@@ -25,20 +24,20 @@ const COMP_KEY_POINTS = 'comp_key_points'
 const COMP_KEY_IMAGE = 'comp_key_image'
 const COMP_KEY_PATTERNS = 'comp_key_patterns'
 const COMP_KEY_ORBITALS = 'comp_key_orbitals'
-const COMP_KEY_TEST = 'comp_key_test'
 const COMP_KEY_MINIBROT = 'comp_key_minibrot'
 const COMP_KEY_NURSERY = 'comp_key_nursery'
 const COMP_KEY_ADMIN = 'comp_key_admin'
-const COMP_KEY_SCRIPT = 'comp_key_script'
+const COMP_KEY_LORE = 'comp_key_lore'
 
 const ACTIVE_COMPS = [
    COMP_KEY_POINTS,
    COMP_KEY_IMAGE,
    COMP_KEY_ORBITALS,
    COMP_KEY_PATTERNS,
+   COMP_KEY_MINIBROT,
    COMP_KEY_NURSERY,
    COMP_KEY_ADMIN,
-   COMP_KEY_TEST,
+   COMP_KEY_LORE,
 ]
 
 export class PaneComps extends Component {
@@ -79,13 +78,8 @@ export class PaneComps extends Component {
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
-         case COMP_KEY_TEST:
-            return <CompTest
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-         case COMP_KEY_MINIBROT:
-            return <CompMinibrot
+         case COMP_KEY_LORE:
+            return <CompLore
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
@@ -94,13 +88,13 @@ export class PaneComps extends Component {
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
-         case COMP_KEY_ADMIN:
-            return <CompAdmin
+         case COMP_KEY_MINIBROT:
+            return <CompMinibrot
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
-         case COMP_KEY_SCRIPT:
-            return <CompScript
+         case COMP_KEY_ADMIN:
+            return <CompAdmin
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
@@ -119,16 +113,14 @@ export class PaneComps extends Component {
             return 'patterns'
          case COMP_KEY_ORBITALS:
             return 'orbitals'
-         case COMP_KEY_TEST:
-            return 'test'
          case COMP_KEY_MINIBROT:
             return 'minibrot'
          case COMP_KEY_NURSERY:
-            return 'nursery'
+            return 'farm'
          case COMP_KEY_ADMIN:
             return 'admin'
-         case COMP_KEY_SCRIPT:
-            return 'script'
+         case COMP_KEY_LORE:
+            return 'lore'
          default:
             return tab_key
       }

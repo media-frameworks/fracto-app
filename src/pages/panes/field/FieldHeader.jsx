@@ -19,7 +19,10 @@ export class FieldHeader extends Component {
       }
       const magnifier = e.shiftKey ? 5 : 3
       const mag_factor = is_up ? magnifier : 1 / magnifier
-      on_settings_changed({[KEY_SCOPE]: page_settings[KEY_SCOPE] * mag_factor})
+      on_settings_changed({
+         [KEY_SCOPE]: page_settings[KEY_SCOPE] * mag_factor,
+         [KEY_DISABLED]: true,
+      })
    }
 
    on_mouse_move = () => {

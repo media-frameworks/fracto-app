@@ -4,7 +4,7 @@ import {CoolStyles} from '../common/ui/CoolImports'
 export class CompImagesStyles {
    static   ContentWrapper = styled(CoolStyles.Block)`
        //overflow-y: scroll;
-       padding: 0.5rem 1rem;
+       padding: 1rem 0.5rem 0;
        //background-color: lightseagreen;
    `
    static Spacer = styled(CoolStyles.InlineBlock)`
@@ -12,7 +12,6 @@ export class CompImagesStyles {
    `
    static CenteredBlock = styled(CoolStyles.Block)`
        ${CoolStyles.align_left}
-       border-bottom: 0.1rem solid #aaaaaa;
        margin-bottom: 0.5rem;
    `
    static PatternTypePrompt = styled(CoolStyles.InlineBlock)`
@@ -23,6 +22,16 @@ export class CompImagesStyles {
        font-size: 1rem;
        margin-left: 0.25rem;
        margin-bottom: 0.25rem;
+   `
+   static ImageFieldWrapper = styled(CoolStyles.Block)`
+       //overflow-y: scroll;
+       margin: 0;
+       padding: 0;
+       //background-color: lightseagreen;
+   `
+   static StatusLine = styled(CoolStyles.Block)`
+       ${CoolStyles.monospace}
+       margin: 0.5rem 1rem;
    `
 }
 

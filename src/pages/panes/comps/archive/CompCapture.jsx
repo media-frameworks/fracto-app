@@ -6,7 +6,7 @@ import {NumberSpan} from "fracto/styles/FractoStyles";
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 
 import FractoUtil from "fracto/FractoUtil";
-import FractoRasterImage, {get_tiles} from "fracto/FractoRasterImage";
+import {get_tiles} from "fracto/FractoTileData";
 import {COLORS_EXTERNAL} from "./CompColors";
 
 import {

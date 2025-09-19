@@ -6,11 +6,21 @@ import {
    IMAGE_MODE_CAPTURE_FIELD,
    IMAGE_MODE_EXTERIOR,
    IMAGE_MODE_INTERIOR,
+   IMAGE_MODE_GALLERY,
    KEY_IMAGE_MODE
 } from "settings/ImageSettings";
 import ImagesInteriorMode from "./images/ImagesInteriorMode";
 import ImagesExteriorMode from "./images/ImagesExteriorMode";
 import ImagesCaptureField from "./images/ImagesCaptureField";
+import ImagesGallery from "./images/ImagesGallery";
+import {render_comp_modes} from "./CompUtils";
+
+const IMAGE_MODES = [
+   {key: IMAGE_MODE_INTERIOR, label: 'interior mode'},
+   {key: IMAGE_MODE_EXTERIOR, label: 'exterior mode'},
+   {key: IMAGE_MODE_CAPTURE_FIELD, label: 'capture field'},
+   {key: IMAGE_MODE_GALLERY, label: 'gallery'},
+]
 
 export class CompImages extends Component {
    static propTypes = {
@@ -24,28 +34,9 @@ export class CompImages extends Component {
    }
 
    render_image_mode = () => {
-      const {page_settings} = this.props
-      const image_mode = page_settings[KEY_IMAGE_MODE] || IMAGE_MODE_INTERIOR
-      const deselected_style = {color: '#aaaaaa', fontWeight: 400}
-      const all_modes = [
-         {key: IMAGE_MODE_INTERIOR, label: 'interior mode'},
-         {key: IMAGE_MODE_EXTERIOR, label: 'exterior mode'},
-         {key: IMAGE_MODE_CAPTURE_FIELD, label: 'capture field'},
-      ].map(mode => {
-         return [
-            <input
-               type={"radio"}
-               checked={image_mode === mode.key}
-               onClick={() => this.set_image_mode(mode.key)}
-            />,
-            <styles.PatternTypePrompt
-               style={image_mode !== mode.key ? deselected_style : {}}
-               onClick={() => this.set_image_mode(mode.key)}>
-               {mode.label}
-            </styles.PatternTypePrompt>,
-            <styles.Spacer/>
-         ]
-      })
+      const {page_settings, on_settings_changed} = this.props
+      const all_modes = render_comp_modes(
+         IMAGE_MODES, KEY_IMAGE_MODE, page_settings, on_settings_changed)
       return <styles.CenteredBlock>
          {all_modes}
       </styles.CenteredBlock>
@@ -73,15 +64,21 @@ export class CompImages extends Component {
                on_settings_changed={on_settings_changed}
             />
             break;
+         case IMAGE_MODE_GALLERY:
+            content = <ImagesGallery
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+            break;
          default:
             content = page_settings[KEY_IMAGE_MODE]
             break
       }
-      return <styles.ContentWrapper>
-         {this.render_image_mode()}
-         {content}
-      </styles.ContentWrapper>
-
+      const modes = this.render_image_mode()
+      return [
+         <styles.ContentWrapper>{modes}</styles.ContentWrapper>,
+         <styles.ImageFieldWrapper>{content}</styles.ImageFieldWrapper>
+      ]
    }
 }
 

@@ -13,6 +13,7 @@ import {
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {CoolSlider} from "common/ui/CoolImports";
 import {get_click_point_info, interpolate_orbital} from "./PointUtils";
+import {KEY_FOCAL_POINT} from "../../../../settings/AppSettings";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
@@ -79,7 +80,14 @@ export class ScatterCharts extends Component {
       if (prevState.height_px !== new_height_px) {
          this.setState({height_px: new_height_px})
       }
-      setTimeout(this.initialize, 150)
+      if (prevState.click_point_info) {
+         const focal_point = page_settings[KEY_FOCAL_POINT]
+         const focal_point_x_changed = prevState.click_point_info.click_point.x !== focal_point.x
+         const focal_point_y_changed = prevState.click_point_info.click_point.y !== focal_point.y
+         if (focal_point_x_changed || focal_point_y_changed) {
+            setTimeout(this.initialize, 150)
+         }
+      }
    }
 
    initialize = () => {
@@ -100,8 +108,8 @@ export class ScatterCharts extends Component {
          // if (in_animation && animation_index >= 0) {
          //    set2.push(orbital_points[animation_index])
          // }
-         const interpolation = interpolate_orbital(orbital_points, Q_core_neg)
-         return click_point_chart(orbital_points, [interpolation, set2], in_cardioid, false)
+         // const interpolation = interpolate_orbital(orbital_points, Q_core_neg)
+         return click_point_chart(orbital_points, [set2], in_cardioid, false)
       }
       return escape_points_chart(click_point, in_cardioid)
    }

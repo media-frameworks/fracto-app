@@ -10,7 +10,7 @@ import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {
    get_click_point_info,
    process_escape_sets,
-   process_orbital_sets,
+   process_orbital_sets, step_ratio_chart,
 } from "./PointUtils";
 import {iteration_chart} from "../patterns/PatternsUtils";
 import {CoolSlider} from "common/ui/CoolImports";
@@ -87,7 +87,7 @@ export class PolarCharts extends Component {
       }
       const in_crosshairs = page_settings[KEY_FIELD_CROSSHAIRS]
       if (dims_changed || in_crosshairs) {
-         setTimeout(this.initialize, 150)
+         // setTimeout(this.initialize, 150)
       }
    }
 
@@ -154,6 +154,7 @@ export class PolarCharts extends Component {
       }
       const {click_point, orbital_points, Q_core_neg, pattern, in_cardioid} = click_point_info
       let r_data_set = []
+      let chart = []
       if (polar_option === OPTION_POLAR_R_THETA) {
          if (!pattern) {
             const escape_sets = process_escape_sets(click_point, Q_core_neg)
@@ -162,13 +163,11 @@ export class PolarCharts extends Component {
             const orbital_sets = process_orbital_sets(orbital_points, Q_core_neg)
             r_data_set = orbital_sets.r_set
          }
+         chart = iteration_chart(r_data_set, in_cardioid, !pattern)
       } else if (polar_option === OPTION_POLAR_ROOTS_OF_UNITY) {
-         return <styles.SeekButton onClick={this.seek_orbitals}>
-            seek orbitals
-         </styles.SeekButton>
+         chart = step_ratio_chart(orbital_points)
       }
       // console.log('r_data_set', r_data_set)
-      const r_chart = iteration_chart(r_data_set, in_cardioid, !pattern)
 
       const chart_style = {
          width: `${width_px - ZOOMER_WIDTH_PX}px`,
@@ -184,7 +183,7 @@ export class PolarCharts extends Component {
          <styles.ZoomerStealth
             ref={zoomer_stealth_ref}
             style={stealth_style}>
-            {r_chart}
+            {chart}
          </styles.ZoomerStealth>
       </styles.GraphWrapper>
    }

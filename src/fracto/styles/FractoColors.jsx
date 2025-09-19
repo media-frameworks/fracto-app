@@ -2,7 +2,7 @@ import FractoUtil from "../FractoUtil";
 
 const MAX_PATTERN = 20000
 
-const GREY_BASE = 75
+const GREY_BASE = 50
 const GREY_RANGE = (255 - GREY_BASE)
 
 const COLOR_LUM_BASE_PCT = 15

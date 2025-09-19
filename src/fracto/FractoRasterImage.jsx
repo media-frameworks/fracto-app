@@ -4,10 +4,8 @@ import styled from "styled-components";
 
 import {CoolStyles} from "common/ui/CoolImports";
 
-import FractoIndexedTiles from "fracto/FractoIndexedTiles";
 import FractoColors from "fracto/styles/FractoColors";
-import FractoFastCalc from "fracto/FractoFastCalc";
-import FractoTileCache from "./FractoTileCache";
+import {init_canvas_buffer, fill_canvas_buffer} from "./FractoTileData";
 
 const FractoCanvas = styled.canvas`
     ${CoolStyles.narrow_box_shadow}
@@ -16,37 +14,6 @@ const FractoCanvas = styled.canvas`
 
 const MAX_LEVEL = 35;
 export var BAD_TILES = {};
-
-export const get_tiles = (
-   width_px,
-   focal_point,
-   scope,
-   aspect_ratio) => {
-
-   if (isNaN(width_px)) {
-      return []
-   }
-   const all_tiles = []
-   const height_px = width_px * aspect_ratio
-   const tiles_on_edge_x = Math.ceil(width_px / 256) + 1;
-   const tiles_on_edge_y = Math.ceil(height_px / 256) + 1;
-   const max_tiles = Math.ceil(tiles_on_edge_x * tiles_on_edge_y + 1)
-   // console.log(`max_tiles ${max_tiles}`)
-   for (let level = 2; level < MAX_LEVEL; level++) {
-      const level_tiles = FractoIndexedTiles.tiles_in_scope(
-         level, focal_point, scope, aspect_ratio);
-      all_tiles.push({
-         level: level,
-         level_tiles: level_tiles
-      })
-      // console.log(`level ${level}: ${level_tiles.length}`)
-      if (level_tiles.length > max_tiles) {
-         break;
-      }
-   }
-   return all_tiles.filter(tiles => tiles.level_tiles.length)
-      .sort((a, b) => a.level > b.level ? 1 : -1)
-}
 
 export class FractoRasterImage extends Component {
 
@@ -136,19 +103,7 @@ export class FractoRasterImage extends Component {
       if (height_px & 1) {
          height_px -= 1
       }
-      const new_canvas_buffer = new Array(width_px)
-         .fill(0)
-         .map((x_value, x_index) => {
-            const h_dist = (width_px / 2) - x_index
-            return new Array(height_px)
-               .fill(0)
-               .map((y_value, y_index) => {
-                  const v_dist = (height_px / 2) - y_index
-                  const distance_to_center =
-                     Math.sqrt(h_dist * h_dist + v_dist * v_dist)
-                  return [0, 4, distance_to_center]
-               })
-         })
+      const new_canvas_buffer = init_canvas_buffer(width_px, aspect_ratio);
       this.setState({
          canvas_buffer: new_canvas_buffer,
          height_px: height_px
@@ -163,98 +118,13 @@ export class FractoRasterImage extends Component {
          scope,
          aspect_ratio,
          on_plan_complete,
-         filter_level,
       } = this.props
-      const all_level_sets = []
-      get_tiles(width_px, focal_point, scope, aspect_ratio)
-         .forEach(level_set => {
-            if (filter_level && filter_level !== level_set.level) {
-               return;
-            }
-            all_level_sets.push(level_set)
-         })
-      const level_data_sets = all_level_sets
-         .map(level_set => {
-            const tile_width =
-               level_set.level_tiles[0].bounds.right
-               - level_set.level_tiles[0].bounds.left
-            level_set.tile_increment = tile_width / 256
-            return level_set
-         })
-         .sort((a, b) => a.level > b.level ? -1 : 1)
-      level_data_sets.forEach(level_set => {
-         level_set.level_tiles.forEach(async tile => {
-            if (BAD_TILES[tile.short_code]) {
-               return;
-            }
-            await FractoTileCache.get_tile(tile.short_code)
-         })
-      })
-      await this.raster_fill(canvas_buffer, level_data_sets, ctx)
+      await fill_canvas_buffer(canvas_buffer, width_px, focal_point, scope, aspect_ratio)
       FractoColors.buffer_to_canvas(canvas_buffer, ctx)
       if (on_plan_complete) {
          on_plan_complete(canvas_buffer, ctx)
       }
       this.setState({loading_tiles: false})
-   }
-
-   raster_fill = async (canvas_buffer, level_data_sets, ctx) => {
-      const {width_px, focal_point, scope, aspect_ratio,} = this.props
-      if (!canvas_buffer) {
-         return;
-      }
-      const canvas_increment = scope / width_px
-      const height_px = width_px * aspect_ratio
-      const horz_scale = []
-      for (let horz_x = 0; horz_x < width_px; horz_x++) {
-         horz_scale[horz_x] = focal_point.x + (horz_x - width_px / 2) * canvas_increment
-      }
-      const vert_scale = []
-      for (let vert_y = 0; vert_y < height_px; vert_y++) {
-         vert_scale[vert_y] = Math.abs(focal_point.y - (vert_y - height_px / 2) * canvas_increment)
-      }
-      for (let canvas_x = 0; canvas_x < width_px; canvas_x++) {
-         const x = horz_scale[canvas_x]
-         for (let canvas_y = 0; canvas_y < height_px; canvas_y++) {
-            const y = vert_scale[canvas_y]
-            let found_point = false
-            for (let index = 0; index < level_data_sets.length; index++) {
-               const level_data_set = level_data_sets[index]
-               const tile = level_data_set.level_tiles
-                  .find(tile => tile.bounds.left <= x
-                     && tile.bounds.right >= x
-                     && tile.bounds.top >= y
-                     && tile.bounds.bottom <= y)
-               if (tile) {
-                  if (BAD_TILES[tile.short_code]) {
-                     continue;
-                  }
-                  let tile_data = null
-                  try {
-                     tile_data = await FractoTileCache.get_tile(tile.short_code)
-                     const tile_x = Math.floor(
-                        (x - tile.bounds.left) / level_data_set.tile_increment)
-                     const tile_y = Math.floor(
-                        (tile.bounds.top - y) / level_data_set.tile_increment)
-                     const pattern = tile_data[tile_x][tile_y][0]
-                     const iteration = tile_data[tile_x][tile_y][1]
-                     canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
-                     found_point = true
-                  } catch (e) {
-                     BAD_TILES[tile.short_code] = true
-                     // console.log('canvas_buffer size error', canvas_x, canvas_y, e)
-                     continue;
-                  }
-                  break;
-               }
-            }
-            const out_of_bounds = (x <= -2) || (x > 0.5) || (y >= 1) || (y <= -1)
-            if (!found_point && out_of_bounds) {
-               const {pattern, iteration} = FractoFastCalc.calc(x, y)
-               canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
-            }
-         }
-      }
    }
 
    render() {

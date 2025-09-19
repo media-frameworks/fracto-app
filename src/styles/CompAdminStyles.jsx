@@ -4,7 +4,7 @@ import {CoolStyles} from '../common/ui/CoolImports'
 export class CompAdminStyles {
    static   ContentWrapper = styled(CoolStyles.Block)`
        //overflow-y: scroll;
-       padding: 0.5rem 1rem;
+       padding: 1rem 0.5rem;
        //background-color: lightseagreen;
    `
    static TileBlockWrapper = styled(CoolStyles.InlineBlock)`
@@ -39,7 +39,7 @@ export class CompAdminStyles {
    static CenteredBlock = styled(CoolStyles.Block)`
        ${CoolStyles.align_left}
        border-bottom: 0.1rem solid #aaaaaa;
-       margin-bottom: 0.5rem;
+       margin: 1.0rem 0 0.5rem;
    `
    static PatternTypePrompt = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.pointer}
