@@ -50,6 +50,7 @@ export class PageMain extends Component {
 
    static propTypes = {
       app_name: PropTypes.string.isRequired,
+      one_tap_data: PropTypes.object.isRequired,
    }
 
    state = {

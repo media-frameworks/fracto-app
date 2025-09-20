@@ -28,48 +28,51 @@ export class FractoIndexedTiles {
       if (FractoIndexedTiles.tile_set !== null) {
          return;
       }
-      FractoIndexedTiles.tile_set = {}
-      ALL_TILE_SETS.forEach(set_name => {
-         FractoIndexedTiles.tile_set[set_name] = []
+      const tile_set = {};
+      for (const set_name of ALL_TILE_SETS) {
+         const arr = new Array(MAX_LEVEL - 2);
          for (let level = 2; level < MAX_LEVEL; level++) {
-            FractoIndexedTiles.tile_set[set_name].push({
+            arr[level - 2] = {
                level: level,
                tile_size: Math.pow(2, 2 - level),
                columns: []
-            })
+            };
          }
-      })
+         tile_set[set_name] = arr;
+      }
+      FractoIndexedTiles.tile_set = tile_set;
       // console.log('FractoIndexedTiles.tile_set', FractoIndexedTiles.tile_set)
    }
 
    static tile_set_is_loaded = (set_name) => {
-      console.log("FractoIndexedTiles.tile_sets_loaded", FractoIndexedTiles.tile_sets_loaded)
+      // Use Set for faster lookup if this grows large
       return FractoIndexedTiles.tile_sets_loaded.includes(set_name);
    }
 
    static get_set_level = (set_name, level) => {
       if (FractoIndexedTiles.tile_set === null) {
-         console.log('initializing tile sets')
+         // console.log('initializing tile sets')
          FractoIndexedTiles.init_tile_sets();
       }
-      // console.log(`set_name: ${set_name}, level: ${level}`)
-      return FractoIndexedTiles.tile_set[set_name]
-         .find(bin => bin.level === level)
+      // Use direct index instead of .find for speed
+      const arr = FractoIndexedTiles.tile_set[set_name];
+      if (!arr) return undefined;
+      return arr[level - 2];
    }
 
    static integrate_tile_packet = (set_name, packet_data) => {
-      const level = packet_data.level
+      const level = packet_data.level;
       if (!FractoIndexedTiles.tile_sets_loaded.includes(set_name)) {
-         FractoIndexedTiles.tile_sets_loaded.push(set_name)
+         FractoIndexedTiles.tile_sets_loaded.push(set_name);
       }
-      let set_level = FractoIndexedTiles.get_set_level(set_name, level)
-      // console.log('integrate_tile_packet', level, set_name, packet_data.columns, set_level.columns)
+      const set_level = FractoIndexedTiles.get_set_level(set_name, level);
       if (!set_level) {
-         console.log(`problem with ${set_name}:${level}`)
+         // console.log(`problem with ${set_name}:${level}`)
          return;
       }
       if (packet_data.columns.length) {
-         packet_data.columns.forEach(column=> set_level.columns.push(column))
+         // Use push with spread for better perf
+         set_level.columns.push(...packet_data.columns);
       }
    }
 
@@ -79,53 +82,45 @@ export class FractoIndexedTiles {
          .then(response => response.text())
          .then(csv => {
             const lines = csv.split("\n");
-            console.log(`fetch_bin_async ${lines.length}`)
-            cb(lines.slice(1))
-         })
+            // console.log(`fetch_bin_async ${lines.length}`)
+            cb(lines.slice(1));
+         });
    }
 
    static load_no_cache = (cb) => {
-      // const no_cache_url = `${SERVER_BASE}/package/no_cache.csv`;
-      // fetch(no_cache_url)
-      //    .then(response => response.text())
-      //    .then(csv => {
-      //       const lines = csv.split("\n");
-      //       console.log(`fetch_bin_async ${lines.length}`)
-      //       cb(lines.slice(1))
-      //    })
       cb([])
    }
 
    static tiles_in_level = (level, set_name = TILE_SET_INDEXED) => {
-      const set_level = FractoIndexedTiles.get_set_level(set_name, level)
+      const set_level = FractoIndexedTiles.get_set_level(set_name, level);
       if (!set_level) {
          // console.log(`no bin for level ${level}`)
-         return []
+         return [];
       }
-      const columns = set_level.columns
-      let short_codes = []
-      for (let column_index = 0; column_index < columns.length; column_index++) {
-         const tiles_in_column = columns[column_index].tiles
-         const column_left = columns[column_index].left
-         const column_tiles = tiles_in_column
-            .map(tile => {
-               return {
-                  bounds: {
-                     left: column_left,
-                     right: column_left + set_level.tile_size,
-                     bottom: tile.bottom,
-                     top: tile.bottom + set_level.tile_size
-                  },
-                  short_code: tile.short_code
-               }
-            })
-         short_codes = short_codes.concat(column_tiles)
+      const columns = set_level.columns;
+      const short_codes = [];
+      for (let i = 0; i < columns.length; i++) {
+         const col = columns[i];
+         const col_left = col.left;
+         for (let j = 0; j < col.tiles.length; j++) {
+            const tile = col.tiles[j];
+            short_codes.push({
+               bounds: {
+                  left: col_left,
+                  right: col_left + set_level.tile_size,
+                  bottom: tile.bottom,
+                  top: tile.bottom + set_level.tile_size
+               },
+               short_code: tile.short_code
+            });
+         }
       }
+      // Use a more efficient sort if needed
       return short_codes.sort((a, b) => {
          return a.bounds.left === b.bounds.left ?
             (a.bounds.top > b.bounds.top ? -1 : 1) :
             (a.bounds.left > b.bounds.left ? 1 : -1)
-      })
+      });
    }
 
    static tiles_in_scope = (level, focal_point, scope, aspect_ratio = 1.0, set_name = TILE_SET_INDEXED) => {
@@ -136,81 +131,62 @@ export class FractoIndexedTiles {
          top: focal_point.y + height_by_two,
          right: focal_point.x + width_by_two,
          bottom: focal_point.y - height_by_two,
+      };
+      const set_level = FractoIndexedTiles.get_set_level(set_name, level);
+      if (!set_level || !set_level.columns.length) {
+         // console.log(`no bin/columns for level ${level} of set_name ${set_name}`)
+         return [];
       }
-      const set_level = FractoIndexedTiles.get_set_level(set_name, level)
-      if (!set_level) {
-         console.log(`no bin for level ${level} of set_name ${set_name}`)
-         return []
+      // Filter columns in a single pass
+      const columns = [];
+      for (let i = 0; i < set_level.columns.length; i++) {
+         const col = set_level.columns[i];
+         if (col.left > viewport.right) continue;
+         if (col.left + set_level.tile_size < viewport.left) continue;
+         columns.push(col);
       }
-      if (!set_level.columns.length) {
-         // console.log(`no columns for level ${level} of set_name ${set_name}`)
-         return []
-      }
-      const columns = set_level.columns
-         .filter(column => {
-            if (column.left > viewport.right) {
-               return false
-            }
-            if (column.left + set_level.tile_size < viewport.left) {
-               return false
-            }
-            return true;
-         })
-      let short_codes = []
+      const short_codes = [];
       const max_y = viewport.top > Math.abs(viewport.bottom)
-         ? viewport.top : Math.abs(viewport.bottom)
-      for (let column_index = 0; column_index < columns.length; column_index++) {
-         const tiles_in_column = columns[column_index].tiles
-         const column_left = columns[column_index].left
-         const column_tiles = tiles_in_column
-            .filter(tile => {
-                  if (tile.bottom > max_y) {
-                     return false
-                  }
-                  if (tile.bottom + set_level.tile_size < viewport.bottom) {
-                     return false
-                  }
-                  return true
-               })
-            .map(tile => {
-               return {
-                  bounds: {
-                     left: column_left,
-                     right: column_left + set_level.tile_size,
-                     bottom: tile.bottom,
-                     top: tile.bottom + set_level.tile_size
-                  },
-                  short_code: tile.short_code
-               }
-            })
-         if (column_tiles.length) {
-            column_tiles.forEach(tile=> short_codes.push(tile))
+         ? viewport.top : Math.abs(viewport.bottom);
+      for (let i = 0; i < columns.length; i++) {
+         const col = columns[i];
+         const col_left = col.left;
+         for (let j = 0; j < col.tiles.length; j++) {
+            const tile = col.tiles[j];
+            if (tile.bottom > max_y) continue;
+            if (tile.bottom + set_level.tile_size < viewport.bottom) continue;
+            short_codes.push({
+               bounds: {
+                  left: col_left,
+                  right: col_left + set_level.tile_size,
+                  bottom: tile.bottom,
+                  top: tile.bottom + set_level.tile_size
+               },
+               short_code: tile.short_code
+            });
          }
       }
       // console.log(`level ${level}, ${short_codes.length} short codes`)
-      return short_codes
+      return short_codes;
    }
 
    static get_tile_scopes = (set_name, focal_point, scope) => {
-      // console.log('get_tile_scopes = (set_name, focal_point, scope)', set_name, focal_point, scope)
-      const level_tiles_in_scope = []
-      // console.log('FractoIndexedTiles.tile_set[set_name]', set_name, FractoIndexedTiles.tile_set[set_name])
+      const level_tiles_in_scope = [];
       for (let level = 3; level < 35; level++) {
          const tiles_in_level = FractoIndexedTiles
             .tiles_in_scope(level, focal_point, scope, 1.0, set_name);
          if (!tiles_in_level.length) {
             continue;
          }
-         // console.log('tiles_in_level', level, tiles_in_level.length)
          if (tiles_in_level.length > 350) {
             continue;
          }
          level_tiles_in_scope.push({
             level: level,
             tiles: tiles_in_level
-         })
+         });
       }
-      return level_tiles_in_scope
+      return level_tiles_in_scope;
    }
 
 }
