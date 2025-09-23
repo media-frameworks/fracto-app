@@ -201,6 +201,7 @@ export const fill_canvas_buffer = async (
             continue;
          }
          if (update_callback) {
+            update_status[FILLING_CANVAS_BUFFER] = 0.0
             update_status[GET_TILES_FROM_CACHE] = (tile_index + 1) / (tile_count + 1)
             update_callback(update_status)
          }

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompImagesStyles {
-   static   ContentWrapper = styled(CoolStyles.Block)`
+   static ContentWrapper = styled(CoolStyles.Block)`
        //overflow-y: scroll;
        padding: 1rem 0.5rem 0;
        //background-color: lightseagreen;
@@ -32,6 +32,18 @@ export class CompImagesStyles {
    static StatusLine = styled(CoolStyles.Block)`
        ${CoolStyles.monospace}
        margin: 0.5rem 1rem;
+   `
+
+   static FocalPointLink = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.pointer}
+   `
+   static LinkSpan = styled.span`
+       ${CoolStyles.link}
+       font-size: 1.125rem;
+       opacity: 0.5;
+       &:hover {
+           opacity: 1.0;
+       }
    `
 }
 

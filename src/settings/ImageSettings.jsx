@@ -10,9 +10,8 @@ export const KEY_IMAGE_CAPTURE_DIMENSION_PX = 'image_capture_dimension_px'
 export const KEY_IMAGE_CAPTURE_ASPECT_RATIO = 'image_capture_aspect_ratio'
 
 // values for KEY_IMAGE_MODE
-export const IMAGE_MODE_EXTERIOR = 'image_mode_exterior'
-export const IMAGE_MODE_INTERIOR = 'image_mode_interior'
 export const IMAGE_MODE_CAPTURE_FIELD = 'image_mode_capture_field'
+export const IMAGE_MODE_STAGING = 'image_mode_staging'
 export const IMAGE_MODE_GALLERY = 'image_mode_gallery'
 
 // values for KEY_IMAGE_INTERIOR_HUE_MAPPING
@@ -30,7 +29,7 @@ export const IMAGE_EXTERIOR_MAPPING_CIRCULAR = 'exterior_mapping_circular'
 export const IMAGE_KEYED_SETTINGS = {
    [KEY_IMAGE_MODE]: {
       data_type: TYPE_STRING,
-      default_value: IMAGE_MODE_INTERIOR,
+      default_value: IMAGE_MODE_CAPTURE_FIELD,
       description: 'mode of rendering for images, interior or exterior',
       persist: true,
    },

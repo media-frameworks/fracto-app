@@ -4,21 +4,17 @@ import PropTypes from 'prop-types';
 import {CompImagesStyles as styles} from 'styles/CompImagesStyles'
 import {
    IMAGE_MODE_CAPTURE_FIELD,
-   IMAGE_MODE_EXTERIOR,
-   IMAGE_MODE_INTERIOR,
    IMAGE_MODE_GALLERY,
+   IMAGE_MODE_STAGING,
    KEY_IMAGE_MODE
 } from "settings/ImageSettings";
-import ImagesInteriorMode from "./images/ImagesInteriorMode";
-import ImagesExteriorMode from "./images/ImagesExteriorMode";
 import ImagesCaptureField from "./images/ImagesCaptureField";
-import ImagesGallery from "./images/ImagesGallery";
+import ImagesStaging from "./images/ImagesStaging";
 import {render_comp_modes} from "./CompUtils";
 
 const IMAGE_MODES = [
-   {key: IMAGE_MODE_INTERIOR, label: 'interior mode'},
-   {key: IMAGE_MODE_EXTERIOR, label: 'exterior mode'},
-   {key: IMAGE_MODE_CAPTURE_FIELD, label: 'capture field'},
+   {key: IMAGE_MODE_CAPTURE_FIELD, label: 'capture'},
+   {key: IMAGE_MODE_STAGING, label: 'staging'},
    {key: IMAGE_MODE_GALLERY, label: 'gallery'},
 ]
 
@@ -46,26 +42,14 @@ export class CompImages extends Component {
       const {page_settings, on_settings_changed} = this.props
       let content = []
       switch (page_settings[KEY_IMAGE_MODE]) {
-         case IMAGE_MODE_INTERIOR:
-            content = <ImagesInteriorMode
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-            break;
-         case IMAGE_MODE_EXTERIOR:
-            content = <ImagesExteriorMode
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-            break;
          case IMAGE_MODE_CAPTURE_FIELD:
             content = <ImagesCaptureField
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
             break;
-         case IMAGE_MODE_GALLERY:
-            content = <ImagesGallery
+         case IMAGE_MODE_STAGING:
+            content = <ImagesStaging
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
