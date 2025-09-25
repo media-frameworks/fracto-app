@@ -268,10 +268,14 @@ export const raster_fill = async (
                   }
                   let tile_data = null
                   try {
+                     const in_main_cardioid = FractoFastCalc.point_in_main_cardioid(x, y)
+                     const scalar = in_main_cardioid ? -1 : 1
                      tile_data = await FractoTileCache.get_tile(tile.short_code)
                      const tile_x = Math.floor((x - tile.bounds.left) / level_data_set.tile_increment)
                      const tile_y = Math.floor((tile.bounds.top - y) / level_data_set.tile_increment)
-                     canvas_buffer[canvas_x][canvas_y] = tile_data && tile_data[tile_x] ? tile_data[tile_x][tile_y] : [0, 4]
+                     canvas_buffer[canvas_x][canvas_y] = tile_data && tile_data[tile_x]
+                        ? [scalar * tile_data[tile_x][tile_y][0], scalar * tile_data[tile_x][tile_y][1]]
+                        : [0, 4]
                      found_point = true
                   } catch (e) {
                      if (!tile_data) {

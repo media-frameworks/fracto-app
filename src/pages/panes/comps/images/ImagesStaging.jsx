@@ -27,6 +27,7 @@ import {
    KEY_SCOPE
 } from "settings/AppSettings";
 import network from "common/config/network.json" with {type: "json"};
+import {render_image} from "./ImageUtils";
 
 const FRACTO_PREFIX = 'fracto'
 const LISTING_LENGTH = 10
@@ -130,6 +131,15 @@ const IMAGE_LIST_COLUMNS = [
       align: CELL_ALIGN_CENTER,
    },
 ]
+const THUMBNAIL_SIZE_PX = 250
+
+const AXIOS_HEADERS = {
+   'Content-Type': 'text/plain',
+   'Access-Control-Allow-Origin': '*',
+   'Access-Control-Allow-Headers': '*',
+   'Access-Control-Expose-Headers': 'Access-Control-*',
+   'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+}
 
 export class ImagesStaging extends Component {
    static propTypes = {
@@ -225,16 +235,15 @@ export class ImagesStaging extends Component {
       </styles.LinkSpan>
    }
 
-   publish_image = (exifData) => {
+   publish_image = async (exifData) => {
+      const {focal_point, scope} = exifData
+      const thumbnail_outcome = await render_image(
+         focal_point, scope, THUMBNAIL_SIZE_PX, 'thumbnails')
+      console.log('create_thumbnail thumbnail_outcome', thumbnail_outcome)
+      exifData.thumbnail_url = thumbnail_outcome.data.public_url
       const url = `${FRACTO_PROD}/assets/publish.php?asset_type=image&asset_id=${exifData.image_id}`
       axios.post(url, JSON.stringify(exifData), {
-         headers: {
-            'Content-Type': 'text/plain',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Expose-Headers': 'Access-Control-*',
-            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-         },
+         headers: AXIOS_HEADERS,
          mode: 'no-cors',
          crossdomain: true,
       })

@@ -1,20 +1,16 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import axios from "axios";
-import network from "common/config/network.json" with {type: 'json'}
 
 import CoolStyles from "common/ui/styles/CoolStyles";
 import {CoolSelect} from "common/ui/CoolImports";
 import {CompImagesStyles as styles} from 'styles/CompImagesStyles'
 import {
-   fill_canvas_buffer,
-   init_canvas_buffer,
    get_tiles,
    GET_TILES_FROM_CACHE,
    FILLING_CANVAS_BUFFER,
-   CALLBACK_BASIS
 } from "fracto/FractoTileData";
 import {KEY_FOCAL_POINT, KEY_SCOPE} from "settings/AppSettings";
+import {render_image} from "./ImageUtils";
 
 const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},
@@ -25,17 +21,6 @@ const RESOLUTIONS = [
    {label: '2400', value: 2400, help: 'super',},
    {label: '3200', value: 3200, help: 'biggest',},
 ]
-
-const AXIOS_CONFIG = {
-   headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Expose-Headers': 'Access-Control-*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-   },
-   mode: 'no-cors',
-   crossdomain: true,
-}
 
 export class ImagesCaptureField extends Component {
    static propTypes = {
@@ -114,33 +99,11 @@ export class ImagesCaptureField extends Component {
       const {current_focal_point, current_scope, current_size} = this.state
       this.setState({image_outcome: {}})
       setTimeout(async () => {
-         const update_status = CALLBACK_BASIS
-         const canvas_buffer = init_canvas_buffer(current_size, 1.0);
-         await fill_canvas_buffer(
-            canvas_buffer,
-            current_size,
-            current_focal_point,
-            current_scope, 1.0,
-            this.update_callback,
-            update_status
-         )
-         const params = [
-            {key: 're', value: current_focal_point.x},
-            {key: 'im', value: current_focal_point.y},
-            {key: 'scope', value: current_scope},
-            {key: 'width_px', value: current_size},
-            {key: 'aspect_ratio', value: 1.0},
-         ].map(item => {
-            return `${item.key}=${item.value}`
-         }).join('&')
-         const url = `${network.image_server_url}/render_image?${params}`
-         const response = await axios.post(
-            url,
-            JSON.stringify(canvas_buffer),
-            AXIOS_CONFIG
-         )
          // console.log('render_now response', response.data)
-         this.setState({image_outcome: response.data})
+         const image_outcome = await render_image(
+            current_focal_point, current_scope, current_size, 'images', this.update_callback)
+         console.log('image_outcome', image_outcome)
+         this.setState({image_outcome: image_outcome.data})
       }, 500)
    }
 

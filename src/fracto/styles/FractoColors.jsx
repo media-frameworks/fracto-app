@@ -80,29 +80,47 @@ export class FractoColors {
 
    static buffer_to_canvas = (canvas_buffer, ctx, scale_factor = 1) => {
       const all_not_pattern_pixels = [];
-      const all_pattern_pixels = [];
+      const all_inner_pattern_pixels = [];
+      const all_outer_pattern_pixels = [];
       const all_not_pattern_sets = {};
-      const all_pattern_sets = {};
+      const all_inner_pattern_sets = {};
+      const all_outer_pattern_sets = {};
       // Use for loops for better performance
       for (let canvas_x = 0; canvas_x < canvas_buffer.length; canvas_x++) {
          const col = canvas_buffer[canvas_x];
          for (let canvas_y = 0; canvas_y < col.length; canvas_y++) {
             const point_data = col[canvas_y];
-            const key = `_${point_data[1]}`;
+            if (!point_data) {
+               continue;
+            }
+            const key = `_${Math.abs(point_data[1])}`;
             if (point_data[0] === 0) {
                all_not_pattern_sets[key] = (all_not_pattern_sets[key] || 0) + 1;
                all_not_pattern_pixels.push({iteration: point_data[1], canvas_x, canvas_y});
             } else {
-               all_pattern_sets[key] = (all_pattern_sets[key] || 0) + 1;
-               all_pattern_pixels.push({pattern: point_data[0], iteration: point_data[1], canvas_x, canvas_y});
+               if (point_data[0] < 0) {
+                  all_inner_pattern_sets[key] = (all_inner_pattern_sets[key] || 0) + 1;
+                  all_inner_pattern_pixels.push({
+                     pattern: Math.abs(point_data[0]),
+                     iteration: Math.abs(point_data[1]),
+                     canvas_x, canvas_y});
+               } else {
+                  all_outer_pattern_sets[key] = (all_outer_pattern_sets[key] || 0) + 1;
+                  all_outer_pattern_pixels.push({
+                     pattern: Math.abs(point_data[0]),
+                     iteration: Math.abs(point_data[1]),
+                     canvas_x, canvas_y});
+               }
             }
          }
       }
 
       const not_pattern_greys_map = FractoColors.get_greys_map(
          all_not_pattern_pixels, all_not_pattern_sets, GREY_BASE, GREY_RANGE);
-      const pattern_greys_map = FractoColors.get_greys_map(
-         all_pattern_pixels, all_pattern_sets, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
+      const inner_pattern_greys_map = FractoColors.get_greys_map(
+         all_inner_pattern_pixels, all_inner_pattern_sets, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
+      const outer_pattern_greys_map = FractoColors.get_greys_map(
+         all_outer_pattern_pixels, all_outer_pattern_sets, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
 
       const pixel_size = 1.5 * scale_factor;
       // Use for loop for better performance
@@ -113,10 +131,18 @@ export class FractoColors {
          ctx.fillStyle = `rgb(${grey_value},${grey_value},${grey_value})`;
          ctx.fillRect(scale_factor * pixel.canvas_x, scale_factor * pixel.canvas_y, pixel_size, pixel_size);
       }
-      for (let i = 0; i < all_pattern_pixels.length; i++) {
-         const pixel = all_pattern_pixels[i];
-         const key = `_${pixel.iteration}`;
-         const lum_factor = pattern_greys_map[key];
+      for (let i = 0; i < all_inner_pattern_pixels.length; i++) {
+         const pixel = all_inner_pattern_pixels[i];
+         const key = `_${Math.abs(pixel.iteration)}`;
+         const lum_factor = inner_pattern_greys_map[key];
+         const hue = FractoColors.pattern_hue(pixel.pattern);
+         ctx.fillStyle = `hsl(${hue}, 80%, ${100 - lum_factor}%)`;
+         ctx.fillRect(scale_factor * pixel.canvas_x, scale_factor * pixel.canvas_y, pixel_size, pixel_size);
+      }
+      for (let i = 0; i < all_outer_pattern_pixels.length; i++) {
+         const pixel = all_outer_pattern_pixels[i];
+         const key = `_${Math.abs(pixel.iteration)}`;
+         const lum_factor = outer_pattern_greys_map[key];
          const hue = FractoColors.pattern_hue(pixel.pattern);
          ctx.fillStyle = `hsl(${hue}, 80%, ${100 - lum_factor}%)`;
          ctx.fillRect(scale_factor * pixel.canvas_x, scale_factor * pixel.canvas_y, pixel_size, pixel_size);
