@@ -124,6 +124,13 @@ const IMAGE_LIST_COLUMNS = [
       align: CELL_ALIGN_CENTER,
    },
    {
+      id: "artist",
+      label: "artist",
+      type: CELL_TYPE_TEXT,
+      width_px: 80,
+      align: CELL_ALIGN_CENTER,
+   },
+   {
       id: "archive",
       label: "archive",
       type: CELL_TYPE_CALLBACK,
@@ -150,10 +157,21 @@ export class ImagesStaging extends Component {
    state = {
       all_files: [],
       selected_row: 0,
+      visitor_email: 'unknown',
+      visitor_name: 'unknown',
    }
 
    componentDidMount() {
       this.refresh_file_list()
+      let visitor_email = 'unknown'
+      let visitor_name = 'unknown'
+      const visitor_str = localStorage.getItem('visitor')
+      if (visitor_str) {
+         const visitor = JSON.parse(visitor_str)
+         visitor_email = visitor.email
+         visitor_name = visitor.name
+      }
+      this.setState({visitor_name, visitor_email})
    }
 
    refresh_file_list = async () => {
@@ -236,11 +254,14 @@ export class ImagesStaging extends Component {
    }
 
    publish_image = async (exifData) => {
+      const {visitor_name, visitor_email} = this.state
       const {focal_point, scope} = exifData
       const thumbnail_outcome = await render_image(
          focal_point, scope, THUMBNAIL_SIZE_PX, 'thumbnails')
       console.log('create_thumbnail thumbnail_outcome', thumbnail_outcome)
       exifData.thumbnail_url = thumbnail_outcome.data.public_url
+      exifData.publisher_name = visitor_name
+      exifData.publisher_email = visitor_email
       const url = `${FRACTO_PROD}/assets/publish.php?asset_type=image&asset_id=${exifData.image_id}`
       axios.post(url, JSON.stringify(exifData), {
          headers: AXIOS_HEADERS,
@@ -270,24 +291,26 @@ export class ImagesStaging extends Component {
    }
 
    render_image_list = (all_files) => {
+      const {visitor_name} = this.state
       const table_data = all_files.map((file, i) => {
          const name = file.Key
             .replace('fracto/images/', '')
             .replace('.jpg', '')
-         const image_id = name.replace('img_', '')
+         const asset_id = name.replace('img_', '')
          const last_modified = <ReactTimeAgo date={Date.parse(file.LastModified.toString())}/>;
          const exifData = JSON.parse(JSON.stringify(file.exifData || {}))
-         exifData.image_id = image_id
+         exifData.asset_id = asset_id
          return {
             name, last_modified,
             size: file.Size,
             dimension: `${exifData.width_px || '-'}x${exifData.height_px || '-'}`,
             scope: [this.render_scope, exifData.scope],
             focal_point: [this.render_focal_point, exifData.focal_point],
+            artist: <styles.ArtistName>{exifData.artist_name}</styles.ArtistName>,
             go: [this.render_go_to_there, {scope: exifData.scope, focal_point: exifData.focal_point}],
             url: [this.render_view, exifData.public_url],
             publish: [this.render_publish, exifData],
-            archive: [this.render_archive, image_id]
+            archive: [this.render_archive, asset_id]
          }
       })
       return <CoolTable

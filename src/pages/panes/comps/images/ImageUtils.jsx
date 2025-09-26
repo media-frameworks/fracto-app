@@ -29,6 +29,15 @@ export const render_image = async (
       update_callback,
       update_status
    )
+   let visitor_email = 'unknown'
+   let visitor_name = 'unknown'
+   const visitor_str = localStorage.getItem('visitor')
+   if (visitor_str) {
+      const visitor = JSON.parse(visitor_str)
+      visitor_email = visitor.email
+      visitor_name = visitor.name
+   }
+   const created = Date.now()
    const params = [
       {key: 'collection', value: collection},
       {key: 're', value: focal_point.x},
@@ -36,6 +45,9 @@ export const render_image = async (
       {key: 'scope', value: scope},
       {key: 'width_px', value: size},
       {key: 'aspect_ratio', value: 1.0},
+      {key: 'artist_email', value: visitor_email },
+      {key: 'artist_name', value: visitor_name },
+      {key: 'created', value: created },
    ].map(item => {
       return `${item.key}=${item.value}`
    }).join('&')

@@ -45,6 +45,11 @@ export class CompImagesStyles {
            opacity: 1.0;
        }
    `
+   static ArtistName = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.italic}
+       font-size: 0.95rem;
+       color: #888888;
+   `
 }
 
 export default CompImagesStyles
