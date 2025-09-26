@@ -131,7 +131,7 @@ const IMAGE_LIST_COLUMNS = [
       align: CELL_ALIGN_CENTER,
    },
 ]
-const THUMBNAIL_SIZE_PX = 250
+const THUMBNAIL_SIZE_PX = 350
 
 const AXIOS_HEADERS = {
    'Content-Type': 'text/plain',

@@ -61,6 +61,9 @@ export class PageMain extends Component {
    };
 
    componentDidMount() {
+      const {one_tap_data} = this.props
+      localStorage.setItem('visitor', JSON.stringify(one_tap_data))
+
       const page_settings = PageSettings.initialize()
       this.setState({page_settings})
       setTimeout(() => {
@@ -72,6 +75,10 @@ export class PageMain extends Component {
             this.setState({height_px})
          }
       }, 100)
+   }
+
+   componentWillUnmount() {
+      localStorage.removeItem('visitor');
    }
 
    on_resize = (new_left_width_px, new_right_width_px, new_height_px) => {

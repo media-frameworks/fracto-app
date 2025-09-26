@@ -96,17 +96,17 @@ export class PageAppStyles {
    `
 
    static Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: #f8f8f8;
-`;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+       height: 100vh;
+       background: #f8f8f8;
+   `;
 
    static Title = styled.h1`
-    margin-bottom: 1rem;
-`;
+       margin-bottom: 1rem;
+   `;
 
    static Button = styled.button`
        padding: 0.75rem 2rem;
@@ -122,6 +122,19 @@ export class PageAppStyles {
            background: #125ea2;
        }
    `;
+   static Salutation = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.italic}
+       position: fixed;
+       top: 2px;
+       left: 0;
+       color: #333333;
+       font-size: 0.85rem;
+       margin-left: 0.5rem;
+   `
+   static NameSpan = styled.span`
+       ${CoolStyles.bold}
+       ${CoolStyles.uppercase}
+   `
 }
 
 export default PageAppStyles

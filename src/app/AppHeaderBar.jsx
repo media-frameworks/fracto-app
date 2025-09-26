@@ -16,9 +16,11 @@ export class AppHeaderBar extends Component {
    state = {
       tile_loader_pct: 100,
       tile_loader_level: 0,
+      visitor: null
    }
 
    componentDidMount() {
+      this.get_visitor_info()
       const interval = setInterval(() => {
          const tile_loader_pct_str = localStorage.getItem(LS_TILE_LOADER_PROGRESS_PCT);
          if (!tile_loader_pct_str) {
@@ -37,6 +39,34 @@ export class AppHeaderBar extends Component {
       }, 1000)
    }
 
+   componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
+      this.get_visitor_info()
+   }
+
+   get_visitor_info = () => {
+      const {visitor} = this.state
+      if (visitor) {
+         return;
+      }
+      const visitor_str = localStorage.getItem('visitor')
+      if (visitor_str) {
+         this.setState({visitor: JSON.parse(visitor_str)})
+      }
+   }
+
+   get_salutation = () => {
+      const {visitor} = this.state
+      const message = [
+         `visitor `,
+         <styles.NameSpan>
+            {visitor ? visitor.name : 'visitor'}
+         </styles.NameSpan>,
+      ]
+      return <styles.Salutation>
+         {message}
+      </styles.Salutation>
+   }
+
    render() {
       const {tile_loader_pct, tile_loader_level} = this.state
       const {app_name} = this.props;
@@ -46,7 +76,9 @@ export class AppHeaderBar extends Component {
          </styles.HeaderProgressWrapper> : '';
       const loader_level = tile_loader_pct !== 100 ?
          <styles.TileLoaderLevel>{tile_loader_level}</styles.TileLoaderLevel> : ''
+      const salutation = this.get_salutation();
       return <styles.HeaderWrapper>
+         {salutation}
          <styles.AppTitle>{app_name}</styles.AppTitle>
          {loader}
          {loader_level}
