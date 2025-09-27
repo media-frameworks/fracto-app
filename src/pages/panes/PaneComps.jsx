@@ -40,7 +40,6 @@ const ACTIVE_COMPS = [
    COMP_KEY_BAILIWICKS,
    COMP_KEY_NURSERY,
    COMP_KEY_ADMIN,
-   COMP_KEY_LORE,
 ]
 
 export class PaneComps extends Component {

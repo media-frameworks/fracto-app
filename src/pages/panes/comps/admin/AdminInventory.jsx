@@ -11,7 +11,6 @@ import CoolTable from "common/ui/CoolTable";
 import FractoIndexedTiles, {TILE_SET_INDEXED} from "fracto/FractoIndexedTiles";
 
 const FRACTO_PROD = network["fracto-prod"];
-const FRACTO_DB_URL = network.db_server_url;
 const AXIOS_CONFIG = {
    headers: {
       'Access-Control-Allow-Origin': '*',
@@ -67,7 +66,7 @@ export class AdminInventory extends Component {
       this.get_db_totals(db_totals => {
          this.get_needs_update(totals => {
             console.log('totals', totals)
-            for (let level = 3; level <= 20; level++) {
+            for (let level = 3; level <= 30; level++) {
                const level_data = FractoIndexedTiles.get_set_level(TILE_SET_INDEXED, level)
                // console.log('level_data', level, level_data)
                let tile_count = 0
@@ -78,12 +77,10 @@ export class AdminInventory extends Component {
                if (!needs_update) {
                   needs_update = totals.find(row => -1 !== row.indexOf(`L0${level}`))
                }
-               const db_total = db_totals.find(row => row.level === level)
                table_data.push({
                   level: level,
                   indexed: tile_count,
-                  needs_update: parseInt(needs_update.slice(0, 9), 10),
-                  in_db: db_total?.total || 0
+                  needs_update: needs_update ? parseInt(needs_update.slice(0, 9), 10) : '-',
                })
             }
             this.setState({table_data})
@@ -98,7 +95,8 @@ export class AdminInventory extends Component {
    }
 
    get_db_totals = async (cb) => {
-      const url = `${FRACTO_DB_URL}/tile_counts`
+      // const url = `${FRACTO_DB_URL}/tile_counts`
+      cb(true);
       // fetch(url)
       //    .then(response => response.text())
       //    .then((str) => {
