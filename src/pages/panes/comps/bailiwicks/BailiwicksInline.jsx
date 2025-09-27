@@ -1,66 +1,35 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faShoePrints} from "@fortawesome/free-solid-svg-icons";
+
 import {CompBailiwickStyles as styles} from 'styles/CompBailiwickStyles';
-import {
-   CELL_ALIGN_CENTER,
-   CELL_ALIGN_LEFT, CELL_TYPE_CALLBACK,
-   CELL_TYPE_TEXT,
-   CoolTable, TABLE_CAN_SELECT
-} from "common/ui/CoolTable";
+import CoolTable, {TABLE_CAN_SELECT} from "common/ui/CoolTable";
 import {
    fetch_bailiwicks,
    render_pattern,
    render_size,
-   render_time_ago
+   render_time_ago,
+   compare_bailiwicks,
 } from "./BailiwickUtils";
-import {BAILIWICK_MODE_INLINE} from "settings/BailiwickSettings";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faShoePrints} from "@fortawesome/free-solid-svg-icons";
-import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_SCOPE} from "../../../../settings/AppSettings";
-
-const COLUMN_ID_PATTERN = "pattern";
-const COLUMN_ID_NAME = "name";
-const COLUMN_ID_SIZE = "size";
-const COLUMN_ID_MODIFIED = "modified";
-
-const TABLE_COLUMNS = [
-   {
-      id: COLUMN_ID_PATTERN,
-      label: "#",
-      type: CELL_TYPE_CALLBACK,
-      width_px: 35,
-      align: CELL_ALIGN_CENTER,
-   },
-   {
-      id: COLUMN_ID_NAME,
-      label: "name",
-      type: CELL_TYPE_TEXT,
-      width_px: 200,
-      align: CELL_ALIGN_LEFT,
-   },
-   {
-      id: COLUMN_ID_SIZE,
-      label: "size",
-      type: CELL_TYPE_CALLBACK,
-      width_px: 80,
-      align: CELL_ALIGN_CENTER,
-   },
-   {
-      id: COLUMN_ID_MODIFIED,
-      label: "modified",
-      type: CELL_TYPE_CALLBACK,
-      width_px: 100,
-      align: CELL_ALIGN_CENTER,
-   },
-   {
-      id: "go",
-      label: "go",
-      type: CELL_TYPE_CALLBACK,
-      width_px: 35,
-      align: CELL_ALIGN_CENTER,
-   },
-]
+import {
+   BAILIWICK_MODE_INLINE,
+   BAILIWICK_ORDERING_ASCENDING,
+   BAILIWICK_ORDERING_DESCENDING,
+   BAILIWICK_TABLE_COLUMNS,
+   COLUMN_ID_MODIFIED,
+   COLUMN_ID_NAME,
+   COLUMN_ID_PATTERN,
+   COLUMN_ID_SIZE,
+   KEY_BAILIWICK_INLINE_ORDERING,
+   KEY_BAILIWICK_INLINE_ORDERING_DIRECTION,
+} from "settings/BailiwickSettings";
+import {
+   KEY_DISABLED,
+   KEY_FOCAL_POINT,
+   KEY_SCOPE,
+} from "settings/AppSettings";
 
 export class BailiwicksInline extends Component {
    static propTypes = {
@@ -71,8 +40,6 @@ export class BailiwicksInline extends Component {
    state = {
       inline_bailiwicks: [],
       bailiwick_index: 0,
-      sort_column_id: COLUMN_ID_PATTERN,
-      sort_ascending: true,
    }
 
    componentDidMount() {
@@ -82,7 +49,7 @@ export class BailiwicksInline extends Component {
    fetch_bailiwicks = async () => {
       const inline_bailiwicks = await fetch_bailiwicks(BAILIWICK_MODE_INLINE)
       this.setState({inline_bailiwicks})
-      console.log('inline_bailiwicks', inline_bailiwicks)
+      // console.log('inline_bailiwicks', inline_bailiwicks)
    }
 
    go_to_there = (fracto_values) => {
@@ -107,50 +74,40 @@ export class BailiwicksInline extends Component {
    }
 
    on_click_column = (column_id) => {
-      const {sort_column_id, sort_ascending} = this.state
-      console.log('column_id', column_id)
-      this.setState({
-         sort_column_id: column_id,
-         sort_ascending: sort_column_id === column_id ? !sort_ascending : true,
+      const {page_settings, on_settings_changed} = this.props
+      const sort_column_id = page_settings[KEY_BAILIWICK_INLINE_ORDERING]
+      let sort_orderong_direction = page_settings[KEY_BAILIWICK_INLINE_ORDERING_DIRECTION]
+      if (column_id === sort_column_id) {
+         sort_orderong_direction =
+            sort_orderong_direction === BAILIWICK_ORDERING_ASCENDING
+               ? BAILIWICK_ORDERING_DESCENDING
+               : BAILIWICK_ORDERING_ASCENDING
+      }
+      on_settings_changed({
+         [KEY_BAILIWICK_INLINE_ORDERING]: column_id,
+         [KEY_BAILIWICK_INLINE_ORDERING_DIRECTION]:sort_orderong_direction
       })
    }
 
    compare_bailiwicks = (a, b) => {
-      const {sort_column_id, sort_ascending} = this.state
-      switch (sort_column_id) {
-         case COLUMN_ID_SIZE:
-            return sort_ascending
-               ? a.magnitude - b.magnitude
-               : b.magnitude - a.magnitude
-         case COLUMN_ID_PATTERN:
-            return sort_ascending
-               ? a.pattern - b.pattern
-               : b.pattern - a.pattern
-         case COLUMN_ID_NAME:
-            return sort_ascending
-               ? a.name > b.name ? -1 : 1
-               : a.name > b.name ? 1 : -1
-         case COLUMN_ID_MODIFIED:
-            return sort_ascending
-               ? a.updated_at > b.updated_at ? -1 : 1
-               : a.updated_at > b.updated_at ? 1 : -1
-         default:
-            console.log('compare_bailiwicks sort_column_id', sort_column_id)
-            return 0;
-      }
+      const {page_settings} = this.props
+      const sort_column_id = page_settings[KEY_BAILIWICK_INLINE_ORDERING]
+      const sort_orderong_direction = page_settings[KEY_BAILIWICK_INLINE_ORDERING_DIRECTION]
+      return compare_bailiwicks(
+         a, b, sort_column_id, sort_orderong_direction === BAILIWICK_ORDERING_ASCENDING)
    }
 
    render() {
-      const {inline_bailiwicks, bailiwick_index, sort_column_id, sort_ascending} = this.state
+      const {inline_bailiwicks, bailiwick_index} = this.state
       const table_data = inline_bailiwicks
          .sort(this.compare_bailiwicks)
          .map((bailiwick) => {
             const display_settings = JSON.parse(bailiwick.display_settings)
             return {
-               pattern: [render_pattern, bailiwick.pattern],
-               name: <styles.NameSpan>{bailiwick.name}</styles.NameSpan>,
-               size: [render_size, bailiwick.magnitude],
-               modified: [render_time_ago, bailiwick.updated_at],
+               [COLUMN_ID_PATTERN]: [render_pattern, bailiwick.pattern],
+               [COLUMN_ID_NAME]: <styles.NameSpan>{bailiwick.name}</styles.NameSpan>,
+               [COLUMN_ID_SIZE]: [render_size, bailiwick.magnitude],
+               [COLUMN_ID_MODIFIED]: [render_time_ago, bailiwick.updated_at],
                go: [
                   this.render_go_to_there,
                   {scope: display_settings.scope, focal_point: display_settings.focal_point}
@@ -159,14 +116,13 @@ export class BailiwicksInline extends Component {
          })
       const bailiwick_table = <CoolTable
          data={table_data}
-         columns={TABLE_COLUMNS}
+         columns={BAILIWICK_TABLE_COLUMNS}
          options={[TABLE_CAN_SELECT]}
          selected_row={bailiwick_index}
          on_select_row={this.select_bailiwick}
          on_click_column={this.on_click_column}
       />
       return [
-         `ordered by ${sort_column_id} ${sort_ascending ? 'ascending' : 'descending'}`,
          bailiwick_table
       ]
    }
