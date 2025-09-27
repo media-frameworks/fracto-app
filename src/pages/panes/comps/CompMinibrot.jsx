@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import network from "common/config/network.json";
+import network from "common/config/network.json" with {type: "json"}
 
 import {
    KEY_MINIBROT_SORT_TYPE,
@@ -17,7 +17,7 @@ import {
    KEY_SCOPE,
 } from 'settings/AppSettings'
 import BailiwickList from "fracto/bailiwick/BailiwickList";
-import {CompMinibrotStyles as styles} from 'styles/CompMinibrotStyles';
+import {CompBailiwickStyles as styles} from 'styles/CompBailiwickStyles';
 import {render_big_pattern_block} from "fracto/styles/FractoStyles";
 
 const AXIOS_CONFIG = {

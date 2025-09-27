@@ -21,7 +21,7 @@ export class CompLoreStyles {
        ${CoolStyles.bold}
        ${CoolStyles.uppercase}
        ${CoolStyles.deep_blue_text}
-       font-size: 1rem;
+       font-size: 14px;
        margin-left: 0.25rem;
        margin-bottom: 0.25rem;
    `

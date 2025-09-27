@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import {CoolStyles} from '../common/ui/CoolImports'
 
-export class CompMinibrotStyles {
+export class CompBailiwickStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
        overflow-x: hidden;
    `
    static CenteredBlock = styled(CoolStyles.Block)`
        ${CoolStyles.align_left}
+       padding: 0.25rem;
        margin: 0.5rem 0 1rem;
-       border-bottom: 0.1rem solid #aaaaaa;
    `
    static Spacer = styled(CoolStyles.InlineBlock)`
        margin-left: 1rem;
@@ -35,4 +35,4 @@ export class CompMinibrotStyles {
    `
 }
 
-export default CompMinibrotStyles
+export default CompBailiwickStyles

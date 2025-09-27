@@ -39,7 +39,7 @@ export const KEY_SCRIPT_SELECTED_KEYS = 'script_selected_sets'
 export const KEY_SCRIPT_SELECTED_DATA = 'script_selected_data'
 
 export const COMPONENT_CAPTURE = 'component_capture'
-export const COMPONENT_MINIBROT = 'component_minibrot'
+export const COMPONENT_BAILIWICKS = 'component_bailiwicks'
 export const COMPONENT_COLORS = 'component_colors'
 export const COMPONENT_SCRIPT = 'component_script'
 export const COMPONENT_PATTERNS = 'component_patterns'
@@ -57,14 +57,14 @@ export const COMP_KEYED_SETTINGS = {
       default_value: SORT_TYPE_BY_SIZE,
       range: [SORT_TYPE_BY_SIZE, SORT_TYPE_BY_ORBITAL],
       description: 'preferred sorting of minibrots in the UI',
-      component: COMPONENT_MINIBROT,
+      component: COMPONENT_BAILIWICKS,
       persist: true,
    },
    [KEY_BAILIWICK_ID]: {
       data_type: TYPE_NUMBER,
       default_value: -1,
       description: 'identifier of the currently selected bailiwick',
-      component: COMPONENT_MINIBROT,
+      component: COMPONENT_BAILIWICKS,
       persist: false,
    },
    [KEY_COLORATION_TYPE]: {

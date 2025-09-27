@@ -17,7 +17,7 @@ import {
    KEY_SCOPE,
 } from 'settings/AppSettings'
 import BailiwickList from "fracto/bailiwick/BailiwickList";
-import {CompMinibrotStyles as styles} from 'styles/CompMinibrotStyles';
+import {CompBailiwickStyles as styles} from 'styles/CompBailiwickStyles';
 import {render_big_pattern_block} from "fracto/styles/FractoStyles";
 
 const AXIOS_CONFIG = {

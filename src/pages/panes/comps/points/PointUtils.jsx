@@ -294,8 +294,8 @@ export const discover_cardinality = (p, q) => {
          return {best_cardinality: 0, best_magnitude: 1000}
       }
    }
-   console.log('discover_cardinality best_magnitude, best_cardinality',
-      best_magnitude, best_cardinality)
+   // console.log('discover_cardinality best_magnitude, best_cardinality',
+   //    best_magnitude, best_cardinality)
    return {best_cardinality, best_magnitude}
 }
 

@@ -68,7 +68,7 @@ export class BailiwickList extends Component {
             const selected = selected_id === item.id
             const row_style = !selected ? {} : {
                border: `0.1rem solid ${CoolColors.deep_blue}`,
-               borderRadius: `0.25rem`,
+               borderRadius: `0.125rem`,
                backgroundColor: "#cccccc",
                color: "white",
                cursor: in_wait ? "wait" : "default",

@@ -17,6 +17,7 @@ import CompLore from "./comps/CompLore";
 import CompPoints from "./comps/CompPoints";
 import CompImages from "./comps/CompImages";
 import CompMinibrot from "./comps/CompMinibrot";
+import CompBailiwicks from "./comps/CompBailiwicks";
 
 export const TAB_HEIGHT_PX = 20
 
@@ -25,6 +26,7 @@ const COMP_KEY_IMAGE = 'comp_key_image'
 const COMP_KEY_PATTERNS = 'comp_key_patterns'
 const COMP_KEY_ORBITALS = 'comp_key_orbitals'
 const COMP_KEY_MINIBROT = 'comp_key_minibrot'
+const COMP_KEY_BAILIWICKS = 'comp_key_bailiwicks'
 const COMP_KEY_NURSERY = 'comp_key_nursery'
 const COMP_KEY_ADMIN = 'comp_key_admin'
 const COMP_KEY_LORE = 'comp_key_lore'
@@ -35,6 +37,7 @@ const ACTIVE_COMPS = [
    COMP_KEY_ORBITALS,
    COMP_KEY_PATTERNS,
    COMP_KEY_MINIBROT,
+   COMP_KEY_BAILIWICKS,
    COMP_KEY_NURSERY,
    COMP_KEY_ADMIN,
    COMP_KEY_LORE,
@@ -93,6 +96,11 @@ export class PaneComps extends Component {
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
+         case COMP_KEY_BAILIWICKS:
+            return <CompBailiwicks
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
          case COMP_KEY_ADMIN:
             return <CompAdmin
                page_settings={page_settings}
@@ -115,6 +123,8 @@ export class PaneComps extends Component {
             return 'orbitals'
          case COMP_KEY_MINIBROT:
             return 'minibrot'
+         case COMP_KEY_BAILIWICKS:
+            return 'bailiwicks'
          case COMP_KEY_NURSERY:
             return 'farm'
          case COMP_KEY_ADMIN:
@@ -134,8 +144,7 @@ export class PaneComps extends Component {
          height: `${TAB_HEIGHT_PX}px`,
       }
       const labelStyle = {
-         fontSize: `${tabs_width / 75}px`,
-         padding: `${TAB_HEIGHT_PX / 5}px ${tabs_width / 60}px`,
+         padding: `4px 12px`,
       }
       const all_labels = ACTIVE_COMPS.map(key => {
          return <CoolStyles.InlineBlock style={labelStyle}>
