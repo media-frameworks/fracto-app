@@ -18,11 +18,15 @@ export class CompAdminStyles {
        margin-bottom: 0.75rem;
    `
    static PreambleWrapper = styled(CoolStyles.Block)`
-       ${CoolStyles.align_left};
+       ${CoolStyles.align_center};
+       ${CoolStyles.uppercase}
+       ${CoolStyles.bold}
        ${CoolStyles.italic}
-       color: #aaaaaa;
-       font-size: 1.25rem;
-       margin-left: 0.5rem;
+       ${CoolStyles.underline}
+       color: #888888;
+       font-size: 1rem;
+       letter-spacing: 1px;
+       margin: 0.5rem;
    `
    static SubPreambleWrapper = styled(CoolStyles.Block)`
        ${CoolStyles.bold}

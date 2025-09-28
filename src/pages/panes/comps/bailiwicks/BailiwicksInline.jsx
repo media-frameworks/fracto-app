@@ -21,7 +21,7 @@ import {
    COLUMN_ID_MODIFIED,
    COLUMN_ID_NAME,
    COLUMN_ID_PATTERN,
-   COLUMN_ID_SIZE,
+   COLUMN_ID_SIZE, KEY_BAILIWICK_DETAIL_DATA,
    KEY_BAILIWICK_INLINE_ORDERING,
    KEY_BAILIWICK_INLINE_ORDERING_DIRECTION,
 } from "settings/BailiwickSettings";
@@ -30,6 +30,7 @@ import {
    KEY_FOCAL_POINT,
    KEY_SCOPE,
 } from "settings/AppSettings";
+import BailiwicksDetail from "./BailiwicksDetail";
 
 export class BailiwicksInline extends Component {
    static propTypes = {
@@ -43,13 +44,19 @@ export class BailiwicksInline extends Component {
    }
 
    componentDidMount() {
+      const {on_settings_changed} = this.props
       this.fetch_bailiwicks();
+      on_settings_changed({[KEY_BAILIWICK_DETAIL_DATA]: null})
    }
 
    fetch_bailiwicks = async () => {
+      const {on_settings_changed} = this.props;
       const inline_bailiwicks = await fetch_bailiwicks(BAILIWICK_MODE_INLINE)
       const sorted = inline_bailiwicks.sort(this.compare_bailiwicks)
       this.setState({inline_bailiwicks: sorted})
+      on_settings_changed({
+         [KEY_BAILIWICK_DETAIL_DATA]: sorted.at(0)
+      })
    }
 
    go_to_there = (fracto_values) => {
@@ -70,7 +77,12 @@ export class BailiwicksInline extends Component {
    }
 
    select_bailiwick = (bailiwick_index) => {
+      const {inline_bailiwicks} = this.state
+      const {on_settings_changed} = this.props
       this.setState({bailiwick_index})
+      on_settings_changed({
+         [KEY_BAILIWICK_DETAIL_DATA]: inline_bailiwicks.at(bailiwick_index)
+      })
    }
 
    on_click_column = (column_id) => {
@@ -99,6 +111,7 @@ export class BailiwicksInline extends Component {
 
    render() {
       const {inline_bailiwicks, bailiwick_index} = this.state
+      const {page_settings, on_settings_changed} = this.props
       const table_data = inline_bailiwicks
          .map((bailiwick) => {
             const display_settings = JSON.parse(bailiwick.display_settings)
@@ -111,16 +124,24 @@ export class BailiwicksInline extends Component {
                go: [this.render_go_to_there, {scope, focal_point}],
             }
          })
-      const bailiwick_table = <CoolTable
-         data={table_data}
-         columns={BAILIWICK_TABLE_COLUMNS}
-         options={[TABLE_CAN_SELECT]}
-         selected_row={bailiwick_index}
-         on_select_row={this.select_bailiwick}
-         on_click_column={this.on_click_column}
-      />
+      const bailiwick_table = <styles.BailiwicksSection>
+         <CoolTable
+            data={table_data}
+            columns={BAILIWICK_TABLE_COLUMNS}
+            options={[TABLE_CAN_SELECT]}
+            selected_row={bailiwick_index}
+            on_select_row={this.select_bailiwick}
+            on_click_column={this.on_click_column}
+         />
+      </styles.BailiwicksSection>
+      const bailiwicks_detail = page_settings[KEY_BAILIWICK_DETAIL_DATA]
+         ? <BailiwicksDetail
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}
+         />
+         : ''
       return [
-         bailiwick_table
+         bailiwick_table, bailiwicks_detail
       ]
    }
 }

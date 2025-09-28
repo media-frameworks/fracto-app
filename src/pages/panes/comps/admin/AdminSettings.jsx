@@ -21,7 +21,8 @@ const SETTINGS_COLUMNS = [
       id: "value",
       label: "value",
       type: CELL_TYPE_OBJECT,
-      align: CELL_ALIGN_LEFT
+      align: CELL_ALIGN_LEFT,
+      width_px: 800,
    },
 ]
 

@@ -21,7 +21,8 @@ import {
    COLUMN_ID_MODIFIED,
    COLUMN_ID_NAME,
    COLUMN_ID_PATTERN,
-   COLUMN_ID_SIZE, KEY_BAILIWICK_DETAIL_DATA,
+   COLUMN_ID_SIZE,
+   KEY_BAILIWICK_DETAIL_DATA,
    KEY_BAILIWICK_FREEFORM_ORDERING,
    KEY_BAILIWICK_FREEFORM_ORDERING_DIRECTION
 } from "settings/BailiwickSettings";
@@ -48,9 +49,13 @@ export class BailiwicksFreeform extends Component {
    }
 
    fetch_bailiwicks = async () => {
+      const {on_settings_changed} = this.props;
       const free_bailiwicks = await fetch_bailiwicks(BAILIWICK_MODE_FREEFORM)
       const sorted = free_bailiwicks.sort(this.compare_bailiwicks)
       this.setState({free_bailiwicks: sorted})
+      on_settings_changed({
+         [KEY_BAILIWICK_DETAIL_DATA]: sorted.at(0)
+      })
    }
 
    go_to_there = (fracto_values) => {

@@ -105,11 +105,9 @@ export class CompNursery extends Component {
                </CoolStyles.Block>
             </styles.TileBlockWrapper>
          })
-      const preamble = 'Let\'s give a hearty welcome to the latest members of the Tile Matrix family!'
-      const sub_preamble = "New tiles will be integrated twice daily -- click on any tile for more info"
+      const preamble = 'New tiles added moments ago at Fracto HQ'
       return <styles.ContentWrapper>
          <styles.PreambleWrapper>{preamble}</styles.PreambleWrapper>
-         <styles.SubPreambleWrapper>{sub_preamble}</styles.SubPreambleWrapper>
          {new_tile_list}
       </styles.ContentWrapper>
    }

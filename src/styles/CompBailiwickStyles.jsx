@@ -70,11 +70,21 @@ export class CompBailiwickStyles {
        top: 1rem;
        margin-left: 0.5rem;
    `
-   static BailiwickNameSpan = styled(CoolStyles.InlineBlock)`
+   static BailiwickNameSpan = styled(CoolStyles.Block)`
        ${CoolStyles.monospace}
        ${CoolStyles.underline}
        font-size: 1.25rem;
        color: #444444;
+   `
+   static DetailsHeaderWrapper = styled(CoolStyles.Block)`
+       margin: 0;
+   `
+   static DataPrompt = styled.span`
+       ${CoolStyles.italic}
+       letter-spacing: 1px;
+       font-size: 0.75rem;
+       color: #666666;
+       margin: 0 0.25rem;
    `
 }
 

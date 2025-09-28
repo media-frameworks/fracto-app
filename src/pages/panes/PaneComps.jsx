@@ -125,7 +125,7 @@ export class PaneComps extends Component {
          case COMP_KEY_BAILIWICKS:
             return 'bailiwicks'
          case COMP_KEY_NURSERY:
-            return 'farm'
+            return 'factory'
          case COMP_KEY_ADMIN:
             return 'admin'
          case COMP_KEY_LORE:

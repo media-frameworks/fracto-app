@@ -13,7 +13,7 @@ import {
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {CoolSlider} from "common/ui/CoolImports";
 import {get_click_point_info} from "./PointUtils";
-import {KEY_FOCAL_POINT} from "../../../../settings/AppSettings";
+import {KEY_FOCAL_POINT} from "settings/AppSettings";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
