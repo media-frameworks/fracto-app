@@ -48,8 +48,8 @@ export class BailiwicksInline extends Component {
 
    fetch_bailiwicks = async () => {
       const inline_bailiwicks = await fetch_bailiwicks(BAILIWICK_MODE_INLINE)
-      this.setState({inline_bailiwicks})
-      // console.log('inline_bailiwicks', inline_bailiwicks)
+      const sorted = inline_bailiwicks.sort(this.compare_bailiwicks)
+      this.setState({inline_bailiwicks: sorted})
    }
 
    go_to_there = (fracto_values) => {
@@ -85,7 +85,7 @@ export class BailiwicksInline extends Component {
       }
       on_settings_changed({
          [KEY_BAILIWICK_INLINE_ORDERING]: column_id,
-         [KEY_BAILIWICK_INLINE_ORDERING_DIRECTION]:sort_orderong_direction
+         [KEY_BAILIWICK_INLINE_ORDERING_DIRECTION]: sort_orderong_direction
       })
    }
 
@@ -100,18 +100,15 @@ export class BailiwicksInline extends Component {
    render() {
       const {inline_bailiwicks, bailiwick_index} = this.state
       const table_data = inline_bailiwicks
-         .sort(this.compare_bailiwicks)
          .map((bailiwick) => {
             const display_settings = JSON.parse(bailiwick.display_settings)
+            const {scope, focal_point} = display_settings
             return {
                [COLUMN_ID_PATTERN]: [render_pattern, bailiwick.pattern],
                [COLUMN_ID_NAME]: <styles.NameSpan>{bailiwick.name}</styles.NameSpan>,
                [COLUMN_ID_SIZE]: [render_size, bailiwick.magnitude],
                [COLUMN_ID_MODIFIED]: [render_time_ago, bailiwick.updated_at],
-               go: [
-                  this.render_go_to_there,
-                  {scope: display_settings.scope, focal_point: display_settings.focal_point}
-               ],
+               go: [this.render_go_to_there, {scope, focal_point}],
             }
          })
       const bailiwick_table = <CoolTable

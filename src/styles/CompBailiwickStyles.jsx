@@ -13,6 +13,9 @@ export class CompBailiwickStyles {
    static Spacer = styled(CoolStyles.InlineBlock)`
        margin-left: 1rem;
    `
+   static HalfSpacer = styled(CoolStyles.InlineBlock)`
+       margin-left: 0.5rem;
+   `
    static SortTypePrompt = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.bold}
        ${CoolStyles.pointer}
@@ -34,7 +37,7 @@ export class CompBailiwickStyles {
        margin: 0;
    `
    static BailiwickModes = styled(CoolStyles.Block)`
-      margin: 0.5rem;
+       margin: 0.5rem;
    `
    static BailiwicksContent = styled(CoolStyles.Block)`
        margin: 0.5rem;
@@ -54,11 +57,25 @@ export class CompBailiwickStyles {
        ${CoolStyles.italic}
        color: ${CoolColors.cool_blue}
        opacity: 0.25 !important;
+
        :hover& {
            opacity: 1;
        }
    `;
-
+   static BailiwicksSection = styled(CoolStyles.InlineBlock)`
+       margin-left: 0.5rem;
+   `
+   static BailiwicksSectionSticky = styled(CoolStyles.InlineBlock)`
+       position: sticky;
+       top: 1rem;
+       margin-left: 0.5rem;
+   `
+   static BailiwickNameSpan = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.monospace}
+       ${CoolStyles.underline}
+       font-size: 1.25rem;
+       color: #444444;
+   `
 }
 
 export default CompBailiwickStyles

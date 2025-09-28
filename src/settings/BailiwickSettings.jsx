@@ -1,4 +1,4 @@
-import {TYPE_STRING} from "./AppSettings";
+import {TYPE_OBJECT, TYPE_STRING} from "./AppSettings";
 import {CELL_ALIGN_CENTER, CELL_ALIGN_LEFT, CELL_TYPE_CALLBACK, CELL_TYPE_TEXT} from "../common/ui/CoolTable";
 
 export const KEY_BAILIWICK_MODE = 'bailiwick_mode'
@@ -8,6 +8,7 @@ export const KEY_BAILIWICK_INLINE_ORDERING = 'bailiwick_inline_ordering'
 export const KEY_BAILIWICK_INLINE_ORDERING_DIRECTION = 'bailiwick_inline_ordering_direction'
 export const KEY_BAILIWICK_NODAL_ORDERING = 'bailiwick_nodal_ordering'
 export const KEY_BAILIWICK_NODAL_ORDERING_DIRECTION = 'bailiwick_nodal_ordering_direction'
+export const KEY_BAILIWICK_DETAIL_DATA = 'bailiwick_detail_data'
 
 export const BAILIWICK_MODE_NODAL = 'bailiwick_mode_nodal'
 export const BAILIWICK_MODE_FREEFORM = 'bailiwick_mode_freeform'
@@ -108,6 +109,13 @@ export const BAILIWICK_KEYED_SETTINGS = {
       description: 'direction of ordering for the list of bailiwicks',
       // component: COMPONENT_BAILIWICKS,
       persist: true,
+   },
+   [KEY_BAILIWICK_DETAIL_DATA]: {
+      data_type: TYPE_OBJECT,
+      default_value: {},
+      description: 'current bailiwick being edited or published',
+      // component: COMPONENT_BAILIWICKS,
+      persist: false,
    },
 }
 

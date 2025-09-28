@@ -10,7 +10,7 @@ import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {
    get_click_point_info,
    process_escape_sets,
-   process_orbital_sets, step_ratio_chart,
+   process_orbital_sets,
 } from "./PointUtils";
 import {iteration_chart} from "../patterns/PatternsUtils";
 import {CoolSlider} from "common/ui/CoolImports";
@@ -25,26 +25,6 @@ const POINT_ZOOM_FACTOR = 10
 const ZOOMER_WIDTH_PX = 30
 const CAPTION_HEIGHT_PX = 35
 const ROUNDING_FACTOR = 10000000
-const OPTION_BAR_HEIGHT_PX = 35
-
-const OPTION_POLAR_R_THETA = 'option_polar_r_theta'
-const OPTION_POLAR_ROOTS_OF_UNITY = 'option_polar_roots_of_unity'
-const OPTION_POLAR_EXPLAINER = 'option_polar_explainer'
-
-const POLAR_OPTIONS = [
-   {
-      label: 'polar form',
-      value: OPTION_POLAR_R_THETA,
-   },
-   {
-      label: 'roots of unity',
-      value: OPTION_POLAR_ROOTS_OF_UNITY,
-   },
-   {
-      label: 'tutorial',
-      value: OPTION_POLAR_EXPLAINER,
-   }
-]
 
 export class PolarCharts extends Component {
    static propTypes = {
@@ -55,7 +35,6 @@ export class PolarCharts extends Component {
    state = {
       point_zoom: 0,
       zoomer_stealth_ref: React.createRef(),
-      polar_option: OPTION_POLAR_R_THETA,
       roots_focal_point: null,
       width_px: 0,
       height_px: 0,
@@ -99,36 +78,6 @@ export class PolarCharts extends Component {
       })
    }
 
-   set_polar_option = (polar_option) => {
-      this.setState({polar_option})
-   }
-
-   render_options = () => {
-      const {polar_option} = this.state
-      const unlit_style = {color: '#aaaaaa'}
-      const options = POLAR_OPTIONS.map((option, i) => {
-         return [
-            <styles.InputWrapper key={`input-${i}`}>
-               <input
-                  type={"radio"}
-                  checked={polar_option === option.value}
-                  onChange={() => this.set_polar_option(option.value)}
-               />
-            </styles.InputWrapper>,
-            <styles.ScatterTypePrompt
-               key={`prompt-${i}`}
-               style={polar_option === option.value ? {} : unlit_style}
-               onClick={() => this.set_polar_option(option.value)}>
-               {option.label}
-            </styles.ScatterTypePrompt>,
-            <styles.Spacer key={`spacer-${i}`}/>
-         ]
-      })
-      return <styles.OptionsWrapper>
-         {options}
-      </styles.OptionsWrapper>
-   }
-
    seek_orbitals = () => {
       const {click_point_info} = this.state
       const {page_settings} = this.props
@@ -148,34 +97,28 @@ export class PolarCharts extends Component {
    }
 
    render_charts = (width_px, height_px) => {
-      const {point_zoom, zoomer_stealth_ref, click_point_info, polar_option} = this.state
+      const {point_zoom, zoomer_stealth_ref, click_point_info} = this.state
       if (!click_point_info) {
          return []
       }
       const {click_point, orbital_points, Q_core_neg, pattern, in_cardioid} = click_point_info
       let r_data_set = []
-      let chart = []
-      if (polar_option === OPTION_POLAR_R_THETA) {
-         if (!pattern) {
-            const escape_sets = process_escape_sets(click_point, Q_core_neg)
-            r_data_set = escape_sets.r_set
-         } else {
-            const orbital_sets = process_orbital_sets(orbital_points, Q_core_neg)
-            r_data_set = orbital_sets.r_set
-         }
-         chart = iteration_chart(r_data_set, in_cardioid, !pattern)
-      } else if (polar_option === OPTION_POLAR_ROOTS_OF_UNITY) {
-         chart = step_ratio_chart(orbital_points)
+      if (!pattern) {
+         const escape_sets = process_escape_sets(click_point, Q_core_neg)
+         r_data_set = escape_sets.r_set
+      } else {
+         const orbital_sets = process_orbital_sets(orbital_points, Q_core_neg)
+         r_data_set = orbital_sets.r_set
       }
-      // console.log('r_data_set', r_data_set)
+      const chart = iteration_chart(r_data_set, in_cardioid, !pattern)
 
       const chart_style = {
          width: `${width_px - ZOOMER_WIDTH_PX}px`,
-         height: `${height_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
+         height: `${height_px - CAPTION_HEIGHT_PX}px`,
       }
       const stealth_style = {
          width: `${width_px - ZOOMER_WIDTH_PX + point_zoom * POINT_ZOOM_FACTOR}px`,
-         height: `${height_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
+         height: `${height_px - CAPTION_HEIGHT_PX}px`,
       }
       return <styles.GraphWrapper
          key={'scatter-chart'}
@@ -265,9 +208,8 @@ export class PolarCharts extends Component {
       const {width_px, height_px, point_zoom} = this.state
       const polar_chart_style = {
          width: `${width_px - ZOOMER_WIDTH_PX}px`,
-         height: `${height_px - width_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
+         height: `${height_px - width_px - CAPTION_HEIGHT_PX}px`,
       }
-      const options = this.render_options()
       const charts = this.render_charts(width_px, height_px - width_px)
       const chart_stack = <styles.ChartWrapper style={polar_chart_style}>
          {charts}
@@ -281,7 +223,7 @@ export class PolarCharts extends Component {
       />
       const wrapped_zoomer = <styles.ZoomerWrapper
          key={'polar-zoomer'}
-         style={{height: `${height_px - width_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX - 20}px`}}>
+         style={{height: `${height_px - width_px - CAPTION_HEIGHT_PX - 20}px`}}>
          {zoomer}
       </styles.ZoomerWrapper>
       const caption_text = this.polar_caption_text()
@@ -290,10 +232,9 @@ export class PolarCharts extends Component {
          {caption_text}
       </styles.CaptionWrapper>
       const rendered_area = [
-         options,
+         caption,
          chart_stack,
          wrapped_zoomer,
-         caption,
       ]
       return <AppErrorBoundary fallback={rendered_area}>
          {rendered_area}

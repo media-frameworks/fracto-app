@@ -12,7 +12,7 @@ import {
 } from "../patterns/PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {CoolSlider} from "common/ui/CoolImports";
-import {get_click_point_info, interpolate_orbital} from "./PointUtils";
+import {get_click_point_info} from "./PointUtils";
 import {KEY_FOCAL_POINT} from "../../../../settings/AppSettings";
 
 const HEIGHT_FACTOR = 1.025
@@ -23,26 +23,6 @@ const POINT_ZOOM_FACTOR = 10
 const ZOOMER_WIDTH_PX = 30
 const CAPTION_HEIGHT_PX = 15
 const ROUNDING_FACTOR = 10000000
-const OPTION_BAR_HEIGHT_PX = 20
-
-const OPTION_SCATTER_EMPIRICAL = 'option_scatter_empirical'
-const OPTION_SCATTER_ANALYTICAL = 'option_scatter_analytic'
-const OPTION_SCATTER_EXPLAINER = 'option_scatter_explainer'
-
-const SCATTER_OPTIONS = [
-   {
-      label: 'empirical',
-      value: OPTION_SCATTER_EMPIRICAL,
-   },
-   {
-      label: 'analytical',
-      value: OPTION_SCATTER_ANALYTICAL,
-   },
-   {
-      label: 'tutorial',
-      value: OPTION_SCATTER_EXPLAINER,
-   }
-]
 
 export class ScatterCharts extends Component {
    static propTypes = {
@@ -54,7 +34,6 @@ export class ScatterCharts extends Component {
       point_zoom: 0,
       zoomer_stealth_ref: React.createRef(),
       scatter_scroll_top_px: 100,
-      scatter_option: OPTION_SCATTER_EMPIRICAL,
       width_px: 0,
       height_px: 0,
       click_point_info: null,
@@ -96,7 +75,6 @@ export class ScatterCharts extends Component {
       this.setState({click_point_info})
    }
 
-
    render_scatter_chart = () => {
       const {click_point_info} = this.state
       if (!click_point_info) {
@@ -105,10 +83,6 @@ export class ScatterCharts extends Component {
       const {click_point, pattern, orbital_points, in_cardioid, Q_core_neg} = click_point_info
       if (pattern) {
          const set2 = [Q_core_neg]
-         // if (in_animation && animation_index >= 0) {
-         //    set2.push(orbital_points[animation_index])
-         // }
-         // const interpolation = interpolate_orbital(orbital_points, Q_core_neg)
          return click_point_chart(orbital_points, [set2], in_cardioid, false)
       }
       return escape_points_chart(click_point, in_cardioid)
@@ -148,56 +122,21 @@ export class ScatterCharts extends Component {
       this.setState({scatter_option})
    }
 
-   render_options = () => {
-      const {scatter_option} = this.state
-      const unlit_style = {color: '#aaaaaa'}
-      const options = SCATTER_OPTIONS.map((option, i) => {
-         return [
-            <styles.InputWrapper key={`input-${i}`}>
-               <input
-                  type={"radio"}
-                  checked={scatter_option === option.value}
-                  onChange={() => this.set_scatter_option(option.value)}
-               />
-            </styles.InputWrapper>,
-            <styles.ScatterTypePrompt
-               key={`prompt-${i}`}
-               style={scatter_option === option.value ? {} : unlit_style}
-               onClick={() => this.set_scatter_option(option.value)}>
-               {option.label}
-            </styles.ScatterTypePrompt>,
-            <styles.Spacer key={`spacer-${i}`}/>
-         ]
-      })
-      return <styles.OptionsWrapper>
-         {options}
-      </styles.OptionsWrapper>
-   }
-
    render_chart = (content, zoomer, width_px, height_px) => {
       const {point_zoom, zoomer_stealth_ref} = this.state
-      const options_style = {
-         width: `${width_px - ZOOMER_WIDTH_PX}px`,
-         height: `${OPTION_BAR_HEIGHT_PX}px`,
-      }
       const chart_style = {
          width: `${width_px - ZOOMER_WIDTH_PX}px`,
-         height: `${height_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
+         height: `${height_px - CAPTION_HEIGHT_PX}px`,
       }
       const stealth_style = {
          width: `${width_px - ZOOMER_WIDTH_PX + point_zoom * POINT_ZOOM_FACTOR}px`,
-         height: `${height_px + point_zoom * POINT_ZOOM_FACTOR - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX}px`,
+         height: `${height_px + point_zoom * POINT_ZOOM_FACTOR - CAPTION_HEIGHT_PX}px`,
       }
       const caption_text = this.scatter_caption_text()
       const caption = <styles.CaptionWrapper
          key={'scatter-caption'}>
          {caption_text}
       </styles.CaptionWrapper>
-      const options = <styles.OptionsWrapper
-         key={'scatter-options'}
-         style={options_style}>
-         {this.render_options()}
-      </styles.OptionsWrapper>
       const show_this = [
          <styles.GraphWrapper
             key={'scatter-chart'}
@@ -211,10 +150,10 @@ export class ScatterCharts extends Component {
       ]
       const wrapped_zoomer = <styles.ZoomerWrapper
          key={'scatter-zoomer'}
-         style={{height: `${height_px - CAPTION_HEIGHT_PX - OPTION_BAR_HEIGHT_PX - 20}px`}}>
+         style={{height: `${height_px - CAPTION_HEIGHT_PX - 20}px`}}>
          {zoomer}
       </styles.ZoomerWrapper>
-      const rendered_area = [options, show_this, wrapped_zoomer, caption]
+      const rendered_area = [caption, show_this, wrapped_zoomer]
       return <AppErrorBoundary fallback={rendered_area}>
          {rendered_area}
       </AppErrorBoundary>

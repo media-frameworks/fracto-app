@@ -21,7 +21,7 @@ import {
    COLUMN_ID_MODIFIED,
    COLUMN_ID_NAME,
    COLUMN_ID_PATTERN,
-   COLUMN_ID_SIZE,
+   COLUMN_ID_SIZE, KEY_BAILIWICK_DETAIL_DATA,
    KEY_BAILIWICK_FREEFORM_ORDERING,
    KEY_BAILIWICK_FREEFORM_ORDERING_DIRECTION
 } from "settings/BailiwickSettings";
@@ -30,6 +30,7 @@ import {
    KEY_FOCAL_POINT,
    KEY_SCOPE
 } from "settings/AppSettings";
+import BailiwicksDetail from "./BailiwicksDetail";
 
 export class BailiwicksFreeform extends Component {
    static propTypes = {
@@ -48,7 +49,8 @@ export class BailiwicksFreeform extends Component {
 
    fetch_bailiwicks = async () => {
       const free_bailiwicks = await fetch_bailiwicks(BAILIWICK_MODE_FREEFORM)
-      this.setState({free_bailiwicks})
+      const sorted = free_bailiwicks.sort(this.compare_bailiwicks)
+      this.setState({free_bailiwicks: sorted})
    }
 
    go_to_there = (fracto_values) => {
@@ -71,10 +73,16 @@ export class BailiwicksFreeform extends Component {
    }
 
    select_bailiwick = (bailiwick_index) => {
+      const {free_bailiwicks} = this.state
+      const {on_settings_changed} = this.props
       this.setState({bailiwick_index})
+      on_settings_changed({
+         [KEY_BAILIWICK_DETAIL_DATA]: free_bailiwicks.at(bailiwick_index)
+      })
    }
 
    on_click_column = (column_id) => {
+      const {free_bailiwicks} = this.state
       const {page_settings, on_settings_changed} = this.props
       const sort_column_id = page_settings[KEY_BAILIWICK_FREEFORM_ORDERING]
       let sort_orderong_direction = page_settings[KEY_BAILIWICK_FREEFORM_ORDERING_DIRECTION]
@@ -86,8 +94,18 @@ export class BailiwicksFreeform extends Component {
       }
       on_settings_changed({
          [KEY_BAILIWICK_FREEFORM_ORDERING]: column_id,
-         [KEY_BAILIWICK_FREEFORM_ORDERING_DIRECTION]:sort_orderong_direction
+         [KEY_BAILIWICK_FREEFORM_ORDERING_DIRECTION]: sort_orderong_direction
       })
+      setTimeout(() => {
+         const sorted = free_bailiwicks.sort(this.compare_bailiwicks)
+         this.setState({
+            free_bailiwicks: sorted,
+            bailiwick_index: 0,
+         })
+         on_settings_changed({
+            [KEY_BAILIWICK_DETAIL_DATA]: sorted.at(0)
+         })
+      }, 100)
    }
 
    compare_bailiwicks = (a, b) => {
@@ -100,31 +118,35 @@ export class BailiwicksFreeform extends Component {
 
    render() {
       const {free_bailiwicks, bailiwick_index} = this.state
+      const {page_settings, on_settings_changed} = this.props
       const table_data = free_bailiwicks
-         .sort(this.compare_bailiwicks)
          .map((bailiwick) => {
             const display_settings = JSON.parse(bailiwick.display_settings)
+            const {scope, focal_point} = display_settings
             return {
                [COLUMN_ID_PATTERN]: [render_pattern, bailiwick.pattern],
                [COLUMN_ID_NAME]: <styles.NameSpan>{bailiwick.name}</styles.NameSpan>,
                [COLUMN_ID_SIZE]: [render_size, bailiwick.magnitude],
                [COLUMN_ID_MODIFIED]: [render_time_ago, bailiwick.updated_at],
-               go: [
-                  this.render_go_to_there,
-                  {scope: display_settings.scope, focal_point: display_settings.focal_point}
-               ],
+               go: [this.render_go_to_there, {scope, focal_point}],
             }
          })
-      const bailiwick_table = <CoolTable
-         data={table_data}
-         columns={BAILIWICK_TABLE_COLUMNS}
-         options={[TABLE_CAN_SELECT]}
-         selected_row={bailiwick_index}
-         on_select_row={this.select_bailiwick}
-         on_click_column={this.on_click_column}
+      const bailiwick_table = <styles.BailiwicksSection>
+         <CoolTable
+            data={table_data}
+            columns={BAILIWICK_TABLE_COLUMNS}
+            options={[TABLE_CAN_SELECT]}
+            selected_row={bailiwick_index}
+            on_select_row={this.select_bailiwick}
+            on_click_column={this.on_click_column}
+         />
+      </styles.BailiwicksSection>
+      const bailiwicks_detail = <BailiwicksDetail
+         page_settings={page_settings}
+         on_settings_changed={on_settings_changed}
       />
       return [
-         bailiwick_table
+         bailiwick_table, bailiwicks_detail
       ]
    }
 }

@@ -76,6 +76,11 @@ export const compare_bailiwicks = (a, b, sort_column_id, sort_ascending) => {
             ? a.magnitude - b.magnitude
             : b.magnitude - a.magnitude
       case COLUMN_ID_PATTERN:
+         if (a.pattern === b.pattern) {
+            return sort_ascending
+               ? b.magnitude - a.magnitude
+               : a.magnitude - b.magnitude
+         }
          return sort_ascending
             ? a.pattern - b.pattern
             : b.pattern - a.pattern

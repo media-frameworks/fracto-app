@@ -112,7 +112,7 @@ export const click_point_chart = (set1, other_sets, in_cardioid = false, escaper
             // label: in_cardioid ? 'Q' : 'Q',
             data: JSON.parse(JSON.stringify(other_sets[0])),
             backgroundColor: in_animation ? ANIMATION_COLOR : 'black',
-            pointRadius: in_animation ? 2 : 1,
+            pointRadius: in_animation ? 3 : 3,
             showLine: true
          },
          {
@@ -120,7 +120,7 @@ export const click_point_chart = (set1, other_sets, in_cardioid = false, escaper
             // label: set1_label,
             data: JSON.parse(JSON.stringify(set1)),
             backgroundColor: FractoUtil.fracto_pattern_color(cardinality || 0),
-            pointRadius: in_animation ? 2 : 4,
+            pointRadius: in_animation ? 3 : 3,
             showLine: true
          },
       ]

@@ -9,7 +9,7 @@ export class CompPointsStyles {
        margin: 0.25rem;
    `
    static ChartWrapper = styled(CoolStyles.InlineBlock)`
-       margin-bottom: 0.5rem;
+       margin: 0;
    `
    static DashboardWrapper = styled(CoolStyles.InlineBlock)`
        margin-top: 0.5rem;
@@ -29,13 +29,11 @@ export class CompPointsStyles {
    static CaptionWrapper = styled(CoolStyles.Block)`
        ${CoolStyles.align_center}
        font-family: ui-serif;
-       font-size: 0.75rem;
+       font-size: 0.85rem;
        color: #666666;
-       padding: 0.125rem 0 0.5rem;
        letter-spacing: 1px;
        width: 95%;
-       margin: 0 auto;
-       border-bottom: 0.15rem solid #aaaaaa;
+       margin: 0.5rem auto 0;
    `
    static CaptionI = styled.span`
        ${CoolStyles.italic}
