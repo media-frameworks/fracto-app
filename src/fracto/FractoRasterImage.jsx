@@ -12,7 +12,6 @@ const FractoCanvas = styled.canvas`
     margin: 0;
 `;
 
-const MAX_LEVEL = 35;
 export var BAD_TILES = {};
 
 export class FractoRasterImage extends Component {

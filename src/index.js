@@ -12,7 +12,7 @@ const options = {
    client_id: google_creds.google_client_id, // required
    auto_select: false, // optional
    cancel_on_tap_outside: false, // optional
-   context: 'signin', // optional
+   context: 'use', // optional
 };
 
 const APP_NAME = 'FRACTO'
@@ -37,6 +37,7 @@ const on_start = () => {
    );
 }
 
+console.log('options', options)
 googleOneTap(options, (response) => {
    const idToken = response.credential;
    one_tap_data = JSON.parse(atob(idToken.split('.')[1])); // Decode the payload part of the JWT

@@ -708,7 +708,7 @@ export class FractoFocalTransit extends Component {
 
    render() {
       const {width_px, in_wait} = this.props
-      const {canvas_ref, in_click, in_hover} = this.state
+      const {canvas_ref} = this.state
       const canvas_style = {
          cursor: in_wait ? "wait" : "pointer",
          borderRadius: `${width_px / CURVED_CORNERS_FACTOR}px`

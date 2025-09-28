@@ -291,7 +291,6 @@ export class ImagesStaging extends Component {
    }
 
    render_image_list = (all_files) => {
-      const {visitor_name} = this.state
       const table_data = all_files.map((file, i) => {
          const name = file.Key
             .replace('fracto/images/', '')
