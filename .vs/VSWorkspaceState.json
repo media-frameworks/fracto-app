@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\common"
+    "\\src\\fracto",
+    "\\src\\fracto\\styles"
   ],
-  "SelectedNode": "\\jsconfig.json",
+  "SelectedNode": "\\src\\fracto\\styles\\FractoColors.jsx",
   "PreviewInSolutionExplorer": false
 }
