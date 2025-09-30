@@ -101,7 +101,9 @@ export class PageAppStyles {
        align-items: center;
        justify-content: center;
        height: 100vh;
-       background: #f8f8f8;
+       margin: 0;
+       padding: 0;
+       transition: background-image 3s ease-in-out;
    `;
 
    static Title = styled.h1`

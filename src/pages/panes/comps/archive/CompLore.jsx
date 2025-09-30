@@ -8,8 +8,8 @@ import {
    LORE_MODE_INDEX,
    LORE_MODE_PRESENT
 } from "settings/LoreSettings";
-import {render_comp_modes} from "./CompUtils";
-import LoreIndex from "./lore/LoreIndex";
+import {render_comp_modes} from "../CompUtils";
+import LoreIndex from "../lore/LoreIndex";
 
 const LORE_MODES = [
    {key: LORE_MODE_INDEX, label: 'index'},

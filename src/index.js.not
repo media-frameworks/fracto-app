@@ -1,0 +1,42 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import googleOneTap from 'google-one-tap';
+
+import google_creds from "../src/common/config/google.json" with {type: "json"}
+
+import PageMain from "pages/PageMain.jsx";
+import PageWelcome from "./pages/PageWelcome";
+import FractoIndexedTilesLoader from "./fracto/FractoIndexedTilesLoader.jsx";
+
+const APP_NAME = 'FRACTO'
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const on_start = () => {
+   setTimeout(()=>{
+      const options = {
+         client_id: google_creds.google_client_id, // required
+      };
+      console.log('on_start', options)
+      googleOneTap(options, (response) => {
+         console.log('googleOneTap',response)
+         const idToken = response.credential;
+         const one_tap_data = JSON.parse(atob(idToken.split('.')[1])); // Decode the payload part of the JWT
+         const page_main = <PageMain
+            key={'page-main'}
+            app_name={APP_NAME}
+            one_tap_data={one_tap_data}
+         />
+         root.render(
+            <FractoIndexedTilesLoader
+               app_name={APP_NAME}
+               app_page={[page_main]}
+            />
+         );
+      });
+   }, 500)
+}
+
+root.render(<PageWelcome
+   on_start={on_start}
+/>)
+

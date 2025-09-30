@@ -11,9 +11,7 @@ import CoolStyles from "common/ui/styles/CoolStyles";
 
 import CompAdmin from "./comps/CompAdmin";
 import CompOrbitals from "./comps/CompOrbitals";
-import CompPatterns from "./comps/CompPatterns";
 import CompNursery from "./comps/CompNursery";
-import CompLore from "./comps/CompLore";
 import CompPoints from "./comps/CompPoints";
 import CompImages from "./comps/CompImages";
 import CompMinibrot from "./comps/CompMinibrot";
@@ -23,19 +21,16 @@ export const TAB_HEIGHT_PX = 20
 
 const COMP_KEY_POINTS = 'comp_key_points'
 const COMP_KEY_IMAGE = 'comp_key_image'
-const COMP_KEY_PATTERNS = 'comp_key_patterns'
 const COMP_KEY_ORBITALS = 'comp_key_orbitals'
 const COMP_KEY_MINIBROT = 'comp_key_minibrot'
 const COMP_KEY_BAILIWICKS = 'comp_key_bailiwicks'
 const COMP_KEY_NURSERY = 'comp_key_nursery'
 const COMP_KEY_ADMIN = 'comp_key_admin'
-const COMP_KEY_LORE = 'comp_key_lore'
 
 const ACTIVE_COMPS = [
    COMP_KEY_POINTS,
    COMP_KEY_IMAGE,
    COMP_KEY_ORBITALS,
-   COMP_KEY_PATTERNS,
    COMP_KEY_MINIBROT,
    COMP_KEY_BAILIWICKS,
    COMP_KEY_NURSERY,
@@ -70,18 +65,8 @@ export class PaneComps extends Component {
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
-         case COMP_KEY_PATTERNS:
-            return <CompPatterns
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
          case COMP_KEY_ORBITALS:
             return <CompOrbitals
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
-         case COMP_KEY_LORE:
-            return <CompLore
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
@@ -116,8 +101,6 @@ export class PaneComps extends Component {
             return 'points'
          case COMP_KEY_IMAGE:
             return 'images'
-         case COMP_KEY_PATTERNS:
-            return 'patterns'
          case COMP_KEY_ORBITALS:
             return 'orbitals'
          case COMP_KEY_MINIBROT:
@@ -128,8 +111,6 @@ export class PaneComps extends Component {
             return 'factory'
          case COMP_KEY_ADMIN:
             return 'admin'
-         case COMP_KEY_LORE:
-            return 'lore'
          default:
             return tab_key
       }

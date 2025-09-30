@@ -16,7 +16,7 @@ import {
    SCRIPT_VIEWER_MODE_TEXT,
    SCRIPT_VIEWER_MODE_UI
 } from "../pages/panes/comps/archive/scripts/ScriptsViewerBar";
-import {PATTERN_TYPE_ORBITALS} from "../pages/panes/comps/CompPatterns";
+import {PATTERN_TYPE_ORBITALS} from "../pages/panes/comps/archive/CompPatterns";
 import {ADMIN_TYPE_SETTINGS} from "../pages/panes/comps/CompAdmin";
 
 export const KEY_IMAGE_WIDTH = 'image_width'
