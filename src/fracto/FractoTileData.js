@@ -205,7 +205,7 @@ export const fill_canvas_buffer = async (
             update_status[GET_TILES_FROM_CACHE] = (tile_index + 1) / (tile_count + 1)
             update_callback(update_status)
          }
-         await FractoTileCache.get_tile(tile.short_code)
+         // await FractoTileCache.get_tile(tile.short_code)
       }
    }
    if (update_callback) {

@@ -31,4 +31,4 @@ yarn-error.log*
 # to be generated on-site
 /public/comp_data
 
-.vs/
+/.vs
