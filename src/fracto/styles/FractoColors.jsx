@@ -81,14 +81,14 @@ export class FractoColors {
       if (!canvas_buffer || !ctx) {
          return;
       }
-      console.log('Count objects for greyscale calculation', canvas_buffer.length)
+      // console.log('Count objects for greyscale calculation', canvas_buffer.length)
       let all_not_pattern_sets = {};
       let all_inner_pattern_sets = {};
       let all_outer_pattern_sets = {};
       let not_pattern_total = 0;
       let inner_pattern_total = 0;
       let outer_pattern_total = 0;
-      console.log('First pass: count pixels per type/iteration',canvas_buffer.length)
+      // console.log('First pass: count pixels per type/iteration',canvas_buffer.length)
       for (let canvas_x = 0; canvas_x < canvas_buffer.length; canvas_x++) {
          const col = canvas_buffer[canvas_x];
          for (let canvas_y = 0; canvas_y < col.length; canvas_y++) {
@@ -109,14 +109,14 @@ export class FractoColors {
             }
          }
       }
-      console.log('Compute greys maps',canvas_buffer.length)
+      // console.log('Compute greys maps',canvas_buffer.length)
       const not_pattern_greys_map = FractoColors.get_greys_map(
          all_not_pattern_sets, not_pattern_total, GREY_BASE, GREY_RANGE);
       const inner_pattern_greys_map = FractoColors.get_greys_map(
          all_inner_pattern_sets, inner_pattern_total, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
       const outer_pattern_greys_map = FractoColors.get_greys_map(
          all_outer_pattern_sets, outer_pattern_total, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
-      console.log('Second pass: draw pixels directly',canvas_buffer.length)
+      // console.log('Second pass: draw pixels directly',canvas_buffer.length)
       const pixel_size = 1.5 * scale_factor;
       for (let canvas_x = 0; canvas_x < canvas_buffer.length; canvas_x++) {
          const col = canvas_buffer[canvas_x];
@@ -147,7 +147,7 @@ export class FractoColors {
             }
          }
       }
-      console.log('Help GC by releasing large objects',canvas_buffer.length)
+      // console.log('Help GC by releasing large objects',canvas_buffer.length)
       // (not strictly necessary in JS, but can help in memory-constrained environments)
       all_not_pattern_sets = null;
       all_inner_pattern_sets = null;
