@@ -20,6 +20,9 @@ const RESOLUTIONS = [
    {label: '1800', value: 1800, help: 'large',},
    {label: '2400', value: 2400, help: 'super',},
    {label: '3200', value: 3200, help: 'biggest',},
+   {label: '3600', value: 3600, help: 'biggest!',},
+   {label: '4200', value: 4200, help: 'biggest!!',},
+   {label: '4800', value: 4800, help: 'biggest!!!',},
 ]
 
 export class ImagesCaptureField extends Component {
