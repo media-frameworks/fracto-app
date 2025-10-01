@@ -36,7 +36,8 @@ export class FractoColors {
       return FractoUtil.fracto_pattern_color_hsl(pattern, iteration);
    }
 
-   static get_greys_map = (all_sets_object, total_pixels, base_value, range_value) => {
+   static get_greys_map = (all_pixels, all_sets_object, base_value, range_value) => {
+      const total_pixels = all_pixels.length;
       // Convert object to sorted array only once
       const all_sets = Object.keys(all_sets_object)
          .map(key => {
@@ -81,14 +82,13 @@ export class FractoColors {
       if (!canvas_buffer || !ctx) {
          return;
       }
-      // console.log('Count objects for greyscale calculation', canvas_buffer.length)
-      let all_not_pattern_sets = {};
-      let all_inner_pattern_sets = {};
-      let all_outer_pattern_sets = {};
-      let not_pattern_total = 0;
-      let inner_pattern_total = 0;
-      let outer_pattern_total = 0;
-      // console.log('First pass: count pixels per type/iteration',canvas_buffer.length)
+      const all_not_pattern_pixels = [];
+      const all_inner_pattern_pixels = [];
+      const all_outer_pattern_pixels = [];
+      const all_not_pattern_sets = {};
+      const all_inner_pattern_sets = {};
+      const all_outer_pattern_sets = {};
+      // Use for loops for better performance
       for (let canvas_x = 0; canvas_x < canvas_buffer.length; canvas_x++) {
          const col = canvas_buffer[canvas_x];
          for (let canvas_y = 0; canvas_y < col.length; canvas_y++) {
@@ -99,59 +99,57 @@ export class FractoColors {
             const key = `_${Math.abs(point_data[1])}`;
             if (point_data[0] === 0) {
                all_not_pattern_sets[key] = (all_not_pattern_sets[key] || 0) + 1;
-               not_pattern_total++;
-            } else if (point_data[0] < 0) {
-               all_inner_pattern_sets[key] = (all_inner_pattern_sets[key] || 0) + 1;
-               inner_pattern_total++;
+               all_not_pattern_pixels.push({iteration: point_data[1], canvas_x, canvas_y});
             } else {
-               all_outer_pattern_sets[key] = (all_outer_pattern_sets[key] || 0) + 1;
-               outer_pattern_total++;
+               if (point_data[0] < 0) {
+                  all_inner_pattern_sets[key] = (all_inner_pattern_sets[key] || 0) + 1;
+                  all_inner_pattern_pixels.push({
+                     pattern: Math.abs(point_data[0]),
+                     iteration: Math.abs(point_data[1]),
+                     canvas_x, canvas_y});
+               } else {
+                  all_outer_pattern_sets[key] = (all_outer_pattern_sets[key] || 0) + 1;
+                  all_outer_pattern_pixels.push({
+                     pattern: Math.abs(point_data[0]),
+                     iteration: Math.abs(point_data[1]),
+                     canvas_x, canvas_y});
+               }
             }
          }
       }
-      // console.log('Compute greys maps',canvas_buffer.length)
+
       const not_pattern_greys_map = FractoColors.get_greys_map(
-         all_not_pattern_sets, not_pattern_total, GREY_BASE, GREY_RANGE);
+         all_not_pattern_pixels, all_not_pattern_sets, GREY_BASE, GREY_RANGE);
       const inner_pattern_greys_map = FractoColors.get_greys_map(
-         all_inner_pattern_sets, inner_pattern_total, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
+         all_inner_pattern_pixels, all_inner_pattern_sets, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
       const outer_pattern_greys_map = FractoColors.get_greys_map(
-         all_outer_pattern_sets, outer_pattern_total, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
-      // console.log('Second pass: draw pixels directly',canvas_buffer.length)
+         all_outer_pattern_pixels, all_outer_pattern_sets, COLOR_LUM_BASE_PCT, COLOR_LUM_BASE_RANGE_PCT);
+
       const pixel_size = 1.5 * scale_factor;
-      for (let canvas_x = 0; canvas_x < canvas_buffer.length; canvas_x++) {
-         const col = canvas_buffer[canvas_x];
-         for (let canvas_y = 0; canvas_y < col.length; canvas_y++) {
-            const point_data = col[canvas_y];
-            if (!point_data) {
-               continue;
-            }
-            const x = scale_factor * canvas_x;
-            const y = scale_factor * canvas_y;
-            if (point_data[0] === 0) {
-               const key = `_${point_data[1]}`;
-               const grey_value = not_pattern_greys_map[key];
-               ctx.fillStyle = `rgb(${grey_value},${grey_value},${grey_value})`;
-               ctx.fillRect(x, y, pixel_size, pixel_size);
-            } else if (point_data[0] < 0) {
-               const key = `_${Math.abs(point_data[1])}`;
-               const lum_factor = inner_pattern_greys_map[key];
-               const hue = FractoColors.pattern_hue(Math.abs(point_data[0]));
-               ctx.fillStyle = `hsl(${hue}, 80%, ${100 - lum_factor}%)`;
-               ctx.fillRect(x, y, pixel_size, pixel_size);
-            } else {
-               const key = `_${Math.abs(point_data[1])}`;
-               const lum_factor = outer_pattern_greys_map[key];
-               const hue = FractoColors.pattern_hue(Math.abs(point_data[0]));
-               ctx.fillStyle = `hsl(${hue}, 80%, ${100 - lum_factor}%)`;
-               ctx.fillRect(x, y, pixel_size, pixel_size);
-            }
-         }
+      // Use for loop for better performance
+      for (let i = 0; i < all_not_pattern_pixels.length; i++) {
+         const pixel = all_not_pattern_pixels[i];
+         const key = `_${pixel.iteration}`;
+         const grey_value = not_pattern_greys_map[key];
+         ctx.fillStyle = `rgb(${grey_value},${grey_value},${grey_value})`;
+         ctx.fillRect(scale_factor * pixel.canvas_x, scale_factor * pixel.canvas_y, pixel_size, pixel_size);
       }
-      // console.log('Help GC by releasing large objects',canvas_buffer.length)
-      // (not strictly necessary in JS, but can help in memory-constrained environments)
-      all_not_pattern_sets = null;
-      all_inner_pattern_sets = null;
-      all_outer_pattern_sets = null;
+      for (let i = 0; i < all_inner_pattern_pixels.length; i++) {
+         const pixel = all_inner_pattern_pixels[i];
+         const key = `_${Math.abs(pixel.iteration)}`;
+         const lum_factor = inner_pattern_greys_map[key];
+         const hue = FractoColors.pattern_hue(pixel.pattern);
+         ctx.fillStyle = `hsl(${hue}, 80%, ${100 - lum_factor}%)`;
+         ctx.fillRect(scale_factor * pixel.canvas_x, scale_factor * pixel.canvas_y, pixel_size, pixel_size);
+      }
+      for (let i = 0; i < all_outer_pattern_pixels.length; i++) {
+         const pixel = all_outer_pattern_pixels[i];
+         const key = `_${Math.abs(pixel.iteration)}`;
+         const lum_factor = outer_pattern_greys_map[key];
+         const hue = FractoColors.pattern_hue(pixel.pattern);
+         ctx.fillStyle = `hsl(${hue}, 80%, ${100 - lum_factor}%)`;
+         ctx.fillRect(scale_factor * pixel.canvas_x, scale_factor * pixel.canvas_y, pixel_size, pixel_size);
+      }
    }
 
 }
