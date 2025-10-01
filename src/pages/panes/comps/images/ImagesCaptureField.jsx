@@ -116,7 +116,7 @@ export class ImagesCaptureField extends Component {
          ? <img src={image_outcome.public_url} alt={'copyright 2025 Fracto Inc'}/>
          : []
       const tile_cache_status = image_status[GET_TILES_FROM_CACHE]
-      const tile_cache_status_str = '' // `get tiles: ${tile_cache_status ? Math.round(tile_cache_status * 10000) / 100 : 0}%`
+      const tile_cache_status_str = `get tiles: ${tile_cache_status ? Math.round(tile_cache_status * 10000) / 100 : 0}%`
       const canvas_buffer_status = image_status[FILLING_CANVAS_BUFFER]
       const canvas_buffer_status_str = `filling buffer: ${canvas_buffer_status ? Math.round(canvas_buffer_status * 10000) / 100 : 0}%`
       const status = tile_cache_status ? [
