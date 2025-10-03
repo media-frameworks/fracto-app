@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './global.css'
 import google_creds from "../src/common/config/google.json" with {type: "json"}
 
 import PageMain from "pages/PageMain.jsx";

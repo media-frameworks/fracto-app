@@ -30,7 +30,7 @@ import network from "common/config/network.json" with {type: "json"};
 import {render_image} from "./ImageUtils";
 
 const FRACTO_PREFIX = 'fracto'
-const LISTING_LENGTH = 10
+const LISTING_LENGTH = 100
 const FRACTO_PROD = network["fracto-prod"];
 
 const isValidJSON = (str) => {

@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\mikeh\\fracto\\fracto-app\\src\\fracto\\styles\\FractoColors.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\fracto\\styles\\FractoColors.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\mikeh\\fracto\\fracto-app\\src\\fracto\\FractoTileData.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\fracto\\FractoTileData.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +18,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FractoTileData.js",
+              "DocumentMoniker": "C:\\Users\\mikeh\\fracto\\fracto-app\\src\\fracto\\FractoTileData.js",
+              "RelativeDocumentMoniker": "src\\fracto\\FractoTileData.js",
+              "ToolTip": "C:\\Users\\mikeh\\fracto\\fracto-app\\src\\fracto\\FractoTileData.js",
+              "RelativeToolTip": "src\\fracto\\FractoTileData.js",
+              "ViewState": "AgIAAAABAAAAAAAAAAAUwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-10-01T00:34:54.059Z"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,7 +40,7 @@
               "RelativeDocumentMoniker": "src\\fracto\\styles\\FractoColors.jsx",
               "ToolTip": "C:\\Users\\mikeh\\fracto\\fracto-app\\src\\fracto\\styles\\FractoColors.jsx",
               "RelativeToolTip": "src\\fracto\\styles\\FractoColors.jsx",
-              "ViewState": "AgIAADUAAAAAAAAAAAAewJEAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAAwI8AAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
               "WhenOpened": "2025-09-30T22:04:41.581Z",
               "EditorCaption": ""

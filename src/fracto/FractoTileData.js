@@ -247,6 +247,7 @@ export const raster_fill = async (
   for (let vert_y = 0; vert_y < height_px; vert_y++) {
     vert_scale[vert_y] = Math.abs(focal_point.y - (vert_y - height_px / 2) * canvas_increment)
   }
+  let unfound = 0
   for (let canvas_x = 0; canvas_x < width_px; canvas_x++) {
     if (update_callback) {
       update_status[FILLING_CANVAS_BUFFER] = (canvas_x + 1) / (width_px + 1)
@@ -289,9 +290,13 @@ export const raster_fill = async (
       }
       const out_of_bounds = (x <= -2) || (x > 0.5) || (y >= 1) || (y <= 1)
       if (!found_point && out_of_bounds) {
+        unfound++
         const {pattern, iteration} = FractoFastCalc.calc(x, y)
         canvas_buffer[canvas_x][canvas_y] = [pattern, iteration]
       }
     }
+  }
+  if (unfound) {
+    console.log('unfound', unfound)
   }
 }
