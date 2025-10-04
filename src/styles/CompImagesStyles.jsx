@@ -4,7 +4,7 @@ import {CoolStyles} from '../common/ui/CoolImports'
 export class CompImagesStyles {
    static ContentWrapper = styled(CoolStyles.Block)`
        //overflow-y: scroll;
-       padding: 1rem 0.5rem 0;
+       padding: 0.5rem 0.5rem 0;
        //background-color: lightseagreen;
    `
    static Spacer = styled(CoolStyles.InlineBlock)`
@@ -49,6 +49,15 @@ export class CompImagesStyles {
        ${CoolStyles.italic}
        font-size: 0.95rem;
        color: #888888;
+   `
+   static RefreshLink = styled(CoolStyles.Block)`
+       ${CoolStyles.link}
+       font-size: 1.125rem;
+       margin-left: 0.5rem;
+       opacity: 0.5;
+       &:hover {
+           opacity: 1.0;
+       }
    `
 }
 

@@ -95,33 +95,43 @@ export class PageAppStyles {
        font-size: 0.85rem;
    `
 
-   static Wrapper = styled.div`
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       justify-content: center;
+   static Wrapper = styled(CoolStyles.Block)`
        height: 100vh;
-       margin: 0;
-       padding: 0;
+       padding: 5rem ${5 * 1.618}rem;
        transition: background-image 3s ease-in-out;
+       text-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.75);
    `;
 
    static Title = styled.h1`
-       margin-bottom: 1rem;
+       ${CoolStyles.uppercase}
+       font-family: monospace;
+       font-weight: normal;
+       font-size: 5rem;
+       line-height: 3rem;
+       letter-spacing: 5px;
+       margin-bottom: 0.25rem;
+       color: rgba(255,255,255, 1);
+       transform: scale(1, 0.65);
+       text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000, 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.75);
+
    `;
 
    static Button = styled.button`
-       padding: 0.75rem 2rem;
-       font-size: 1.2rem;
-       background: #1976d2;
+       ${CoolStyles.uppercase}
+       padding: 0.25rem 1rem;
+       font-size: 0.85rem;
+       letter-spacing: 5px;
+       opacity: 0.5;
+       background: #223344;
        color: white;
        border: none;
        border-radius: 4px;
        cursor: pointer;
        transition: background 0.2s;
-
        &:hover {
-           background: #125ea2;
+           opacity: 1.0;
+           background: #334455;
+           font-weight: bold;
        }
    `;
    static Salutation = styled(CoolStyles.InlineBlock)`

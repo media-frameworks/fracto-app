@@ -30,7 +30,7 @@ import network from "common/config/network.json" with {type: "json"};
 import {render_image} from "./ImageUtils";
 
 const FRACTO_PREFIX = 'fracto'
-const LISTING_LENGTH = 100
+const LISTING_LENGTH = 20
 const FRACTO_PROD = network["fracto-prod"];
 
 const isValidJSON = (str) => {
@@ -320,9 +320,12 @@ export class ImagesStaging extends Component {
 
    render() {
       const {all_files} = this.state
-      return <styles.ContentWrapper>
-         {this.render_image_list(all_files)}
-      </styles.ContentWrapper>
+      return [
+         <styles.RefreshLink onClick={this.refresh_file_list}>refresh list</styles.RefreshLink>,
+         <styles.ContentWrapper>
+            {this.render_image_list(all_files)}
+         </styles.ContentWrapper>
+      ]
    }
 }
 
