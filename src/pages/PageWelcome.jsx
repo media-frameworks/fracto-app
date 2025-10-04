@@ -9,16 +9,20 @@ const IMAGE_IDS = [
    '95155837', '88107978', '55733655', '56297934', '45661276', '21602856',
    '6645013', '16567422', '13476002', '88328851', '27267420', '14959701',
    '82719097', '2816809', '37777168', '7860868', '98124615', '29273549',
-   '16827347', '96179357', '21738100', '58005872', '73345599', '72949085',
+   '16827347', '21738100', '58005872', '73345599', '72949085', '85226101',
    '90878904', '44650502', '57139333', '43132024', '37321005', '35019600',
    '84149541', '37690970', '67262443', '47995366', '44195606', '11142241',
-   '46667733', '62112246', '69229820', '96137524', '45730188', '3067009',
+   '46667733', '62112246', '69229820', '45730188', '3067009', '80448293',
    '80370734', '69150513', '52193880', '84501123', '16802054', '40363462',
    '1827601', '43385256', '50410062', '94629549', '96745497', '8108962',
    '51856189', '91088336', '34910383', '87741832', '13228412', '31992546',
    '6240099', '16911405', '26815847', '53261124', '3692577', '91708010',
    '45304102', '58856345', '89333963', '79338781', '97621995', '16769148',
-   '54062228', '54864480'
+   '54062228', '54864480', '29275090', '42750071', '69842272', '754765',
+   '78074322', '55826367', '5815562', '48684802', '86347590', '54864480',
+   '17009909', '53607660', '32594692', '3334258', '58809772', '68716298',
+   '8880868', '59296419', '35297106', '21936941', '47409786', '61126242',
+   '54602308', '10713280'
 ]
 
 const REFRESH_LIMIT = 1000
@@ -95,12 +99,19 @@ export class PageWelcome extends Component {
       })
    }
 
+   gate_keeper = (e) => {
+      const {on_start} = this.props;
+      const {altKey, ctrlKey, shiftKey} = e
+      if (altKey && ctrlKey && shiftKey) {
+         on_start()
+      }
+   }
+
    render() {
       const {
          x_offset, y_offset, image_index, wrapper_ref, shuffled_images,
          letter_color
       } = this.state
-      const {on_start} = this.props;
       let wrapper_style = {}
       if (shuffled_images.length) {
          const background_image = this.url_from_index(image_index)
@@ -109,11 +120,11 @@ export class PageWelcome extends Component {
             backgroundPosition: `${-x_offset}px ${-y_offset}px`,
          }
       }
-      const title_style = {color:letter_color}
+      const title_style = {color: letter_color}
       return <styles.Wrapper ref={wrapper_ref} style={wrapper_style}>
          <styles.Title style={title_style}>fracto</styles.Title>
          <styles.Button
-            onClick={on_start}>
+            onClick={this.gate_keeper}>
             {'i want to go to there'}
          </styles.Button>
       </styles.Wrapper>
