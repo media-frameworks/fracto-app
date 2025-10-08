@@ -134,7 +134,7 @@ export class PageWelcome extends Component {
          <styles.Title style={title_style}>fracto</styles.Title>
          <styles.Button
             onClick={this.gate_keeper}>
-            {'i want to go to there'}
+            {'the atlas of chaos'}
          </styles.Button>
       </styles.Wrapper>
    }
