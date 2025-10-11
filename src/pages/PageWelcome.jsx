@@ -31,7 +31,9 @@ const IMAGE_IDS = [
    '88043015', '85243955', '1098147', '32033557', '32372542', '76572109',
    '97733876', '78638398', '91778825', '46132318', '99608652', '83423333',
    '75127839', '27464453', '77554403', '21085604', '31894400', '14195694',
-   '43853259', '86046344'
+   '43853259', '86046344', '13835167', '48686005', '79676268', '30710625',
+   '34363792', '16070237', '23110417', '92381287', '69080310', '99529107',
+   '91247161', '4204227', '71227366', '13902593', '87401778'
 ]
 
 const REFRESH_LIMIT = 1000
@@ -131,11 +133,13 @@ export class PageWelcome extends Component {
       }
       const title_style = {color: letter_color}
       return <styles.Wrapper ref={wrapper_ref} style={wrapper_style}>
-         <styles.Title style={title_style}>fracto</styles.Title>
-         <styles.Button
-            onClick={this.gate_keeper}>
-            {'the atlas of chaos'}
-         </styles.Button>
+         <styles.TitleWrapper>
+            <styles.Title style={title_style}>fracto</styles.Title>
+            <styles.Button
+               onClick={this.gate_keeper}>
+               {'the atlas of chaos'}
+            </styles.Button>
+         </styles.TitleWrapper>
       </styles.Wrapper>
    }
 }

@@ -99,7 +99,6 @@ export class PageAppStyles {
        height: 100vh;
        padding: 5rem ${5 * 1.618}rem;
        transition: background-image 3s ease-in-out;
-       text-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.75);
    `;
 
    static Title = styled.h1`
@@ -146,6 +145,9 @@ export class PageAppStyles {
    static NameSpan = styled.span`
        ${CoolStyles.bold}
        ${CoolStyles.uppercase}
+   `
+   static TitleWrapper = styled(CoolStyles.InlineBlock)`
+        ${CoolStyles.align_center}
    `
 }
 
