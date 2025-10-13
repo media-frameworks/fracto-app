@@ -99,6 +99,7 @@ export class PageAppStyles {
        height: 100vh;
        padding: 5rem ${5 * 1.618}rem;
        transition: background-image 3s ease-in-out;
+       z-index: 1000;
    `;
 
    static Title = styled.h1`
@@ -109,7 +110,7 @@ export class PageAppStyles {
        line-height: 3rem;
        letter-spacing: 5px;
        margin-bottom: 0.25rem;
-       color: rgba(255,255,255, 1);
+       color: rgba(255, 255, 255, 1);
        transform: scale(1, 0.65);
        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000, 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.75);
 
@@ -127,10 +128,10 @@ export class PageAppStyles {
        border-radius: 4px;
        cursor: pointer;
        transition: background 0.2s;
+       font-weight: bold;
        &:hover {
            opacity: 1.0;
            background: #334455;
-           font-weight: bold;
        }
    `;
    static Salutation = styled(CoolStyles.InlineBlock)`
@@ -147,7 +148,20 @@ export class PageAppStyles {
        ${CoolStyles.uppercase}
    `
    static TitleWrapper = styled(CoolStyles.InlineBlock)`
-        ${CoolStyles.align_center}
+       ${CoolStyles.align_center}
+   `
+   static InfoBox = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.align_left}
+       position: fixed;
+       top: 9rem;
+       left: ${5 * 1.618}rem;
+       background-color: #f8f8f8;
+       opacity: 0;
+       padding: 0.5rem 1rem;
+       transition: opacity 0.5s ease-in-out;
+       border-radius: 0.25rem;
+       border: 1px solid black;
+       box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25);
    `
 }
 
