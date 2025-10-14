@@ -129,6 +129,7 @@ export class PageAppStyles {
        cursor: pointer;
        transition: background 0.2s;
        font-weight: bold;
+
        &:hover {
            opacity: 1.0;
            background: #334455;
@@ -162,6 +163,11 @@ export class PageAppStyles {
        border-radius: 0.25rem;
        border: 1px solid black;
        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25);
+   `
+   static PreambleText = styled(CoolStyles.InlineBlock)`
+       font-family: Arial;
+       font-size: 1rem;
+       color: #444444;
    `
 }
 

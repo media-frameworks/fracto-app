@@ -30,6 +30,13 @@ const IMAGE_IDS = [
    '91247161', '4204227', '13902593', '87401778', '54421662'
 ]
 
+const INTRO_TEXT = [
+   <b>Fracto</b>,
+   " is an empirical study of the distribution,", <br/>,
+   "formal characteristics, and structural taxonomy", <br/>,
+   "of the orbital patterns within the Mandelbrot Set."
+]
+
 const REFRESH_LIMIT = 800
 const REFRESH_CADENCE_MS = 25
 
@@ -118,17 +125,19 @@ export class PageWelcome extends Component {
    }
 
    render_info_box = () => {
-      const {show_info_box,button_ref} = this.state
+      const {show_info_box, button_ref} = this.state
       if (!button_ref.current) {
          return []
       }
       const button_bounds = button_ref.current.getBoundingClientRect()
       const box_style = {
-         top : `${button_bounds.bottom + 5}px`,
-         left : `${button_bounds.left}px`,
-         opacity: show_info_box ? 0.85 : 0
+         top: `${button_bounds.bottom + 5}px`,
+         left: `${button_bounds.left}px`,
+         opacity: show_info_box ? 0.90 : 0
       }
-      return <styles.InfoBox style={box_style}>i want to go to there</styles.InfoBox>
+      return <styles.InfoBox style={box_style}>
+         <styles.PreambleText>{INTRO_TEXT}</styles.PreambleText>
+      </styles.InfoBox>
    }
 
    render() {
