@@ -7,7 +7,7 @@ import {
    IMAGE_MODE_GALLERY,
    IMAGE_MODE_STAGING,
    KEY_IMAGE_MODE
-} from "settings/ImageSettings";
+} from "pages/settings/ImageSettings";
 import ImagesCaptureField from "./images/ImagesCaptureField";
 import ImagesStaging from "./images/ImagesStaging";
 import {render_comp_modes} from "./CompUtils";

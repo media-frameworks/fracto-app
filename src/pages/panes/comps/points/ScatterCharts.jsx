@@ -5,7 +5,7 @@ import {CompPointsStyles as styles} from 'styles/CompPointsStyles'
 import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX
-} from "settings/PaneSettings";
+} from "pages/settings/PaneSettings";
 import {
    click_point_chart,
    escape_points_chart
@@ -13,11 +13,11 @@ import {
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {CoolSlider} from "common/ui/CoolImports";
 import {get_click_point_info} from "./PointUtils";
-import {KEY_FOCAL_POINT} from "settings/AppSettings";
+import {KEY_FIELD_CROSSHAIRS, KEY_FOCAL_POINT} from "pages/settings/AppSettings";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
-const WIDTH_FACTOR = 2.05
+const WIDTH_FACTOR = 1.618
 const WIDTH_OFFSET_PX = 15
 const POINT_ZOOM_FACTOR = 10
 const ZOOMER_WIDTH_PX = 30
@@ -59,7 +59,10 @@ export class ScatterCharts extends Component {
       if (prevState.height_px !== new_height_px) {
          this.setState({height_px: new_height_px})
       }
-      if (prevState.click_point_info) {
+      const in_crosshairs = page_settings[KEY_FIELD_CROSSHAIRS]
+      if (in_crosshairs) {
+         setTimeout(this.initialize, 150)
+      } else if (prevState.click_point_info) {
          const focal_point = page_settings[KEY_FOCAL_POINT]
          const focal_point_x_changed = prevState.click_point_info.click_point.x !== focal_point.x
          const focal_point_y_changed = prevState.click_point_info.click_point.y !== focal_point.y
@@ -83,7 +86,7 @@ export class ScatterCharts extends Component {
       const {click_point, pattern, orbital_points, in_cardioid, Q_core_neg} = click_point_info
       if (pattern) {
          const set2 = [Q_core_neg]
-         return click_point_chart(orbital_points, [set2], in_cardioid, false)
+         return click_point_chart(orbital_points, set2, in_cardioid, false)
       }
       return escape_points_chart(click_point, in_cardioid)
    }
@@ -93,7 +96,7 @@ export class ScatterCharts extends Component {
       if (!click_point_info) {
          return []
       }
-      const {pattern,iteration, Q_core_neg} = click_point_info
+      const {pattern, iteration, Q_core_neg} = click_point_info
       const subject_text = pattern
          ? `${pattern}-POINT ORBITAL`
          : `${iteration}-POINT ESCAPE PATH`
@@ -177,8 +180,8 @@ export class ScatterCharts extends Component {
       const {width_px, point_zoom} = this.state
       const scatter_chart_height_px = width_px * 1.01
       const scatter_chart_style = {
-         width: `${width_px}px`,
-         height: `${scatter_chart_height_px}px`,
+         // width: `${width_px}px`,
+         // height: `${scatter_chart_height_px}px`,
       }
       const scatter_chart = this.render_scatter_chart()
       const zoomer = <CoolSlider

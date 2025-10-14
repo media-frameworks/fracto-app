@@ -5,7 +5,7 @@ import {CompPointsStyles as styles} from 'styles/CompPointsStyles'
 import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX
-} from "settings/PaneSettings";
+} from "pages/settings/PaneSettings";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {
    get_click_point_info,
@@ -14,12 +14,12 @@ import {
 } from "./PointUtils";
 import {iteration_chart} from "../patterns/PatternsUtils";
 import {CoolSlider} from "common/ui/CoolImports";
-import {KEY_FIELD_CROSSHAIRS, KEY_FOCAL_POINT} from "settings/AppSettings";
+import {KEY_FIELD_CROSSHAIRS, KEY_FOCAL_POINT} from "pages/settings/AppSettings";
 import FractoCardioid from "fracto/FractoCardioid";
 
 const HEIGHT_FACTOR = 1.025
 const HEIGHT_OFFSET_PX = 60
-const WIDTH_FACTOR = 2.05
+const WIDTH_FACTOR = 1.618
 const WIDTH_OFFSET_PX = 15
 const POINT_ZOOM_FACTOR = 10
 const ZOOMER_WIDTH_PX = 30
@@ -66,7 +66,7 @@ export class PolarCharts extends Component {
       }
       const in_crosshairs = page_settings[KEY_FIELD_CROSSHAIRS]
       if (dims_changed || in_crosshairs) {
-         // setTimeout(this.initialize, 150)
+         setTimeout(this.initialize, 150)
       }
    }
 
@@ -207,8 +207,8 @@ export class PolarCharts extends Component {
    render() {
       const {width_px, height_px, point_zoom} = this.state
       const polar_chart_style = {
-         width: `${width_px - ZOOMER_WIDTH_PX}px`,
-         height: `${height_px - width_px - CAPTION_HEIGHT_PX}px`,
+         // width: `${width_px - ZOOMER_WIDTH_PX}px`,
+         // height: `${height_px - width_px - CAPTION_HEIGHT_PX}px`,
       }
       const charts = this.render_charts(width_px, height_px - width_px)
       const chart_stack = <styles.ChartWrapper style={polar_chart_style}>

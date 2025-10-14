@@ -66,12 +66,15 @@ const find_bounds = (set1, other_sets, in_cardioid, escaper) => {
          }
       })
    })
+   const x_center = (max_x + min_x) / 2
+   const y_center = (max_y + min_y) / 2
    const x_extent = max_x - min_x
    const y_extent = max_y - min_y
-   min_x -= x_extent / 10
-   max_x += x_extent / 10
-   min_y -= y_extent / 10
-   max_y += y_extent / 10
+   const extent_by_2 = 1.1 * Math.max(x_extent, y_extent) / 2
+   min_x = x_center - extent_by_2
+   max_x = x_center + extent_by_2
+   min_y = y_center - extent_by_2
+   max_y = y_center + extent_by_2
    return {min_x, max_x, min_y, max_y}
 }
 
@@ -110,8 +113,8 @@ export const click_point_chart = (set1, other_sets, in_cardioid = false, escaper
          {
             Id: 2,
             // label: in_cardioid ? 'Q' : 'Q',
-            data: JSON.parse(JSON.stringify(other_sets[0])),
-            backgroundColor: in_animation ? ANIMATION_COLOR : 'black',
+            data: JSON.parse(JSON.stringify(other_sets)),
+            backgroundColor: 'black',
             pointRadius: in_animation ? 3 : 3,
             showLine: true
          },
@@ -273,9 +276,9 @@ export const escape_points_chart = (click_point, in_cardioid, animation_index = 
    const Q_core_neg = FractoFastCalc.calculate_cardioid_Q(click_point.x, click_point.y, -1)
    // const Q_core_pos = FractoFastCalc.calculate_cardioid_Q(click_point.x, click_point.y, 1)
    const set2 = [Q_core_neg]
-   if (animation_index >= 0) {
-      set2.push(escape_points[animation_index])
-   }
+   // if (animation_index >= 0) {
+   //    set2.push(escape_points[animation_index])
+   // }
    return click_point_chart(escape_points, set2, in_cardioid, true, animation_index)
 }
 

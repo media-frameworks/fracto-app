@@ -7,7 +7,7 @@ import {
    KEY_FIELD_CROSSHAIRS,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT, KEY_IMAGE_BOUNDS
-} from "settings/AppSettings";
+} from "pages/settings/AppSettings";
 import FieldUtils from "./FieldUtils";
 
 export class FieldCrossHairs extends Component {

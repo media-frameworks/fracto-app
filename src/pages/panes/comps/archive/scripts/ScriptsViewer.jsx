@@ -8,7 +8,7 @@ import {
    KEY_SCRIPT_TREE_WIDTH_PX,
    KEY_SCRIPT_VIEWER_MODE,
    KEY_SELECTED_SCRIPT_DATA,
-} from "settings/CompSettings";
+} from "pages/settings/CompSettings";
 import {SPLITTER_WIDTH_PX} from "styles/PageAppStyles";
 import {TAB_HEIGHT_PX} from "pages/panes/PaneComps";
 import ScriptsViewerBar, {SCRIPT_VIEWER_MODE_TEXT} from "./ScriptsViewerBar";

@@ -9,7 +9,7 @@ import {
    GET_TILES_FROM_CACHE,
    FILLING_CANVAS_BUFFER,
 } from "fracto/FractoTileData";
-import {KEY_FOCAL_POINT, KEY_SCOPE} from "settings/AppSettings";
+import {KEY_FOCAL_POINT, KEY_SCOPE} from "pages/settings/AppSettings";
 import {render_image} from "./ImageUtils";
 
 const RESOLUTIONS = [

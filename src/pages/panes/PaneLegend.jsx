@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_SCOPE} from "settings/AppSettings";
+import {KEY_DISABLED, KEY_FOCAL_POINT, KEY_SCOPE} from "pages/settings/AppSettings";
 import {
    KEY_LEGEND_HEIGHT_PX, KEY_LEGEND_WIDTH_PX
-} from "settings/PaneSettings";
+} from "pages/settings/PaneSettings";
 import {
    PaneLegendStyles as styles,
    HEADER_HEIGHT_PX,

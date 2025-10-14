@@ -18,16 +18,16 @@ import {
    KEY_UPDATE_INDEX,
    KEY_FIELD_CROSSHAIRS,
    KEY_CLIENT_POINT, KEY_IMAGE_BOUNDS, KEY_LOCATE_CENTER,
-} from "settings/AppSettings";
+} from "pages/settings/AppSettings";
 import {
    KEY_FIELD_WIDTH_PX,
    KEY_FIELD_HEIGHT_PX,
-} from 'settings/PaneSettings'
+} from 'pages/settings/PaneSettings'
 import {
    KEY_IMAGE_WIDTH,
    KEY_COLORATION_TYPE,
    KEY_COLOR_PHASE
-} from 'settings/CompSettings'
+} from 'pages/settings/CompSettings'
 import FractoUtil from "fracto/FractoUtil";
 import {COLORS_EXTERNAL} from "../comps/archive/CompColors";
 import {CoolDropdown} from "common/ui/CoolImports";

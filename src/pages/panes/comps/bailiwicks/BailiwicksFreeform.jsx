@@ -25,12 +25,12 @@ import {
    KEY_BAILIWICK_DETAIL_DATA,
    KEY_BAILIWICK_FREEFORM_ORDERING,
    KEY_BAILIWICK_FREEFORM_ORDERING_DIRECTION
-} from "settings/BailiwickSettings";
+} from "pages/settings/BailiwickSettings";
 import {
    KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_SCOPE
-} from "settings/AppSettings";
+} from "pages/settings/AppSettings";
 import BailiwicksDetail from "./BailiwicksDetail";
 
 export class BailiwicksFreeform extends Component {

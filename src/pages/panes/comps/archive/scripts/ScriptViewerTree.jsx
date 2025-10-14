@@ -13,7 +13,7 @@ import {
    KEY_SCRIPT_SELECTED_KEYS,
    KEY_SCRIPT_SELECTED_NODE,
    KEY_SELECTED_SCRIPT_DATA
-} from "settings/CompSettings";
+} from "pages/settings/CompSettings";
 import {
    node_type_from_key,
    icon_from_key,

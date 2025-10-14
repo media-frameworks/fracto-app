@@ -1,5 +1,5 @@
 import {TYPE_OBJECT, TYPE_STRING} from "./AppSettings";
-import {CELL_ALIGN_CENTER, CELL_ALIGN_LEFT, CELL_TYPE_CALLBACK, CELL_TYPE_TEXT} from "../common/ui/CoolTable";
+import {CELL_ALIGN_CENTER, CELL_ALIGN_LEFT, CELL_TYPE_CALLBACK, CELL_TYPE_TEXT} from "../../common/ui/CoolTable";
 
 export const KEY_BAILIWICK_MODE = 'bailiwick_mode'
 export const KEY_BAILIWICK_FREEFORM_ORDERING = 'bailiwick_freeform_ordering'

@@ -7,7 +7,7 @@ import {
    LORE_MODE_EDIT,
    LORE_MODE_INDEX,
    LORE_MODE_PRESENT
-} from "settings/LoreSettings";
+} from "pages/settings/LoreSettings";
 import {render_comp_modes} from "../CompUtils";
 import LoreIndex from "../lore/LoreIndex";
 

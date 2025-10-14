@@ -12,7 +12,7 @@ import {
    COLUMN_ID_NAME,
    COLUMN_ID_PATTERN,
    COLUMN_ID_SIZE
-} from "settings/BailiwickSettings";
+} from "pages/settings/BailiwickSettings";
 import { render_pattern_block} from "fracto/styles/FractoStyles";
 import ReactTimeAgo from "react-time-ago";
 

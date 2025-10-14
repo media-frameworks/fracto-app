@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {KEY_SCRIPT_SELECTED_DATA} from "settings/CompSettings";
+import {KEY_SCRIPT_SELECTED_DATA} from "pages/settings/CompSettings";
 
 export class ScriptsDetail extends Component {
    static propTypes = {

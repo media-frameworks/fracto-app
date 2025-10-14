@@ -5,7 +5,7 @@ import {
    TYPE_NUMBER,
    TYPE_STRING,
    TYPE_OBJECT,
-} from "settings/AppSettings";
+} from "pages/settings/AppSettings";
 import {
    faGear,
    faCircleQuestion,

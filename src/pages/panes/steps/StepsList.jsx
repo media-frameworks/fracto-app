@@ -8,8 +8,8 @@ import {
    KEY_SCOPE,
    KEY_DISABLED,
    KEY_STEPS_ZOOM,
-} from 'settings/AppSettings'
-import {KEY_STEPS_WIDTH_PX} from "settings/PaneSettings";
+} from 'pages/settings/AppSettings'
+import {KEY_STEPS_WIDTH_PX} from "pages/settings/PaneSettings";
 
 const create_step_entry = (step_scope) => {
    return {

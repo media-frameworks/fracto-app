@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 
-import {KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
+import {KEY_COMPS_WIDTH_PX} from "pages/settings/PaneSettings";
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
-import {KEY_FOCAL_POINT, KEY_SCOPE} from "settings/AppSettings";
+import {KEY_FOCAL_POINT, KEY_SCOPE} from "pages/settings/AppSettings";
 import FractoUtil from "fracto/FractoUtil";
 import {Scatter} from "react-chartjs-2";
 // import Complex from "../../../../common/math/Complex";

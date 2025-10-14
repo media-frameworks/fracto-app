@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import {ColorWheelStyles as styles} from './styles/ColorWheelStyles';
 import FractoUtil from "./FractoUtil";
-import {KEY_COLOR_PHASE} from "settings/CompSettings";
+import {KEY_COLOR_PHASE} from "pages/settings/CompSettings";
 import {color_wheel, draw_circle, TWO_PI} from './ColorWheelUtils'
-import {KEY_DISABLED} from "../settings/AppSettings";
+import {KEY_DISABLED} from "../pages/settings/AppSettings";
 
 export class FractoColorWheel extends Component {
    static propTypes = {

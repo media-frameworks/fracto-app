@@ -14,8 +14,8 @@ import {Bar} from 'react-chartjs-2';
 import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX
-} from "settings/PaneSettings";
-import {KEY_CANVAS_BUFFER} from 'settings/AppSettings'
+} from "pages/settings/PaneSettings";
+import {KEY_CANVAS_BUFFER} from 'pages/settings/AppSettings'
 import FractoUtil from "fracto/FractoUtil";
 import CoolStyles from "common/ui/styles/CoolStyles";
 

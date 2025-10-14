@@ -2,7 +2,7 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {NumberSpan, render_coordinates} from "fracto/styles/FractoStyles";
-import {KEY_IMAGE_WIDTH} from 'settings/CompSettings'
+import {KEY_IMAGE_WIDTH} from 'pages/settings/CompSettings'
 import {
    KEY_CACHE_SIZE,
    KEY_DISABLED,
@@ -10,12 +10,12 @@ import {
    KEY_HOVER_POINT,
    KEY_SCOPE,
    KEY_FIELD_COVERAGE,
-} from 'settings/AppSettings'
+} from 'pages/settings/AppSettings'
 import {
    KEY_FIELD_WIDTH_PX,
    KEY_LEGEND_HEIGHT_PX,
    KEY_LEGEND_WIDTH_PX,
-} from 'settings/PaneSettings'
+} from 'pages/settings/PaneSettings'
 import {
    PaneLegendStyles as styles,
    THUMBNAIL_WIDTH_PX,

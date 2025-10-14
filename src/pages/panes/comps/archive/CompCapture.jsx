@@ -11,10 +11,10 @@ import {COLORS_EXTERNAL} from "./CompColors";
 
 import {
    KEY_FOCAL_POINT, KEY_SCOPE
-} from "settings/AppSettings";
+} from "pages/settings/AppSettings";
 import {
    KEY_COLORATION_TYPE, KEY_COLOR_PHASE
-} from 'settings/CompSettings'
+} from 'pages/settings/CompSettings'
 
 const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},

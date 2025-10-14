@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {PaneFieldStyles as styles} from 'styles/PaneFieldStyles'
 import {HEADER_HEIGHT_PX} from "styles/PageAppStyles";
 import {faCaretDown, faCaretUp} from "@fortawesome/free-solid-svg-icons";
-import {KEY_DISABLED, KEY_FIELD_COVERAGE, KEY_FIELD_CROSSHAIRS, KEY_SCOPE} from "settings/AppSettings";
+import {KEY_DISABLED, KEY_FIELD_COVERAGE, KEY_FIELD_CROSSHAIRS, KEY_SCOPE} from "pages/settings/AppSettings";
 
 export class FieldHeader extends Component {
    static propTypes = {

@@ -18,7 +18,7 @@ import {
    TYPE_ARRAY,
    TYPE_BOOLEAN,
    TYPE_OBJECT
-} from "settings/AppSettings";
+} from "pages/settings/AppSettings";
 import {
    KEY_STEPS_WIDTH_PX,
    KEY_STEPS_HEIGHT_PX,
@@ -28,7 +28,7 @@ import {
    KEY_COMPS_HEIGHT_PX,
    KEY_LEGEND_WIDTH_PX,
    KEY_LEGEND_HEIGHT_PX
-} from "../settings/PaneSettings";
+} from "./settings/PaneSettings";
 import PageSettings from "./PageSettings";
 
 const getViewportDimensions = () => {

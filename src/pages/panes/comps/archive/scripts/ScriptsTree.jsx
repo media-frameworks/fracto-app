@@ -11,7 +11,7 @@ import {
    KEY_SCRIPT_TREE_EXPANDED,
    KEY_SCRIPT_TREE_SELECTED,
    KEY_SCRIPT_SELECTED_NODE
-} from "settings/CompSettings";
+} from "pages/settings/CompSettings";
 import {TAB_HEIGHT_PX} from "../../../PaneComps";
 
 export class ScriptsTree extends Component {

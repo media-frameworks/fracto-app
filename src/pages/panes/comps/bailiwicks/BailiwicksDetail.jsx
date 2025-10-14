@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompBailiwickStyles as styles} from 'styles/CompBailiwickStyles';
-import {KEY_BAILIWICK_DETAIL_DATA} from "settings/BailiwickSettings";
+import {KEY_BAILIWICK_DETAIL_DATA} from "pages/settings/BailiwickSettings";
 import {render_pattern_block} from "fracto/styles/FractoStyles";
 import CoolStyles from "common/ui/styles/CoolStyles";
 import {render_size} from "./BailiwickUtils";

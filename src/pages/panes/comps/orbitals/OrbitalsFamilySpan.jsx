@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 
 import {CompOrbitalStyles as styles} from 'styles/CompOrbitalStyles'
-import {KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
+import {KEY_COMPS_WIDTH_PX} from "pages/settings/PaneSettings";
 import {collect_orbitals} from "fracto/CanvasBufferUtils";
 import FractoUtil from "fracto/FractoUtil";
 

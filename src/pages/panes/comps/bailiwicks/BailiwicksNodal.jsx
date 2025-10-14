@@ -10,7 +10,7 @@ import {
 } from "common/ui/CoolTable";
 
 import {fetch_bailiwicks, render_pattern, render_size, render_time_ago} from "./BailiwickUtils";
-import {BAILIWICK_MODE_NODAL} from "settings/BailiwickSettings";
+import {BAILIWICK_MODE_NODAL} from "pages/settings/BailiwickSettings";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShoePrints} from "@fortawesome/free-solid-svg-icons";
 

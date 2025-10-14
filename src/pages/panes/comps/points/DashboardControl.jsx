@@ -6,7 +6,7 @@ import {CompPointsStyles as styles} from 'styles/CompPointsStyles'
 import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX
-} from "settings/PaneSettings";
+} from "pages/settings/PaneSettings";
 import {NumberSpan, render_pattern_block} from "fracto/styles/FractoStyles";
 import {
    discover_cardinality,
@@ -14,12 +14,12 @@ import {
    round_places
 } from "./PointUtils";
 import {render_coordinates} from "fracto/styles/FractoStyles";
-import {KEY_FOCAL_POINT} from "../../../../settings/AppSettings";
+import {KEY_FOCAL_POINT} from "../../../settings/AppSettings";
 import Complex from "../../../../common/math/Complex";
 
 const HEIGHT_FACTOR = 2.618
-const WIDTH_FACTOR = 2.05
-const WIDTH_OFFSET_PX = 40
+const WIDTH_FACTOR = 2.618
+const WIDTH_OFFSET_PX = 50
 const HEIGHT_OFFSET_PX = 60
 
 export class DashboardControl extends Component {
@@ -134,11 +134,8 @@ export class DashboardControl extends Component {
    }
 
    render() {
-      const {width_px, height_px, click_point_info} = this.state
-      const content_style = {
-         width: `${width_px}px`,
-         height: `${height_px}px`,
-      }
+      const {width_px, click_point_info} = this.state
+      const content_style = {width: `${width_px}px`,}
       if (!click_point_info) {
          return '...'
       }
@@ -147,8 +144,8 @@ export class DashboardControl extends Component {
       } = click_point_info
       let cardinality = 0
       if (orbital_points.length > 1) {
-         const current_value = new Complex (orbital_points[0].x, orbital_points[0].y )
-         const next_value = new Complex (orbital_points[1].x, orbital_points[1].y )
+         const current_value = new Complex(orbital_points[0].x, orbital_points[0].y)
+         const next_value = new Complex(orbital_points[1].x, orbital_points[1].y)
          const psi = next_value.divide(current_value)
          const phi = next_value.mul(current_value)
          const psi_add_phi = psi.add(phi)

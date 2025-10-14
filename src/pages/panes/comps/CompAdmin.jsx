@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
-import {KEY_ADMIN_TYPE} from "settings/CompSettings";
+import {KEY_ADMIN_TYPE} from "pages/settings/CompSettings";
 
 import AdminSettings from "./admin/AdminSettings";
 import AdminInventory from "./admin/AdminInventory";

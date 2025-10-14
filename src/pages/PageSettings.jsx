@@ -5,12 +5,12 @@ import {
    TYPE_NUMBER,
    TYPE_OBJECT,
    TYPE_STRING
-} from "../settings/AppSettings";
-import {COMP_KEYED_SETTINGS} from "../settings/CompSettings";
-import {PANE_KEYED_SETTINGS} from "../settings/PaneSettings";
-import {IMAGE_KEYED_SETTINGS} from "../settings/ImageSettings";
-import {LORE_KEYED_SETTINGS} from "../settings/LoreSettings";
-import {BAILIWICK_KEYED_SETTINGS} from "../settings/BailiwickSettings";
+} from "./settings/AppSettings";
+import {COMP_KEYED_SETTINGS} from "./settings/CompSettings";
+import {PANE_KEYED_SETTINGS} from "./settings/PaneSettings";
+import {IMAGE_KEYED_SETTINGS} from "./settings/ImageSettings";
+import {LORE_KEYED_SETTINGS} from "./settings/LoreSettings";
+import {BAILIWICK_KEYED_SETTINGS} from "./settings/BailiwickSettings";
 
 export class PageSettings {
 

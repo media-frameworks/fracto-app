@@ -12,8 +12,8 @@ import {
    KEY_DISABLED, KEY_FIELD_CROSSHAIRS,
    KEY_FOCAL_POINT,
    KEY_HOVER_POINT,
-} from "settings/AppSettings";
-import {KEY_COMPS_WIDTH_PX} from "settings/PaneSettings";
+} from "pages/settings/AppSettings";
+import {KEY_COMPS_WIDTH_PX} from "pages/settings/PaneSettings";
 import {
    click_point_chart,
    get_escape_points,
@@ -124,15 +124,11 @@ export class PatternsOrbital extends Component {
    }
 
    click_point_data = () => {
-      const {in_animation, animation_index} = this.state
+      const {animation_index} = this.state
       const click_point_info = this.get_click_point_info()
       const {click_point, pattern, orbital_points, in_cardioid, Q_core_neg} = click_point_info
       if (pattern) {
-         const set2 = [Q_core_neg]
-         if (in_animation && animation_index >= 0) {
-            set2.push(orbital_points[animation_index])
-         }
-         return click_point_chart(orbital_points, set2, in_cardioid, false)
+         return click_point_chart(orbital_points, [Q_core_neg], in_cardioid, false)
       }
       return escape_points_chart(click_point, in_cardioid, animation_index)
    }
@@ -202,7 +198,7 @@ export class PatternsOrbital extends Component {
       on_settings_changed({[KEY_AUTOMATION_SCALAR_MS]: animation_scalar_ms})
    }
 
-   big_calc_info = (pattern, click_point) =>{
+   big_calc_info = (pattern, click_point) => {
       const big_calc_obj = FractoFastCalc.best_big_iteration(
          pattern, click_point.x, click_point.y)
       console.log('big_calc_obj', big_calc_obj)

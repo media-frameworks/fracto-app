@@ -7,7 +7,7 @@ import {
    BAILIWICK_MODE_INLINE,
    BAILIWICK_MODE_NODAL,
    KEY_BAILIWICK_MODE
-} from "settings/BailiwickSettings";
+} from "pages/settings/BailiwickSettings";
 import {render_comp_modes} from "./CompUtils";
 import BailiwicksFreeform from "./bailiwicks/BailiwicksFreeform";
 import BailiwicksInline from "./bailiwicks/BailiwicksInline";

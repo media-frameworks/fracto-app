@@ -6,16 +6,16 @@ import network from "common/config/network.json" with {type: "json"}
 import {
    KEY_MINIBROT_SORT_TYPE,
    KEY_BAILIWICK_ID,
-} from "settings/CompSettings";
+} from "pages/settings/CompSettings";
 import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX,
-} from "settings/PaneSettings";
+} from "pages/settings/PaneSettings";
 import {
    KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_SCOPE,
-} from 'settings/AppSettings'
+} from 'pages/settings/AppSettings'
 import BailiwickList from "fracto/bailiwick/BailiwickList";
 import {CompBailiwickStyles as styles} from 'styles/CompBailiwickStyles';
 import {render_big_pattern_block} from "fracto/styles/FractoStyles";

@@ -3,8 +3,8 @@ import styled from "styled-components";
 import PropTypes from 'prop-types';
 
 import {CoolSlider, CoolStyles} from "common/ui/CoolImports";
-import {KEY_STEPS_ZOOM} from "settings/AppSettings";
-import {KEY_STEPS_WIDTH_PX} from 'settings/PaneSettings'
+import {KEY_STEPS_ZOOM} from "pages/settings/AppSettings";
+import {KEY_STEPS_WIDTH_PX} from 'pages/settings/PaneSettings'
 
 const MARGIN_PX = 10;
 const HeaderZoomWrapper = styled(CoolStyles.Block)`

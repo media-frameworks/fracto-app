@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import network from "common/config/network.json";
 import {CoolStyles, CoolModal} from "common/ui/CoolImports";
-import {KEY_MODAL} from "settings/AppSettings";
+import {KEY_MODAL} from "pages/settings/AppSettings";
 
 import FractoTileContext from "fracto/FractoTileContext";
 import FractoUtil from "fracto/FractoUtil";

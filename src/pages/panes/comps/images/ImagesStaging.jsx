@@ -25,7 +25,7 @@ import {
    KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_SCOPE
-} from "settings/AppSettings";
+} from "pages/settings/AppSettings";
 import network from "common/config/network.json" with {type: "json"};
 import {render_image} from "./ImageUtils";
 

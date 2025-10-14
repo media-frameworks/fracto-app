@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompLoreStyles as styles} from 'styles/CompLoreStyles'
-import {KEY_FOCAL_POINT} from "settings/AppSettings";
+import {KEY_FOCAL_POINT} from "pages/settings/AppSettings";
 import Base2i from "common/math/Base2i";
 import Complex from "common/math/Complex";
 import {Scatter} from "react-chartjs-2";

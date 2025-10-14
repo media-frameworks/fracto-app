@@ -7,17 +7,17 @@ import {
 import {
    SORT_TYPE_BY_ORBITAL,
    SORT_TYPE_BY_SIZE
-} from "../pages/panes/comps/archive/CompMinibrot";
+} from "../panes/comps/archive/CompMinibrot";
 import {
    COLORS_INTERNAL,
    COLORS_EXTERNAL
-} from "../pages/panes/comps/archive/CompColors";
+} from "../panes/comps/archive/CompColors";
 import {
    SCRIPT_VIEWER_MODE_TEXT,
    SCRIPT_VIEWER_MODE_UI
-} from "../pages/panes/comps/archive/scripts/ScriptsViewerBar";
-import {PATTERN_TYPE_ORBITALS} from "../pages/panes/comps/archive/CompPatterns";
-import {ADMIN_TYPE_SETTINGS} from "../pages/panes/comps/CompAdmin";
+} from "../panes/comps/archive/scripts/ScriptsViewerBar";
+import {PATTERN_TYPE_ORBITALS} from "../panes/comps/archive/CompPatterns";
+import {ADMIN_TYPE_SETTINGS} from "../panes/comps/CompAdmin";
 
 export const KEY_IMAGE_WIDTH = 'image_width'
 export const KEY_COLORATION_TYPE = 'coloration_type'

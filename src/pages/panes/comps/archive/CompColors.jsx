@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompColorsStyles as styles} from 'styles/CompColorsStyles';
-import {KEY_UPDATE_INDEX} from "settings/AppSettings";
+import {KEY_UPDATE_INDEX} from "pages/settings/AppSettings";
 import ColorsInterior from "./colors/ColorsInterior";
 import ColorsExterior from "./colors/ColorsExterior";
-import {KEY_COLORATION_TYPE} from "settings/CompSettings";
+import {KEY_COLORATION_TYPE} from "pages/settings/CompSettings";
 
 export const COLORS_INTERNAL = 'colors_internal'
 export const COLORS_EXTERNAL = 'colors_external'
