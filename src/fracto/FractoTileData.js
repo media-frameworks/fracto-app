@@ -101,7 +101,7 @@ export const get_tiles = (
   return all_tiles.sort((a, b) => a.level - b.level)
 }
 
-const tiles_in_scope = (level, focal_point, scope, aspect_ratio = 1.0, set_name = TILE_SET_INDEXED) => {
+export const tiles_in_scope = (level, focal_point, scope, aspect_ratio = 1.0, set_name = TILE_SET_INDEXED) => {
   const width_by_two = scope / 2;
   const height_by_two = width_by_two * aspect_ratio;
   const viewport = {

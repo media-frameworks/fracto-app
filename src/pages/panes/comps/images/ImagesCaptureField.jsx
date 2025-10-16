@@ -11,6 +11,7 @@ import {
 } from "fracto/FractoTileData";
 import {KEY_FOCAL_POINT, KEY_SCOPE} from "pages/settings/AppSettings";
 import {render_image} from "./ImageUtils";
+import ImagesHeatMap from "./ImagesHeatMap";
 
 const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},
@@ -112,6 +113,7 @@ export class ImagesCaptureField extends Component {
 
    render() {
       const {coverage, current_size, image_outcome, image_status} = this.state
+      const {page_settings, on_settings_changed} = this.props
       const image = image_outcome.public_url
          ? <img src={image_outcome.public_url} alt={'copyright 2025 Fracto Inc'}/>
          : []
@@ -122,6 +124,11 @@ export class ImagesCaptureField extends Component {
       const status = tile_cache_status ? [
          tile_cache_status_str,
          canvas_buffer_status_str].join(', ') : ''
+      const image_heat_map = !image_outcome.public_url
+         ? <ImagesHeatMap
+            page_settings={page_settings}
+            on_settings_changed={on_settings_changed}/>
+         : []
       return [
          <styles.Spacer/>,
          <CoolSelect
@@ -134,6 +141,7 @@ export class ImagesCaptureField extends Component {
          <styles.Spacer/>,
          <CoolStyles.LinkSpan onClick={this.render_now}>render now</CoolStyles.LinkSpan>,
          <styles.StatusLine>{status}</styles.StatusLine>,
+         image_heat_map,
          image
       ]
    }
