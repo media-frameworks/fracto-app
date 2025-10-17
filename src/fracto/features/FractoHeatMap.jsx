@@ -7,6 +7,7 @@ export const fill_heat_map = (ctx, image_width, scope, focal_point) => {
    const increment = scope / image_width
    const leftmost = focal_point.x - scope / 2
    const topmost = focal_point.y + scope / 2
+   let max_level = 0
    for (let level = 3; level < MAX_LEVELS; level++) {
       ctx.fillStyle = `hsl(0, 0%, ${(100 * (MAX_LEVELS - level)) / MAX_LEVELS}%)`;
       const tiles = tiles_in_scope(level, focal_point, scope, 1.0);
@@ -23,8 +24,18 @@ export const fill_heat_map = (ctx, image_width, scope, focal_point) => {
                }
                ctx.fillRect(col, row, 1, 1);
                level_counts[level] += 1
+               max_level = level
             }
          }
       })
    }
+   const max_count = image_width * image_width
+   const result = level_counts.map((count, level) => {
+      return {level, count}
+   })
+      .filter(obj => obj.count && obj.count !== max_count)
+   if (result.length === 0) {
+      result.push({level: max_level, count: max_count})
+   }
+   return result
 }

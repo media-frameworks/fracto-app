@@ -41,6 +41,7 @@ export class CompImagesStyles {
        ${CoolStyles.link}
        font-size: 1.125rem;
        opacity: 0.5;
+
        &:hover {
            opacity: 1.0;
        }
@@ -55,10 +56,22 @@ export class CompImagesStyles {
        font-size: 1.125rem;
        margin-left: 0.5rem;
        opacity: 0.5;
+
        &:hover {
            opacity: 1.0;
        }
    `
+   static HeatMapCanvas = styled.canvas`
+       ${CoolStyles.narrow_box_shadow}
+       margin: 1rem;
+   `;
+   static HeatMapLevelWrapper = styled(CoolStyles.InlineBlock)`
+      margin: 1rem 0;
+   `
+   static HeatMapLevelItem = styled(CoolStyles.Block)`
+       ${CoolStyles.monospace}
+   `
+
 }
 
 export default CompImagesStyles
