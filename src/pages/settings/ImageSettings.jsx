@@ -65,7 +65,7 @@ export const IMAGE_KEYED_SETTINGS = {
    },
    [KEY_IMAGE_CAPTURE_DIMENSION_PX]: {
       data_type: TYPE_NUMBER,
-      default_value: 1200,
+      default_value: 4800,
       description: 'most recent image capture pixel count, aspect ratio fixes dimensions',
       persist: true,
    },

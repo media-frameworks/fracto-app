@@ -12,6 +12,7 @@ import {
 import {KEY_FOCAL_POINT, KEY_SCOPE} from "pages/settings/AppSettings";
 import {render_image} from "./ImageUtils";
 import ImagesHeatMap from "./ImagesHeatMap";
+import {KEY_IMAGE_CAPTURE_DIMENSION_PX} from "../../../settings/ImageSettings";
 
 const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},
@@ -34,7 +35,7 @@ export class ImagesCaptureField extends Component {
 
    state = {
       coverage: 'calculating...',
-      current_size: 1800,
+      current_size: 1200,
       current_focal_point: {},
       current_scope: 0,
       image_outcome: {},
@@ -42,13 +43,13 @@ export class ImagesCaptureField extends Component {
    }
 
    componentDidMount() {
-      const {current_size} = this.state
-      this.initialize(current_size)
+      const {page_settings} = this.props
+      this.initialize(page_settings[KEY_IMAGE_CAPTURE_DIMENSION_PX])
    }
 
    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
-      const {current_size} = this.state
       const {page_settings} = this.props
+      const current_size = page_settings[KEY_IMAGE_CAPTURE_DIMENSION_PX]
       const focal_point = page_settings[KEY_FOCAL_POINT]
       const scope = page_settings[KEY_SCOPE]
       const focal_point_x_changed = prevState.current_focal_point.x !== focal_point.x
@@ -81,15 +82,17 @@ export class ImagesCaptureField extends Component {
          coverage: coverage_str,
          current_focal_point,
          current_scope,
+         current_size,
          image_outcome: {}
       })
       console.log('initialize current_size', current_size)
    }
 
    change_resolution = (e) => {
+      const {on_settings_changed} = this.props
       console.log('change_resolution', e.target.value)
       const current_size = parseInt(e.target.value)
-      this.setState({current_size,})
+      on_settings_changed({[KEY_IMAGE_CAPTURE_DIMENSION_PX]:current_size})
       this.initialize(current_size)
    }
 

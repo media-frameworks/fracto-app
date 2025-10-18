@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {CompImagesStyles as styles} from 'styles/CompImagesStyles'
+import {
+   CELL_ALIGN_CENTER, CELL_TYPE_CALLBACK,
+   CELL_TYPE_NUMBER, CELL_TYPE_TEXT, CoolTable, NumericSpan
+} from "common/ui/CoolTable";
 
 import {
    KEY_FOCAL_POINT,
@@ -11,6 +15,37 @@ import {
    KEY_IMAGE_WIDTH
 } from "pages/settings/CompSettings";
 import {fill_heat_map} from "fracto/features/FractoHeatMap";
+
+const TABLE_COLUMNS = [
+   {
+      id: "color",
+      label: "shade",
+      type: CELL_TYPE_CALLBACK,
+      width_px: 60,
+      align: CELL_ALIGN_CENTER,
+   },
+   {
+      id: "level",
+      label: "level",
+      type: CELL_TYPE_NUMBER,
+      width_px: 40,
+      align: CELL_ALIGN_CENTER,
+   },
+   {
+      id: "percent",
+      label: "coverage",
+      type: CELL_TYPE_TEXT,
+      width_px: 80,
+      align: CELL_ALIGN_CENTER,
+   },
+   {
+      id: "tile_count",
+      label: "# tiles",
+      type: CELL_TYPE_NUMBER,
+      width_px: 60,
+      align: CELL_ALIGN_CENTER,
+   },
+]
 
 export class ImagesHeatMap extends Component {
    static propTypes = {
@@ -61,12 +96,6 @@ export class ImagesHeatMap extends Component {
       }
       const ctx = canvas.getContext('2d');
       const level_counts = fill_heat_map(ctx, image_width, scope, focal_point);
-      if (level_counts.length > 0) {
-         level_counts.unshift({
-            level: level_counts[0].level - 1,
-            count: image_width * image_width
-         })
-      }
       this.setState({
          stored_focal_point: JSON.parse(JSON.stringify(focal_point)),
          stored_scope: scope,
@@ -75,20 +104,34 @@ export class ImagesHeatMap extends Component {
          level_counts,
       })
    }
+   render_color = (item) => {
+      return <div style={{
+         backgroundColor: item.color,
+         color: item.color,
+      }}>.</div>
+   }
 
    render_level_counts = () => {
       const {level_counts, stored_image_width} = this.state
       console.log('level_counts', level_counts)
-      const all_levels = level_counts.map(item => {
-         const max_size = stored_image_width * stored_image_width
-         const item_pct = Math.round((item.count * 10000) / max_size) / 100
-         const level_data = `${item.level}: ${item_pct}%`
-         return <styles.HeatMapLevelItem>
-            {level_data}
-         </styles.HeatMapLevelItem>
+      const table_data = []
+      const max_size = stored_image_width * stored_image_width
+      level_counts.forEach((item) => {
+         const item_copy = JSON.parse(JSON.stringify(item))
+         const percent = Math.round((item.count * 10000) / max_size) / 100
+         table_data.push({
+            level: item.level,
+            percent: <NumericSpan>{`${percent}%`}</NumericSpan>,
+            tile_count: item.tile_count,
+            color: [this.render_color, item_copy],
+         })
       })
+      const level_count_table = <CoolTable
+         columns={TABLE_COLUMNS}
+         data={table_data}
+      />
       return <styles.HeatMapLevelWrapper>
-         {all_levels}
+         {level_count_table}
       </styles.HeatMapLevelWrapper>
    }
 
