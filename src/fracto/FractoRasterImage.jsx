@@ -5,7 +5,15 @@ import styled from "styled-components";
 import {CoolStyles} from "common/ui/CoolImports";
 
 import FractoColors from "fracto/styles/FractoColors";
-import {init_canvas_buffer, fill_canvas_buffer} from "./FractoTileData";
+import {
+   init_canvas_buffer,
+   fill_canvas_buffer,
+} from "./FractoTileData";
+import PageSettings from "pages/PageSettings";
+import {
+   KEY_SCOPE,
+   KEY_UPDATE_INDEX,
+} from "pages/settings/AppSettings";
 
 const FractoCanvas = styled.canvas`
     ${CoolStyles.narrow_box_shadow}
@@ -26,6 +34,7 @@ export class FractoRasterImage extends Component {
       update_counter: PropTypes.number,
       filter_level: PropTypes.number,
       color_handler: PropTypes.func,
+      resolution_factor: PropTypes.number,
    }
 
    static defaultProps = {
@@ -34,12 +43,14 @@ export class FractoRasterImage extends Component {
       update_counter: 0,
       filter_level: 0,
       color_handler: FractoColors.pattern_color_hsl,
+      resolution_factor: 1,
    }
 
    state = {
       canvas_buffer: null,
       canvas_ref: React.createRef(),
       loading_tiles: true,
+      stored_values: {}
    }
 
    componentDidMount() {
@@ -69,12 +80,6 @@ export class FractoRasterImage extends Component {
    componentDidUpdate(prevProps, prevState, snapshot) {
       const width_px_changed = prevProps.width_px !== this.props.width_px;
       const aspect_ratio_changed = prevProps.aspect_ratio !== this.props.aspect_ratio;
-      const focal_point_x_changed = prevProps.focal_point?.x !== this.props.focal_point?.x;
-      const focal_point_y_changed = prevProps.focal_point?.y !== this.props.focal_point?.y;
-      const scope_changed = prevProps.scope !== this.props.scope;
-      const disabled_changed = prevProps.disabled !== this.props.disabled;
-      const filter_level_changed = this.props.filter_level && prevProps.filter_level !== this.props.filter_level;
-      const update_counter_changed = false //this.props.update_counter && prevProps.update_counter !== this.props.update_counter;
       let canvas_buffer = this.state.canvas_buffer
       if (this.state.loading_tiles) {
          return;
@@ -85,14 +90,29 @@ export class FractoRasterImage extends Component {
          || !canvas_buffer) {
          canvas_buffer = this.init_canvas_buffer()
          this.fill_canvas_buffer(canvas_buffer, this.state.ctx);
-      } else if (
-         focal_point_x_changed
-         || focal_point_y_changed
-         || scope_changed
-         || filter_level_changed
-         || disabled_changed
-         || update_counter_changed) {
-         this.fill_canvas_buffer(canvas_buffer, this.state.ctx);
+      } else {
+         const {stored_values} = this.state
+         let focal_point_x_changed = false
+         if (stored_values.focal_point) {
+            const diff_focal_point_x = this.props.focal_point.x - stored_values.focal_point.x
+            const diff_focal_point_y = this.props.focal_point.y - stored_values.focal_point.y
+            const magnitude_diff = Math.sqrt(
+               diff_focal_point_x * diff_focal_point_x + diff_focal_point_y * diff_focal_point_y)
+            focal_point_x_changed = (magnitude_diff / this.props.scope > 0.001)
+         }
+         const settings_changed = PageSettings.test_update_settings(
+            [
+               // KEY_FOCAL_POINT,
+               KEY_SCOPE,
+               KEY_UPDATE_INDEX,
+            ], this.props, stored_values)
+         if (settings_changed || focal_point_x_changed) {
+            stored_values.filter_level = this.props.filter_level
+            stored_values.focal_point = this.props.focal_point
+            this.setState({stored_values, loading_tiles: true})
+            this.fill_canvas_buffer(canvas_buffer, this.state.ctx);
+            // console.log('stored values changed', stored_values);
+         }
       }
    }
 
@@ -117,8 +137,10 @@ export class FractoRasterImage extends Component {
          scope,
          aspect_ratio,
          on_plan_complete,
+         resolution_factor
       } = this.props
-      await fill_canvas_buffer(canvas_buffer, width_px, focal_point, scope, aspect_ratio)
+      console.log('fill_canvas_buffer')
+      await fill_canvas_buffer(canvas_buffer, width_px, focal_point, scope, aspect_ratio, resolution_factor)
       FractoColors.buffer_to_canvas(canvas_buffer, ctx)
       if (on_plan_complete) {
          on_plan_complete(canvas_buffer, ctx)

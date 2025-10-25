@@ -114,7 +114,7 @@ export class FieldImage extends Component {
 
    on_click = (e) => {
       const {page_settings, on_settings_changed} = this.props
-      const {focal_point, scope, disabled} = page_settings
+      const {focal_point, scope, disabled, update_index} = page_settings
       if (disabled) {
          return
       }
@@ -122,14 +122,14 @@ export class FieldImage extends Component {
       const leftmost = focal_point.x - scope / 2
       const topmost = focal_point.y + scope / 2
       const increment = scope / client_click.container_bounds.width
-      let settings = {[KEY_DISABLED]: true}
-      settings[KEY_FOCAL_POINT] = {
-         x: leftmost + increment * client_click.x, y: topmost - increment * client_click.y,
-      }
-      if (e.ctrlKey) {
-         settings[KEY_SCOPE] = page_settings[KEY_SCOPE] / ZOOM_FACTOR
-      }
-      on_settings_changed(settings)
+      on_settings_changed({
+         [KEY_DISABLED]: true,
+         [KEY_UPDATE_INDEX]: update_index + 1,
+         [KEY_FOCAL_POINT]: {
+            x: leftmost + increment * client_click.x,
+            y: topmost - increment * client_click.y,
+         }
+      })
    }
 
    on_context_menu = (e) => {
@@ -238,7 +238,10 @@ export class FieldImage extends Component {
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}/>
          : ''
-      const locate_center = page_settings[KEY_LOCATE_CENTER] ? this.render_center_crosshairs() : ''
+      const locate_center = '' // page_settings[KEY_LOCATE_CENTER] ? this.render_center_crosshairs() : ''
+      if (!focal_point) {
+         return [];
+      }
       return [
          <styles.FieldWrapper
             key={'field-wrapper'}
@@ -260,6 +263,7 @@ export class FieldImage extends Component {
                   disabled={disabled}
                   color_handler={this.color_handler}
                   update_counter={page_settings[KEY_UPDATE_INDEX]}
+                  resolution_factor={1}
                />
             </styles.ImageWrapper>
          </styles.FieldWrapper>,

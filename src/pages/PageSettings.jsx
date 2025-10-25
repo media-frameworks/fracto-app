@@ -113,6 +113,25 @@ export class PageSettings {
          }
       })
    }
+
+   static test_update_settings = (setting_keys, props, stored_values) => {
+      let settings_changed = false
+      setting_keys.forEach((key) => {
+         let current_value = props[key]
+         let previous_value = stored_values[key]
+         if (typeof current_value === 'object') {
+            current_value = JSON.stringify(current_value)
+            previous_value = JSON.stringify(previous_value)
+         }
+         if (current_value !== previous_value) {
+            console.log(`current_value !== previous_value for key ${key}`,
+            current_value, previous_value)
+            settings_changed = true
+            stored_values[key] = props[key];
+         }
+      })
+      return settings_changed;
+   }
 }
 
 export default PageSettings

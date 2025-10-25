@@ -85,28 +85,6 @@ export const calculate_zs = (click_point) => {
    }
 }
 
-const find_best_cardinality = (click_point, all_zs) => {
-   const discovery_z0 = discover_cardinality(click_point, all_zs.z_0)
-   const cardinality_z0 = discovery_z0.best_cardinality
-   const magnitude_z0 = discovery_z0.best_magnitude
-   const discovery_z1 = discover_cardinality(click_point, all_zs.z_1)
-   const cardinality_z1 = discovery_z1.best_cardinality
-   const magnitude_z1 = discovery_z1.best_magnitude
-   const discovery_z2 = discover_cardinality(click_point, all_zs.z_2)
-   const cardinality_z2 = discovery_z2.best_cardinality
-   const magnitude_z2 = discovery_z2.best_magnitude
-   if (magnitude_z0 < magnitude_z1 && magnitude_z0 < magnitude_z2) {
-      console.log('discovery_z0', discovery_z0)
-      return [cardinality_z0, magnitude_z0]
-   }
-   if (magnitude_z1 < magnitude_z2 && magnitude_z1 < magnitude_z0) {
-      console.log('discovery_z1', discovery_z1)
-      return [cardinality_z1, magnitude_z1]
-   }
-   console.log('discovery_z2', discovery_z2)
-   return [cardinality_z2, magnitude_z2]
-}
-
 export const get_click_point_info = (page_settings) => {
    let click_point = page_settings[KEY_HOVER_POINT]
    if (!page_settings[KEY_FIELD_CROSSHAIRS]) {
@@ -129,16 +107,6 @@ export const get_click_point_info = (page_settings) => {
    let all_zs = {}
    if (!fracto_values.pattern) {
       orbital_points = get_escape_points(click_point)
-   } else {
-      if (in_cardioid) {
-         const start = performance.now()
-         all_zs = calculate_zs(click_point)
-         const results = find_best_cardinality(click_point, all_zs)
-         const finish = performance.now()
-         elapsed_new = finish - start
-         best_cardinality = results[0]
-         best_magnitude = results[1]
-      }
    }
    return {
       click_point,

@@ -10,6 +10,7 @@ import {
 } from "pages/settings/ImageSettings";
 import ImagesCaptureField from "./images/ImagesCaptureField";
 import ImagesStaging from "./images/ImagesStaging";
+import ImagesGallery from "./images/ImagesGallery";
 import {render_comp_modes} from "./CompUtils";
 
 const IMAGE_MODES = [
@@ -54,6 +55,12 @@ export class CompImages extends Component {
                on_settings_changed={on_settings_changed}
             />
             break;
+         case IMAGE_MODE_GALLERY:
+            content = <ImagesGallery
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+            break
          default:
             content = page_settings[KEY_IMAGE_MODE]
             break

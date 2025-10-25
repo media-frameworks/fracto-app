@@ -14,7 +14,9 @@ import PaneSteps from "./panes/PaneSteps";
 import PaneLegend from "./panes/PaneLegend";
 import PaneComps from "./panes/PaneComps";
 import {
-   KEY_DISABLED, KEY_FIELD_CROSSHAIRS, KEY_IMAGE_BOUNDS,
+   KEY_DISABLED,
+   KEY_FIELD_CROSSHAIRS,
+   KEY_IMAGE_BOUNDS,
    TYPE_ARRAY,
    TYPE_BOOLEAN,
    TYPE_OBJECT

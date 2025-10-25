@@ -102,7 +102,7 @@ export class PaneComps extends Component {
          case COMP_KEY_IMAGE:
             return 'images'
          case COMP_KEY_ORBITALS:
-            return 'orbitals'
+            return 'fields'
          case COMP_KEY_MINIBROT:
             return 'minibrot'
          case COMP_KEY_BAILIWICKS:

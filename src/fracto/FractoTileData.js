@@ -72,7 +72,8 @@ export const get_tiles = (
    width_px,
    focal_point,
    scope,
-   aspect_ratio) => {
+   aspect_ratio,
+   resolution_factor = 1) => {
 
   if (!focal_point) {
     return []
@@ -81,20 +82,20 @@ export const get_tiles = (
   const height_px = width_px * aspect_ratio
   const tiles_on_edge_x = Math.ceil(width_px / 256) + 1;
   const tiles_on_edge_y = Math.ceil(height_px / 256) + 1;
-  const max_tiles = Math.ceil(tiles_on_edge_x * tiles_on_edge_y + 1)
+  const max_tiles =  Math.ceil(resolution_factor * tiles_on_edge_x * tiles_on_edge_y + 1)
   const min_level = 3
   const max_level = 30
   for (let level = min_level; level < max_level; level++) {
     const level_tiles = tiles_in_scope(
        level, focal_point, scope, aspect_ratio);
+    if (level_tiles.length > max_tiles) {
+      break;
+    }
     if (level_tiles.length) {
       all_tiles.push({
         level: level,
         level_tiles: level_tiles
       })
-    }
-    if (level_tiles.length > max_tiles) {
-      break;
     }
   }
   // Use a more efficient sort
@@ -168,6 +169,7 @@ export const fill_canvas_buffer = async (
    focal_point,
    scope,
    aspect_ratio,
+   resolution_factor,
    update_callback = null,
    update_status = null) => {
 
@@ -175,7 +177,8 @@ export const fill_canvas_buffer = async (
      width_px,
      focal_point,
      scope,
-     aspect_ratio)
+     aspect_ratio,
+     resolution_factor)
   if (update_callback) {
     update_status[FILTER_ALL_TILES] = 1.0
     update_callback(update_status)

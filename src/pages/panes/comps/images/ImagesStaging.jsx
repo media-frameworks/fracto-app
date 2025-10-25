@@ -4,14 +4,12 @@ import EXIF from 'exif-js';
 import axios from 'axios';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEye} from '@fortawesome/free-regular-svg-icons';
 import {faThumbsUp} from '@fortawesome/free-regular-svg-icons';
 import {faThumbsDown} from '@fortawesome/free-regular-svg-icons';
 import {faShoePrints} from '@fortawesome/free-solid-svg-icons';
 
 import {CompImagesStyles as styles} from 'styles/CompImagesStyles'
 import StoreS3 from "common/system/StoreS3";
-import ReactTimeAgo from "react-time-ago";
 import {
    CELL_ALIGN_LEFT,
    CELL_ALIGN_CENTER,
@@ -20,14 +18,19 @@ import {
    CELL_TYPE_CALLBACK,
    CoolTable,
 } from "common/ui/CoolTable";
-import {render_coordinates} from "fracto/styles/FractoStyles";
 import {
    KEY_DISABLED,
    KEY_FOCAL_POINT,
    KEY_SCOPE
 } from "pages/settings/AppSettings";
 import network from "common/config/network.json" with {type: "json"};
-import {render_image} from "./ImageUtils";
+import {
+   render_image,
+   render_focal_point,
+   render_scope,
+   render_view,
+   render_timeago
+} from "./ImageUtils";
 
 const FRACTO_PREFIX = 'fracto'
 const LISTING_LENGTH = 20
@@ -57,7 +60,7 @@ const IMAGE_LIST_COLUMNS = [
    {
       id: "last_modified",
       label: "created",
-      type: CELL_TYPE_TEXT,
+      type: CELL_TYPE_CALLBACK,
       style: {
          fontSize: '1.0rem',
          fontStyle: 'italic',
@@ -203,20 +206,6 @@ export class ImagesStaging extends Component {
       }
    }
 
-   render_focal_point = (focal_point) => {
-      return focal_point
-         ? render_coordinates(focal_point.x, focal_point.y, 9)
-         : '-'
-   }
-
-   render_scope = (scope) => {
-      const rounded = Math.round(scope * 100000000) / 100
-      const mu = <i>{'\u03BC'}</i>
-      return scope
-         ? <div title={`${scope}`}>{rounded}{mu}</div>
-         : '-'
-   }
-
    on_select_row = (selected_row) => {
       console.log('selected_row', selected_row)
       this.setState({selected_row})
@@ -238,18 +227,6 @@ export class ImagesStaging extends Component {
          title={'go to there'}
          onClick={e => this.go_to_there(fracto_values)}>
          <FontAwesomeIcon icon={faShoePrints}/>
-      </styles.LinkSpan>
-   }
-
-   render_view = (url) => {
-      const icon_style = {color: 'darkcyan'};
-      return <styles.LinkSpan
-         style={icon_style}
-         title={'view in tab'}
-         onClick={e =>
-            window.open(url, '_blank', 'noopener,noreferrer')
-         }>
-         <FontAwesomeIcon icon={faEye}/>
       </styles.LinkSpan>
    }
 
@@ -296,18 +273,18 @@ export class ImagesStaging extends Component {
             .replace('fracto/images/', '')
             .replace('.jpg', '')
          const asset_id = name.replace('img_', '')
-         const last_modified = <ReactTimeAgo date={Date.parse(file.LastModified.toString())}/>;
          const exifData = JSON.parse(JSON.stringify(file.exifData || {}))
          exifData.asset_id = asset_id
          return {
-            name, last_modified,
+            name,
+            last_modified: [render_timeago, Date.parse(file.LastModified.toString())],
             size: file.Size,
             dimension: `${exifData.width_px || '-'}x${exifData.height_px || '-'}`,
-            scope: [this.render_scope, exifData.scope],
-            focal_point: [this.render_focal_point, exifData.focal_point],
+            scope: [render_scope, exifData.scope],
+            focal_point: [render_focal_point, exifData.focal_point],
             artist: <styles.ArtistName>{exifData.artist_name}</styles.ArtistName>,
             go: [this.render_go_to_there, {scope: exifData.scope, focal_point: exifData.focal_point}],
-            url: [this.render_view, exifData.public_url],
+            url: [render_view, exifData.public_url],
             publish: [this.render_publish, exifData],
             archive: [this.render_archive, asset_id]
          }

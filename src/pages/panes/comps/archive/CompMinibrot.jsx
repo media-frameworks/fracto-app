@@ -20,7 +20,7 @@ import BailiwickList from "fracto/bailiwick/BailiwickList";
 import {CompBailiwickStyles as styles} from 'styles/CompBailiwickStyles';
 import {render_big_pattern_block} from "fracto/styles/FractoStyles";
 
-const AXIOS_CONFIG = {
+export const AXIOS_CONFIG = {
    headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Expose-Headers': 'Access-Control-*',
