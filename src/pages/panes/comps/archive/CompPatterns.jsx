@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {Chart as ChartJS, CategoryScale, BarController} from "chart.js/auto";
 
 import {CompPatternStyles as styles} from "styles/CompPatternStyles"
-import PatternsOrbital from "../patterns/PatternsOrbital";
+import PatternsOrbital from "./patterns/PatternsOrbital";
 
 ChartJS.register(CategoryScale, BarController)
 

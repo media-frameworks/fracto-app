@@ -139,7 +139,7 @@ export class FractoRasterImage extends Component {
          on_plan_complete,
          resolution_factor
       } = this.props
-      console.log('fill_canvas_buffer')
+      // console.log('fill_canvas_buffer')
       await fill_canvas_buffer(canvas_buffer, width_px, focal_point, scope, aspect_ratio, resolution_factor)
       FractoColors.buffer_to_canvas(canvas_buffer, ctx)
       if (on_plan_complete) {

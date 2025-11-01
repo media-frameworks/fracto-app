@@ -12,7 +12,7 @@ import {
    process_escape_sets,
    process_orbital_sets,
 } from "./PointUtils";
-import {iteration_chart} from "../patterns/PatternsUtils";
+import {iteration_chart} from "../archive/patterns/PatternsUtils";
 import {CoolSlider} from "common/ui/CoolImports";
 import {KEY_FIELD_CROSSHAIRS, KEY_FOCAL_POINT} from "pages/settings/AppSettings";
 import FractoCardioid from "fracto/FractoCardioid";

@@ -119,13 +119,16 @@ export class PageSettings {
       setting_keys.forEach((key) => {
          let current_value = props[key]
          let previous_value = stored_values[key]
+         if (!current_value) {
+            console.log(`current_value of ${key} is undefined, props`, props)
+         }
+         // console.log(`testing key ${key}: current_value, previous_value`, current_value, previous_value)
          if (typeof current_value === 'object') {
             current_value = JSON.stringify(current_value)
             previous_value = JSON.stringify(previous_value)
          }
          if (current_value !== previous_value) {
-            console.log(`current_value !== previous_value for key ${key}`,
-            current_value, previous_value)
+            // console.log(`current_value !== previous_value for key ${key}`, current_value, previous_value)
             settings_changed = true
             stored_values[key] = props[key];
          }

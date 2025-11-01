@@ -2,7 +2,10 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import FractoUtil from "fracto/FractoUtil";
-import {KEY_COMPS_HEIGHT_PX} from "pages/settings/PaneSettings";
+import {
+   KEY_COMPS_HEIGHT_PX,
+   KEY_COMPS_WIDTH_PX,
+} from "pages/settings/PaneSettings";
 import {PaneCompsStyles as styles} from 'styles/PaneCompsStyles'
 
 import {
@@ -27,7 +30,10 @@ ChartJS.register(
    Legend
 );
 
-export class OrbitalsColorChart extends Component {
+const COMP_WIDTH_FACTOR = 0.55
+const COMP_HEIGHT_FACTOR = 0.40
+
+export class FieldsColorChart extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
@@ -42,11 +48,7 @@ export class OrbitalsColorChart extends Component {
    }
 
    componentDidMount() {
-      const interval = setInterval(() => {
-         if (this.fill_pattern_bins()) {
-            clearInterval(interval)
-         }
-      }, 1000)
+      setTimeout(this.fill_pattern_bins, 500)
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
@@ -105,11 +107,14 @@ export class OrbitalsColorChart extends Component {
             y: {type: 'logarithmic'},
          },
       };
-      const chartStyle = {height: `${page_settings[KEY_COMPS_HEIGHT_PX] * 0.45}px`}
-      return <CoolStyles.Block style={chartStyle}>
+      const chartStyle = {
+         height: `${page_settings[KEY_COMPS_HEIGHT_PX] * COMP_HEIGHT_FACTOR}px`,
+         width: `${page_settings[KEY_COMPS_WIDTH_PX] * COMP_WIDTH_FACTOR}px`,
+      }
+      return <CoolStyles.InlineBlock style={chartStyle}>
          <Bar data={data} options={options}/>
-      </CoolStyles.Block>
+      </CoolStyles.InlineBlock>
    }
 }
 
-export default OrbitalsColorChart
+export default FieldsColorChart

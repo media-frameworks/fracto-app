@@ -146,11 +146,14 @@ export class FieldImage extends Component {
 
    on_wheel = (e) => {
       const {page_settings, on_settings_changed} = this.props
-      const {scope, disabled} = page_settings
+      const {scope, disabled, update_index} = page_settings
       if (disabled) {
          return;
       }
-      let settings = {[KEY_DISABLED]: true}
+      let settings = {
+         [KEY_DISABLED]: true,
+         [KEY_UPDATE_INDEX]: update_index + 1,
+      }
       let zoom_factor = e.shiftKey ? ZOOM_FACTOR_MAJOR : ZOOM_FACTOR
       if (e.altKey) {
          zoom_factor = ZOOM_FACTOR_MINOR
@@ -263,7 +266,7 @@ export class FieldImage extends Component {
                   disabled={disabled}
                   color_handler={this.color_handler}
                   update_counter={page_settings[KEY_UPDATE_INDEX]}
-                  resolution_factor={1}
+                  resolution_factor={1.5}
                />
             </styles.ImageWrapper>
          </styles.FieldWrapper>,

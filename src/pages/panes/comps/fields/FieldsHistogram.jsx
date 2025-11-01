@@ -15,9 +15,10 @@ import {
    KEY_COMPS_HEIGHT_PX,
    KEY_COMPS_WIDTH_PX
 } from "pages/settings/PaneSettings";
-import {KEY_CANVAS_BUFFER} from 'pages/settings/AppSettings'
+import {KEY_CANVAS_BUFFER, KEY_UPDATE_INDEX} from 'pages/settings/AppSettings'
 import FractoUtil from "fracto/FractoUtil";
 import CoolStyles from "common/ui/styles/CoolStyles";
+import PageSettings from "../../../PageSettings";
 
 ChartJS.register(
    CategoryScale,
@@ -28,37 +29,43 @@ ChartJS.register(
    Legend
 );
 
-export class OrbitalsHistogram extends Component {
+const COMP_WIDTH_FACTOR = 0.35
+const COMP_HEIGHT_FACTOR = 0.40
+
+export class FieldsHistogram extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
    }
    state = {
       bin_list: [],
-      most_recent: {
-         scope: 0,
-         focal_point: {x: 0, y: 0}
-      }
+      stored_values: {},
+      interval: null,
    }
 
    componentDidMount() {
-      setTimeout(() => {
-         this.fill_histogram()
-      }, 1000)
+      const {stored_values} = this.state
+      const {page_settings} = this.props
+      this.setState({
+         stored_values: {
+            [KEY_UPDATE_INDEX]: 0,
+         }
+      });
+      const interval = setInterval(() => {
+         const settings_changed = PageSettings.test_update_settings(
+            [KEY_UPDATE_INDEX], page_settings, stored_values)
+         if (settings_changed) {
+            this.setState({stored_values})
+            this.fill_histogram()
+         }
+      }, 500)
+      this.setState({interval})
    }
 
-   componentDidUpdate(prevProps, prevState, snapshot) {
-      const {most_recent} = this.state
-      const {page_settings} = this.props
-      const {scope, focal_point} = page_settings
-      const mr_scope = most_recent.scope
-      const mr_focal_point = most_recent.focal_point
-      const scope_changed = mr_scope !== scope
-      const focal_point_x_changed = mr_focal_point.x !== focal_point.x
-      const focal_point_y_changed = mr_focal_point.y !== focal_point.y
-      if (scope_changed || focal_point_x_changed || focal_point_y_changed) {
-         this.setState({most_recent: {scope, focal_point}})
-         this.fill_histogram()
+   componentWillUnmount() {
+      const {interval} = this.state
+      if (interval) {
+         clearInterval(interval)
       }
    }
 
@@ -119,9 +126,10 @@ export class OrbitalsHistogram extends Component {
             x: {type: 'logarithmic'},
             y: {type: 'logarithmic'},
          },
+         animation: false,
       };
-      const height = page_settings[KEY_COMPS_HEIGHT_PX] * 0.45
-      const width = page_settings[KEY_COMPS_WIDTH_PX] * 0.95 - height
+      const height = page_settings[KEY_COMPS_HEIGHT_PX] * COMP_HEIGHT_FACTOR
+      const width = page_settings[KEY_COMPS_WIDTH_PX] * COMP_WIDTH_FACTOR
       const chartStyle = {
          height: `${height}px`, width: `${width}px`
       }
@@ -131,4 +139,4 @@ export class OrbitalsHistogram extends Component {
    }
 }
 
-export default OrbitalsHistogram
+export default FieldsHistogram

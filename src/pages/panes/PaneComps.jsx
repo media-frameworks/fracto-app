@@ -10,7 +10,7 @@ import {PaneCompsStyles as styles} from 'styles/PaneCompsStyles'
 import CoolStyles from "common/ui/styles/CoolStyles";
 
 import CompAdmin from "./comps/CompAdmin";
-import CompOrbitals from "./comps/CompOrbitals";
+import CompFields from "./comps/CompFields";
 import CompNursery from "./comps/CompNursery";
 import CompPoints from "./comps/CompPoints";
 import CompImages from "./comps/CompImages";
@@ -65,11 +65,6 @@ export class PaneComps extends Component {
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
-         case COMP_KEY_ORBITALS:
-            return <CompOrbitals
-               page_settings={page_settings}
-               on_settings_changed={on_settings_changed}
-            />
          case COMP_KEY_NURSERY:
             return <CompNursery
                page_settings={page_settings}
@@ -87,6 +82,11 @@ export class PaneComps extends Component {
             />
          case COMP_KEY_ADMIN:
             return <CompAdmin
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         case COMP_KEY_ORBITALS:
+            return <CompFields
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />

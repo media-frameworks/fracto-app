@@ -9,7 +9,7 @@ import {
 import {
    click_point_chart,
    escape_points_chart
-} from "../patterns/PatternsUtils";
+} from "../archive/patterns/PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {CoolSlider} from "common/ui/CoolImports";
 import {get_click_point_info} from "./PointUtils";

@@ -2,13 +2,24 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 
 import {CompOrbitalStyles as styles} from 'styles/CompOrbitalStyles'
-import {KEY_COMPS_WIDTH_PX} from "pages/settings/PaneSettings";
+import PageSettings from "pages/PageSettings";
+import {
+   KEY_COMPS_HEIGHT_PX,
+   KEY_COMPS_WIDTH_PX
+} from "pages/settings/PaneSettings";
+import {
+   KEY_UPDATE_INDEX,
+   KEY_SCOPE,
+   KEY_FOCAL_POINT,
+} from "pages/settings/AppSettings";
 import {collect_orbitals} from "fracto/CanvasBufferUtils";
 import FractoUtil from "fracto/FractoUtil";
 
 const GRADUAL_FACTOR_CHANGE = 1.015
+const COMP_WIDTH_FACTOR = 0.55
+const COMP_HEIGHT_FACTOR = 0.45
 
-export class OrbitalsFamilySpan extends Component {
+export class FieldsFamilySpan extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
@@ -26,44 +37,57 @@ export class OrbitalsFamilySpan extends Component {
       families: {},
       highest_family_count: 0,
       height_scalar: 0.45,
+      stored_values: {},
+      interval: null,
    };
 
    componentDidMount() {
+      const {stored_values} = this.state
+      const {page_settings} = this.props
       this.initialize()
-      setTimeout(() => {
-         this.fill_pattern_bins()
-      }, 250)
+      this.setState({
+         stored_values: {
+            [KEY_UPDATE_INDEX]: 0,
+         }
+      });
+      const interval = setInterval(() => {
+         const settings_changed = PageSettings.test_update_settings(
+            [
+               KEY_UPDATE_INDEX,
+               KEY_SCOPE,
+               KEY_FOCAL_POINT,
+            ], page_settings, stored_values)
+         if (settings_changed) {
+            this.setState({stored_values})
+            this.fill_pattern_bins()
+         }
+      }, 500)
+      this.setState({interval})
    }
 
-   componentDidUpdate(prevProps, prevState, snapshot) {
-      const {most_recent, wrapper_width_px, height_scalar} = this.state
-      const {page_settings} = this.props
-      const {scope, focal_point, canvas_buffer} = page_settings
-      const mr_scope = most_recent.scope
-      const mr_focal_point = most_recent.focal_point
-      const scope_changed = mr_scope !== scope
-      const focal_point_x_changed = mr_focal_point.x !== focal_point?.x
-      const focal_point_y_changed = mr_focal_point.y !== focal_point?.y
-      const canvas_buffer_changed = canvas_buffer && canvas_buffer.length !== prevState.canvas_buffer_width
-      const width_px = page_settings[KEY_COMPS_WIDTH_PX] - 100
-      const wrapper_width_changed = width_px !== wrapper_width_px
-      const height_scalar_changed = height_scalar !== prevState.height_scalar
-      if (scope_changed || focal_point_x_changed || focal_point_y_changed || height_scalar_changed) {
-         this.setState({most_recent: {scope, focal_point}})
-         this.fill_pattern_bins()
-      } else if (wrapper_width_changed) {
-         this.initialize()
-      } else if (canvas_buffer_changed) {
-         this.fill_pattern_bins()
+   componentWillUnmount() {
+      const {interval} = this.state
+      if (interval) {
+         clearInterval(interval)
       }
    }
 
-   initialize() {
+   componentDidUpdate(prevProps, prevState, snapshot) {
       const {wrapper_width_px} = this.state
       const {page_settings} = this.props
-      const width_px = page_settings[KEY_COMPS_WIDTH_PX] - 100
+      const width_px = page_settings[KEY_COMPS_WIDTH_PX] * COMP_WIDTH_FACTOR
+      const wrapper_width_changed = width_px !== wrapper_width_px
+      if (wrapper_width_changed) {
+         setTimeout(this.initialize, 500)
+      }
+   }
+
+   initialize = () => {
+      const {wrapper_width_px} = this.state
+      const {page_settings} = this.props
+      const width_px = page_settings[KEY_COMPS_WIDTH_PX] * COMP_WIDTH_FACTOR
       if (width_px !== wrapper_width_px) {
-         const height_px = width_px / Math.exp(1)
+         const height_px = page_settings[KEY_COMPS_HEIGHT_PX] * COMP_HEIGHT_FACTOR
          this.setState({
             wrapper_width_px: Math.round(width_px),
             wrapper_height_px: Math.round(height_px)
@@ -116,7 +140,7 @@ export class OrbitalsFamilySpan extends Component {
          }
       })
       // console.log('families, highest_family_count', families, highest_family_count)
-      const log_highest_count = Math.log(highest_family_count) * 2
+      const log_highest_count = Math.log(highest_family_count) * 1.5
       let least_base_y = wrapper_height_px
       Object.keys(families).forEach(key => {
          const family = families[key]
@@ -159,7 +183,7 @@ export class OrbitalsFamilySpan extends Component {
 
       setTimeout(() => {
          let new_height_scalar = height_scalar
-         if (least_base_y > 20) {
+         if (least_base_y > 5) {
             new_height_scalar = height_scalar * GRADUAL_FACTOR_CHANGE
          } else if (least_base_y < 5) {
             new_height_scalar = height_scalar / GRADUAL_FACTOR_CHANGE
@@ -188,4 +212,4 @@ export class OrbitalsFamilySpan extends Component {
    }
 }
 
-export default OrbitalsFamilySpan;
+export default FieldsFamilySpan;
