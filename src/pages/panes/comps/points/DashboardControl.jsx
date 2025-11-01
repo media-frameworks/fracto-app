@@ -9,13 +9,18 @@ import {
 } from "pages/settings/PaneSettings";
 import {NumberSpan, render_pattern_block} from "fracto/styles/FractoStyles";
 import {
-   discover_cardinality,
    get_click_point_info,
-   round_places
+   get_escape_points,
+   get_magnitude,
 } from "./PointUtils";
 import {render_coordinates} from "fracto/styles/FractoStyles";
-import {KEY_FOCAL_POINT} from "../../../settings/AppSettings";
-import Complex from "../../../../common/math/Complex";
+import {
+   KEY_FOCAL_POINT,
+   KEY_HOVER_POINT,
+   KEY_SCOPE,
+} from "pages/settings/AppSettings";
+import PageSettings from "pages/PageSettings";
+import FractoFastCalc from "../../../../fracto/FractoFastCalc";
 
 const HEIGHT_FACTOR = 2.618
 const WIDTH_FACTOR = 2.618
@@ -32,19 +37,21 @@ export class DashboardControl extends Component {
       width_px: 0,
       height_px: 0,
       click_point_info: null,
-      rendered_focal_point: null
+      stored_values: {},
+      fracto_values: {},
+      click_point: {},
    }
 
    componentDidMount() {
       const {page_settings} = this.props
       const width_px = Math.round(page_settings[KEY_COMPS_WIDTH_PX] / WIDTH_FACTOR) - WIDTH_OFFSET_PX
       const height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR) - HEIGHT_OFFSET_PX
-      const focal_point = page_settings[KEY_FOCAL_POINT]
-      this.setState({width_px, height_px, rendered_focal_point: focal_point})
+      this.setState({width_px, height_px})
       setTimeout(this.initialize, 150)
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {
+      const {stored_values} = this.state
       const {page_settings} = this.props
       const new_width_px = Math.round(page_settings[KEY_COMPS_WIDTH_PX] / WIDTH_FACTOR)
          - WIDTH_OFFSET_PX
@@ -56,23 +63,27 @@ export class DashboardControl extends Component {
       if (prevState.height_px !== new_height_px) {
          this.setState({height_px: new_height_px})
       }
-      if (prevState.rendered_focal_point) {
-         const focal_point = page_settings[KEY_FOCAL_POINT]
-         const focal_point_x_changed = prevState.rendered_focal_point.x !== focal_point.x
-         const focal_point_y_changed = prevState.rendered_focal_point.y !== focal_point.y
-         if (prevState.rendered_focal_point && (focal_point_x_changed || focal_point_y_changed)) {
-            this.setState({rendered_focal_point: focal_point})
-            setTimeout(this.initialize, 150)
-         }
+      const settings_changed = PageSettings.test_update_settings(
+         [
+            KEY_SCOPE,
+            KEY_FOCAL_POINT,
+            KEY_HOVER_POINT,
+         ], page_settings, stored_values)
+      if (settings_changed) {
+         setTimeout(this.initialize, 50)
       }
    }
 
    initialize = () => {
       const {page_settings} = this.props
+      const {field_crosshairs, hover_point, focal_point} = page_settings;
+      const click_point = field_crosshairs ? hover_point : focal_point
+      const fracto_values = FractoFastCalc.calc(click_point.x, click_point.y)
       const click_point_info = get_click_point_info(page_settings)
-      const {cardinality} = click_point_info
-      console.log('cardinality', cardinality)
-      this.setState({click_point_info})
+      if (!fracto_values.orbital_points) {
+         fracto_values.orbital_points = get_escape_points(focal_point)
+      }
+      this.setState({click_point_info, fracto_values, click_point})
    }
 
    indefinite_article_text = (number) => {
@@ -134,34 +145,21 @@ export class DashboardControl extends Component {
    }
 
    render() {
-      const {width_px, click_point_info} = this.state
+      const {width_px, click_point_info, fracto_values, click_point} = this.state
       const content_style = {width: `${width_px}px`,}
       if (!click_point_info) {
          return '...'
       }
-      const {
-         pattern, magnitude, click_point, Q_core_neg, iteration, elapsed_new, orbital_points,
-      } = click_point_info
-      let cardinality = 0
-      if (orbital_points.length > 1) {
-         const current_value = new Complex(orbital_points[0].x, orbital_points[0].y)
-         const next_value = new Complex(orbital_points[1].x, orbital_points[1].y)
-         const psi = next_value.divide(current_value)
-         const phi = next_value.mul(current_value)
-         const psi_add_phi = psi.add(phi)
-         const z = psi_add_phi.scale(0.5)
-         const cardinality_data = discover_cardinality(click_point, z)
-         cardinality = `${cardinality_data.best_cardinality} (${round_places(cardinality_data.best_magnitude, 8)})`
-      }
+      const {pattern, Q_core_neg, iteration,} = click_point_info
       const pattern_badge = render_pattern_block(pattern, 32)
       const preamble = pattern ? this.render_pattern_preamble() : this.render_escape_preamble()
+      const magnitude = !pattern ? '-'
+         : get_magnitude(fracto_values.orbital_points, Q_core_neg)
       const separate_lines = [
-         [`constant: `, render_coordinates(click_point.x, click_point.y)],
-         [`focal point: `, render_coordinates(Q_core_neg.x, Q_core_neg.y)],
-         [`magnitude: `, <NumberSpan>{`${round_places(magnitude, 8)}`}</NumberSpan>],
+         [`focal point (P): `, render_coordinates(click_point.x, click_point.y)],
+         [`generative (Q): `, render_coordinates(Q_core_neg.x, Q_core_neg.y)],
+         [`magnitude: `, <NumberSpan>{`${magnitude}`}</NumberSpan>],
          [`iterations: `, <NumberSpan>{iteration}</NumberSpan>],
-         [`elapsed ms: `, <NumberSpan>{elapsed_new}</NumberSpan>],
-         [`cardinality: `, <NumberSpan>{cardinality}</NumberSpan>],
       ].map((text, i) => {
          return <CoolStyles.Block key={`line-${i}`}>
             <CoolStyles.Block>{text}</CoolStyles.Block>
