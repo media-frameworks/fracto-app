@@ -9,7 +9,7 @@ import {
 import {
    click_point_chart,
    escape_points_chart
-} from "../archive/patterns/PatternsUtils";
+} from "./PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import {CoolSlider} from "common/ui/CoolImports";
 import {get_click_point_info} from "./PointUtils";
@@ -179,10 +179,6 @@ export class ScatterCharts extends Component {
    render = () => {
       const {width_px, point_zoom} = this.state
       const scatter_chart_height_px = width_px * 1.01
-      const scatter_chart_style = {
-         // width: `${width_px}px`,
-         // height: `${scatter_chart_height_px}px`,
-      }
       const scatter_chart = this.render_scatter_chart()
       const zoomer = <CoolSlider
          value={point_zoom}
@@ -191,7 +187,7 @@ export class ScatterCharts extends Component {
          is_vertical={true}
          on_change={this.change_point_zoom}
       />
-      return <styles.ChartWrapper style={scatter_chart_style}>
+      return <styles.ChartWrapper>
          {this.render_chart(
             scatter_chart, zoomer,
             width_px,

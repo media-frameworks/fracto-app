@@ -22,7 +22,7 @@ import {
    process_r_data,
    r_theta_chart,
    normalize_angle,
-} from "./PatternsUtils";
+} from "../../points/PatternsUtils";
 import AppErrorBoundary from "common/app/AppErrorBoundary";
 import CoolMediaTransport from "common/ui/CoolMediaTransport";
 

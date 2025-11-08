@@ -85,6 +85,61 @@ export const calculate_zs = (click_point) => {
    }
 }
 
+export const verify_roots = (points, cardinality, Q) => {
+   console.log('verify_roots', points, cardinality, Q)
+   const two_Q = new Complex(2 * Q.x, 2 * Q.y)
+   let power = new Complex(1, 0)
+   for (let i = 0; i < cardinality; i++) {
+      const difference = new Complex(points[i].x - Q.x, points[i].y - Q.y)
+      const sum = difference.add(two_Q)
+      power = power.mul(sum)
+   }
+   console.log('power, magnitude', power.toString(), power.magnitude())
+   let power2 = new Complex(1, 0)
+   for (let i = 0; i < cardinality; i++) {
+      const difference1 = new Complex(points[i].x - Q.x, points[i].y - Q.y)
+      const difference2 = new Complex(points[i + 1].x - Q.x, points[i + 1].y - Q.y)
+      let sum = difference1.add(difference2).offset(1, 0)
+      power2 = power2.mul(sum)
+   }
+   console.log('power2, magnitude', power2.toString(), power2.magnitude())
+   let power3 = new Complex(1, 0)
+   for (let i = 0; i < cardinality; i++) {
+      let difference = new Complex(points[i].x - Q.x, points[i].y - Q.y)
+      difference = difference.offset(1, 0)
+      power3 = power3.mul(difference)
+   }
+   console.log('power3, magnitude', power3.toString(), power3.magnitude())
+   let power4 = new Complex(1, 0)
+   for (let i = 0; i < cardinality; i++) {
+      const difference1 = new Complex(points[i].x - Q.x, points[i].y - Q.y)
+      const difference2 = new Complex(points[i + 1].x - Q.x, points[i + 1].y - Q.y)
+      let sum = difference1.add(difference2).add(two_Q)
+      power4 = power4.mul(sum)
+   }
+   console.log('power4, magnitude', power4.toString(), power4.magnitude())
+   let sum5 = new Complex(1, 0)
+   for (let i = 0; i < cardinality; i++) {
+      const difference = new Complex(points[i].x - Q.x, points[i].y - Q.y)
+      sum5 = sum5.add(difference)
+   }
+   let power5 = new Complex(1, 0)
+   for (let i = 0; i < cardinality; i++) {
+      power5 = power5.mul(sum5)
+   }
+   console.log('power5, sum5', power5.toString(), sum5.toString())
+   let sum6 = new Complex(two_Q.re, two_Q.im)
+   for (let i = 0; i < cardinality; i++) {
+      const difference = new Complex(points[i].x - Q.x, points[i].y - Q.y)
+      sum6 = sum6.add(difference)
+   }
+   let power6 = new Complex(1, 0)
+   for (let i = 0; i < cardinality; i++) {
+      power6 = power6.mul(sum6)
+   }
+   console.log('power6, sum6', power6.toString(), sum6.toString())
+}
+
 export const get_click_point_info = (page_settings) => {
    let click_point = page_settings[KEY_HOVER_POINT]
    if (!page_settings[KEY_FIELD_CROSSHAIRS]) {

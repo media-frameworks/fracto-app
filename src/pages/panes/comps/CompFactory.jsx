@@ -6,16 +6,14 @@ import ReactTimeAgo from "react-time-ago";
 
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
 import {CoolStyles} from "common/ui/CoolImports";
-import LatestTileBlock from "./latest/LatestTileBlock";
+import LatestTileBlock from "./archive/latest/LatestTileBlock";
 import {NumberInline, SmallNumberInline} from "fracto/styles/FractoStyles";
-import {KEY_MODAL} from "pages/settings/AppSettings";
-import LatestTileDetail from "./latest/TileDetailModal";
 import {KEY_COMPS_WIDTH_PX} from 'pages/settings/PaneSettings'
 
 const TILE_COUNT = 17;
 const PAGE_REFRESH_TIME_MS = 3000;
 
-export class CompNursery extends Component {
+export class CompFactory extends Component {
    static propTypes = {
       page_settings: PropTypes.object.isRequired,
       on_settings_changed: PropTypes.func.isRequired,
@@ -56,16 +54,6 @@ export class CompNursery extends Component {
       }, PAGE_REFRESH_TIME_MS)
    }
 
-   tile_detail = (short_code) => {
-      const {on_settings_changed} = this.props
-      on_settings_changed({
-         [KEY_MODAL]: <LatestTileDetail
-            short_code={short_code}
-            on_settings_changed={on_settings_changed}
-         />
-      })
-   }
-
    render() {
       const {tile_blocks} = this.state
       const {page_settings, on_settings_changed} = this.props
@@ -85,8 +73,7 @@ export class CompNursery extends Component {
                : <SmallNumberInline style={{width: `${small_width}px`}}>{short_code}</SmallNumberInline>
             return <styles.TileBlockWrapper
                style={{marginLeft: `${margin}px`}}
-               key={`recent-${short_code}`}
-               onClick={() => this.tile_detail(short_code)}>
+               key={`recent-${short_code}`}>
                <LatestTileBlock
                   short_code={short_code}
                   size_px={top_row ? large_width : small_width}
@@ -113,4 +100,4 @@ export class CompNursery extends Component {
    }
 }
 
-export default CompNursery
+export default CompFactory

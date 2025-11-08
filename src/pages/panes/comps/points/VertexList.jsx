@@ -18,7 +18,7 @@ import CoolTable, {
    CELL_TYPE_TEXT
 } from "common/ui/CoolTable";
 import {render_coordinates} from "fracto/styles/FractoStyles";
-import {get_escape_points} from "./PointUtils";
+import {get_escape_points, verify_roots} from "./PointUtils";
 
 const VERTEX_LIST_COLUMNS = [
    {
@@ -76,12 +76,16 @@ export class VertexList extends Component {
       }
    }
 
-   calc_hover_data = ( focal_point) => {
+   calc_hover_data = (focal_point) => {
       const fracto_values = FractoFastCalc.calc(focal_point.x, focal_point.y)
       if (!fracto_values.orbital_points) {
          fracto_values.orbital_points = get_escape_points(focal_point)
       }
       this.setState({fracto_values})
+      if (fracto_values.pattern) {
+         const Q_core_neg = FractoFastCalc.calculate_cardioid_Q(focal_point.x, focal_point.y, -1)
+         verify_roots(fracto_values.orbital_points, fracto_values.pattern, Q_core_neg)
+      }
    }
 
    render() {
@@ -94,11 +98,11 @@ export class VertexList extends Component {
          ? fracto_values.orbital_points
             .slice(0, -1)
             .map((point, index) => {
-            return {
-               index: index + 1,
-               coords: render_coordinates(point.x, point.y, 15),
-            }
-         }) : []
+               return {
+                  index: index + 1,
+                  coords: render_coordinates(point.x, point.y, 15),
+               }
+            }) : []
       const table = fracto_values
          ? <CoolTable
             data={vertex_data}

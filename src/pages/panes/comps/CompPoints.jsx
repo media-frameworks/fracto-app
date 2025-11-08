@@ -34,11 +34,10 @@ export class CompPoints extends Component {
       const right_column_width_px = Math.round(page_settings[KEY_COMPS_WIDTH_PX] * 0.618) - 2 * WIDTH_OFFSET_PX
       const column_height_px = Math.round(page_settings[KEY_COMPS_HEIGHT_PX] / HEIGHT_FACTOR) - HEIGHT_OFFSET_PX
       this.setState({
-            right_column_width_px,
-            left_column_width_px: page_settings[KEY_COMPS_WIDTH_PX] - right_column_width_px - 2 * WIDTH_OFFSET_PX,
-            column_height_px
-         }
-      )
+         right_column_width_px,
+         left_column_width_px: page_settings[KEY_COMPS_WIDTH_PX] - right_column_width_px - 2 * WIDTH_OFFSET_PX,
+         column_height_px
+      })
    }
 
    componentDidUpdate(prevProps, prevState, snapshot) {

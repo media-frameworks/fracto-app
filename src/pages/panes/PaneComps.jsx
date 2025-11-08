@@ -11,7 +11,7 @@ import CoolStyles from "common/ui/styles/CoolStyles";
 
 import CompAdmin from "./comps/CompAdmin";
 import CompFields from "./comps/CompFields";
-import CompNursery from "./comps/CompNursery";
+import CompFactory from "./comps/CompFactory";
 import CompPoints from "./comps/CompPoints";
 import CompImages from "./comps/CompImages";
 import CompMinibrot from "./comps/CompMinibrot";
@@ -66,7 +66,7 @@ export class PaneComps extends Component {
                on_settings_changed={on_settings_changed}
             />
          case COMP_KEY_NURSERY:
-            return <CompNursery
+            return <CompFactory
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />

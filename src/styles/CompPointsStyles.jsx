@@ -8,10 +8,10 @@ export class CompPointsStyles {
    static ColumnWrapper = styled(CoolStyles.InlineBlock)`
        margin: 0.25rem;
    `
-   static ChartWrapper = styled(CoolStyles.InlineBlock)`
+   static ChartWrapper = styled(CoolStyles.Block)`
        margin: 0;
    `
-   static DashboardWrapper = styled(CoolStyles.InlineBlock)`
+   static DashboardWrapper = styled(CoolStyles.Block)`
        margin-top: 0.5rem;
    `
    static GraphWrapper = styled(CoolStyles.InlineBlock)`
