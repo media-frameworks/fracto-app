@@ -128,11 +128,13 @@ export const verify_roots = (points, cardinality, Q) => {
       power5 = power5.mul(sum5)
    }
    console.log('power5, sum5', power5.toString(), sum5.toString())
-   let sum6 = new Complex(two_Q.re, two_Q.im)
+   let sum6 = new Complex(0, 0)
+   let Q_power = two_Q.mul(two_Q)
    for (let i = 0; i < cardinality; i++) {
       const difference = new Complex(points[i].x - Q.x, points[i].y - Q.y)
       sum6 = sum6.add(difference)
    }
+   sum6 = sum6.add(two_Q)
    let power6 = new Complex(1, 0)
    for (let i = 0; i < cardinality; i++) {
       power6 = power6.mul(sum6)
