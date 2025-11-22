@@ -21,6 +21,7 @@ export const KEY_FIELD_CROSSHAIRS = 'field_crosshairs'
 export const KEY_FIELD_COVERAGE = 'field_coverage'
 export const KEY_IMAGE_BOUNDS = 'image_bounds'
 export const KEY_LOCATE_CENTER = 'locate_center'
+export const KEY_CROSSHAIRS_ANGLE = 'crosshairs_angle'
 
 export const APP_KEYED_SETTINGS = {
    [KEY_FOCAL_POINT]: {
@@ -124,6 +125,12 @@ export const APP_KEYED_SETTINGS = {
       data_type: TYPE_BOOLEAN,
       default_value: false,
       description: 'displays crosshairs in the exact center of the main field',
+      persist: false,
+   },
+   [KEY_CROSSHAIRS_ANGLE]: {
+      data_type: TYPE_NUMBER,
+      default_value: 0,
+      description: 'displays crosshairs at an angle from -90 to +90',
       persist: false,
    },
 }

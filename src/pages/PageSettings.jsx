@@ -11,6 +11,7 @@ import {PANE_KEYED_SETTINGS} from "./settings/PaneSettings";
 import {IMAGE_KEYED_SETTINGS} from "./settings/ImageSettings";
 import {LORE_KEYED_SETTINGS} from "./settings/LoreSettings";
 import {BAILIWICK_KEYED_SETTINGS} from "./settings/BailiwickSettings";
+import {VIDEO_KEYED_SETTINGS} from "./settings/VideoSettings";
 
 export class PageSettings {
 
@@ -25,6 +26,7 @@ export class PageSettings {
          IMAGE_KEYED_SETTINGS,
          LORE_KEYED_SETTINGS,
          BAILIWICK_KEYED_SETTINGS,
+         VIDEO_KEYED_SETTINGS,
       )
       const page_settings_keys = Object.keys(PageSettings.all_settings)
       const page_settings = {}

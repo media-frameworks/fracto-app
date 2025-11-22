@@ -150,7 +150,7 @@ export class DashboardControl extends Component {
       if (!click_point_info) {
          return '...'
       }
-      const {pattern, Q_core_neg, iteration,} = click_point_info
+      const {pattern, Q_core_neg, iteration, cardinality_plus, cardinality_minus} = click_point_info
       const pattern_badge = render_pattern_block(pattern, 32)
       const preamble = pattern ? this.render_pattern_preamble() : this.render_escape_preamble()
       const magnitude = !pattern ? '-'
@@ -160,6 +160,8 @@ export class DashboardControl extends Component {
          [`generative (Q): `, render_coordinates(Q_core_neg.x, Q_core_neg.y)],
          [`magnitude: `, <NumberSpan>{`${magnitude}`}</NumberSpan>],
          [`iterations: `, <NumberSpan>{iteration}</NumberSpan>],
+         [`cardinality_plus: `, render_coordinates(cardinality_plus.re, cardinality_plus.im)],
+         [`cardinality_minus: `, render_coordinates(cardinality_minus.re, cardinality_minus.im)],
       ].map((text, i) => {
          return <CoolStyles.Block key={`line-${i}`}>
             <CoolStyles.Block>{text}</CoolStyles.Block>

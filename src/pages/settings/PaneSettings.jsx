@@ -1,4 +1,4 @@
-import {TYPE_NUMBER} from "./AppSettings";
+import {TYPE_BOOLEAN, TYPE_NUMBER} from "./AppSettings";
 
 export const KEY_STEPS_WIDTH_PX = 'steps_width_px'
 export const KEY_STEPS_HEIGHT_PX = 'steps_height_px'
@@ -8,6 +8,7 @@ export const KEY_COMPS_WIDTH_PX = 'comps_width_px'
 export const KEY_COMPS_HEIGHT_PX = 'comps_height_px'
 export const KEY_LEGEND_WIDTH_PX = 'legend_width_px'
 export const KEY_LEGEND_HEIGHT_PX = 'legend_height_px'
+export const KEY_FIELDS_PROFILES = 'fields_profiles'
 
 export const PANE_KEYED_SETTINGS = {
    [KEY_STEPS_WIDTH_PX]: {
@@ -57,5 +58,11 @@ export const PANE_KEYED_SETTINGS = {
       default_value: 300,
       description: 'height of the legend pane in pixels',
       persist: true,
+   },
+   [KEY_FIELDS_PROFILES]: {
+      data_type: TYPE_BOOLEAN,
+      default_value: false,
+      description: 'whether or not the profiles page is shown',
+      persist: false,
    },
 }

@@ -15,7 +15,7 @@ import PaneLegend from "./panes/PaneLegend";
 import PaneComps from "./panes/PaneComps";
 import {
    KEY_DISABLED,
-   KEY_FIELD_CROSSHAIRS,
+   KEY_FIELD_CROSSHAIRS, KEY_HOVER_POINT,
    KEY_IMAGE_BOUNDS,
    TYPE_ARRAY,
    TYPE_BOOLEAN,
@@ -29,7 +29,7 @@ import {
    KEY_COMPS_WIDTH_PX,
    KEY_COMPS_HEIGHT_PX,
    KEY_LEGEND_WIDTH_PX,
-   KEY_LEGEND_HEIGHT_PX
+   KEY_LEGEND_HEIGHT_PX, KEY_FIELDS_PROFILES
 } from "./settings/PaneSettings";
 import PageSettings from "./PageSettings";
 
@@ -163,9 +163,13 @@ export class PageMain extends Component {
          return;
       }
       const bounds = page_settings[KEY_IMAGE_BOUNDS]
-      if (e.clientX < bounds.left || e.clientX > bounds.right) {
+      const in_fields_profiles = page_settings[KEY_FIELDS_PROFILES]
+      if ((e.clientX < bounds.left || e.clientX > bounds.right) && !in_fields_profiles) {
          // console.log('crosshairs go away!')
-         this.on_settings_changed({[KEY_FIELD_CROSSHAIRS]: false})
+         this.on_settings_changed({
+            [KEY_FIELD_CROSSHAIRS]: page_settings[KEY_FIELDS_PROFILES],
+            [KEY_HOVER_POINT]: null,
+         })
       }
    }
 

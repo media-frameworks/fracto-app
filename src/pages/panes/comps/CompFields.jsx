@@ -14,6 +14,7 @@ import FieldsHistogram from "./fields/FieldsHistogram";
 import FieldsColorWheel from "./fields/FieldsColorWheel";
 import FieldsFamilySpan from "./fields/FieldsFamilySpan";
 import FieldsColorChart from "./fields/FieldsColorChart";
+import FieldsProfiles from "./fields/FieldsProfiles";
 
 export const FIELDS_TYPE_SEPARATIONS = 'fields_type_separations'
 export const FIELDS_TYPE_PROFILES = 'fields_type_profiles'
@@ -77,7 +78,10 @@ export class CompFields extends Component {
             ]
             break
          case FIELDS_TYPE_PROFILES:
-            content = 'profiles here'
+            content = <FieldsProfiles
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
             break;
          default:
             break

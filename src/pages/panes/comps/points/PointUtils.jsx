@@ -165,6 +165,8 @@ export const get_click_point_info = (page_settings) => {
    if (!fracto_values.pattern) {
       orbital_points = get_escape_points(click_point)
    }
+   const cardinality_plus = get_cardinality(click_point.x, click_point.y, 1)
+   const cardinality_minus = get_cardinality(click_point.x, click_point.y, -1)
    return {
       click_point,
       pattern: fracto_values.pattern,
@@ -178,6 +180,7 @@ export const get_click_point_info = (page_settings) => {
       cardinality: best_cardinality,
       magnitude: best_magnitude,
       elapsed_new,
+      cardinality_plus, cardinality_minus,
    }
 }
 
@@ -403,4 +406,17 @@ export const step_ratio_chart = (point_set) => {
       debugger;
       return [e.message]
    }
+}
+
+const get_cardinality = (x, y, scalar) => {
+   const two_pi = new Complex(2 * Math.PI, 0)
+   const i = new Complex (0, 1)
+   const two_pi_i = two_pi.mul(i)
+   const negative_four_P = new Complex (-4 * x, -4 * y)
+   const under_radical = negative_four_P.offset(1, 0)
+   const radical = under_radical.sqrt()
+   const scalar_radical = radical.scale(scalar)
+   const one_plus_scalar_radical = scalar_radical.offset(1, 0)
+   const log_expression = one_plus_scalar_radical.ln()
+   return two_pi_i.divide(log_expression)
 }

@@ -104,6 +104,16 @@ export class FieldImage extends Component {
       }, 10)
    }
 
+   on_mouseleave = (e) => {
+      const {on_settings_changed} = this.props
+      setTimeout(() => {
+         on_settings_changed({
+            [KEY_HOVER_POINT]: null,
+            [KEY_FIELD_CROSSHAIRS]: false,
+         })
+      }, 10)
+   }
+
    client_click = (e) => {
       const {image_ref} = this.state
       const container_bounds = image_ref.current.getBoundingClientRect()
@@ -238,6 +248,7 @@ export class FieldImage extends Component {
          /> : []
       const crosshairs = page_settings[KEY_FIELD_CROSSHAIRS]
          ? <FieldCrossHairs
+            key={'crosshairs'}
             page_settings={page_settings}
             on_settings_changed={on_settings_changed}/>
          : ''
@@ -255,6 +266,7 @@ export class FieldImage extends Component {
                onClick={this.on_click}
                onContextMenu={this.on_context_menu}
                onMouseMove={this.on_mousemove}
+               onMouseLeave={this.on_mouseleave}
                onWheel={this.on_wheel}
                style={{width: image_width, marginTop: (field_height - image_width) / 2}}>
                <FractoRasterImage

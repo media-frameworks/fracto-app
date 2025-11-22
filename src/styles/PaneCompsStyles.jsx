@@ -5,39 +5,39 @@ const ROW_HEIGHT_PX = 15;
 
 export class PaneCompsStyles {
    static TabsWrapper = styled(CoolStyles.Block)`
-      background-color: #fcfcfc;
-      overflow-y: auto;
+       background-color: #fcfcfc;
+       overflow-y: auto;
    `
    static BinsWrapper = styled(CoolStyles.Block)`
-      background-color: white;
-      padding: 0.5rem 0.5rem;
-      margin-left: 0.5rem;
+       background-color: white;
+       padding: 0.5rem 0.5rem;
+       margin-left: 0.5rem;
    `
    static TableWrapper = styled(CoolStyles.Block)`
-      margin-bottom: 0.5rem;
+       margin-bottom: 0.5rem;
    `
 
    static ColorBarSegment = styled(CoolStyles.InlineBlock)`
-      height: ${ROW_HEIGHT_PX}px;
-      margin-bottom: 0.5rem;
+       height: ${ROW_HEIGHT_PX}px;
+       margin-bottom: 0.5rem;
    `;
 
    static OthersWrapper = styled(CoolStyles.Block)`
-      background-color: white;
-      margin: 0.25rem 0 0 1rem;
+       background-color: white;
+       margin: 0.25rem 0 0 1rem;
    `
 
    static OthersLabel = styled(CoolStyles.Block)`
-      ${CoolStyles.italic}
-      color: #444444;
-      margin: 0.25rem 0 0.25rem 0;
-      font-size: 0.85rem;
+       ${CoolStyles.italic}
+       color: #444444;
+       margin: 0.25rem 0 0.25rem 0;
+       font-size: 0.85rem;
    `;
 
    static ColorBlockWrapper = styled(CoolStyles.InlineBlock)`
-      ${CoolStyles.noselect}
-      margin-right: 0.5rem;
-      margin-bottom: 0.25rem;
+       ${CoolStyles.noselect}
+       margin-right: 0.5rem;
+       margin-bottom: 0.25rem;
    `;
 
    static OrbitalsPrompt = styled(CoolStyles.Block)`
@@ -49,14 +49,26 @@ export class PaneCompsStyles {
    `;
 
    static ColorWheelWrapper = styled(CoolStyles.InlineBlock)`
-      ${CoolStyles.noselect}
-      margin-right: 0.5rem;
-      margin-bottom: 0.25rem;
+       ${CoolStyles.noselect}
+       margin-right: 0.5rem;
+       margin-bottom: 0.25rem;
    `;
 
    static ColorWheelCanvas = styled.canvas`
        margin: 1rem;
    `
+   static ProfilesPrompt = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.italic}
+       color: #888888;
+       font-size: 1.125rem;
+       margin-right: 0.5rem;
+   `;
+   static SliderWrapper = styled(CoolStyles.InlineBlock)`
+       margin-right: 0.5rem;
+       margin-bottom: 0.25rem;
+       min-width: 200px;
+   `;
+
 }
 
 export default PaneCompsStyles

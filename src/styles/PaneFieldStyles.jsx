@@ -3,8 +3,8 @@ import {CoolStyles} from '../common/ui/CoolImports'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {HEADER_HEIGHT_PX} from "./PageAppStyles";
 
-const WIDTH_CROSSHAIR_LINE_PX = 2
-const OPACITY_LINE_PCT = 45
+export const WIDTH_CROSSHAIR_LINE_PX = 2
+export const OPACITY_LINE_PCT = 45
 
 export class PaneFieldStyles {
    static HeaderWrapper = styled(CoolStyles.Block)`

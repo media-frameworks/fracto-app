@@ -9,10 +9,15 @@ import {
    GET_TILES_FROM_CACHE,
    FILLING_CANVAS_BUFFER,
 } from "fracto/FractoTileData";
-import {KEY_FOCAL_POINT, KEY_SCOPE} from "pages/settings/AppSettings";
+import {
+   KEY_FOCAL_POINT,
+   KEY_HOVER_POINT,
+   KEY_SCOPE
+} from "pages/settings/AppSettings";
 import {render_image} from "./ImageUtils";
 import ImagesHeatMap from "./ImagesHeatMap";
-import {KEY_IMAGE_CAPTURE_DIMENSION_PX} from "../../../settings/ImageSettings";
+import {KEY_IMAGE_CAPTURE_DIMENSION_PX} from "pages/settings/ImageSettings";
+import PageSettings from "pages/PageSettings";
 
 const RESOLUTIONS = [
    {label: '150', value: 150, help: 'thumbnail',},
@@ -39,7 +44,8 @@ export class ImagesCaptureField extends Component {
       current_focal_point: {},
       current_scope: 0,
       image_outcome: {},
-      image_status: {}
+      image_status: {},
+      stored_values: {},
    }
 
    componentDidMount() {
@@ -48,15 +54,17 @@ export class ImagesCaptureField extends Component {
    }
 
    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
+      const {stored_values} = this.state
       const {page_settings} = this.props
       const current_size = page_settings[KEY_IMAGE_CAPTURE_DIMENSION_PX]
-      const focal_point = page_settings[KEY_FOCAL_POINT]
-      const scope = page_settings[KEY_SCOPE]
-      const focal_point_x_changed = prevState.current_focal_point.x !== focal_point.x
-      const focal_point_y_changed = prevState.current_focal_point.y !== focal_point.y
-      const scope_changed = prevState.current_scope !== scope
       const size_changes = current_size !== prevState.current_size
-      if (focal_point_x_changed || focal_point_y_changed || scope_changed || size_changes) {
+      const settings_changed = PageSettings.test_update_settings(
+         [
+            KEY_SCOPE,
+            KEY_FOCAL_POINT,
+            KEY_HOVER_POINT,
+         ], page_settings, stored_values)
+      if (settings_changed || size_changes) {
          this.initialize(current_size)
       }
    }
@@ -92,7 +100,7 @@ export class ImagesCaptureField extends Component {
       const {on_settings_changed} = this.props
       console.log('change_resolution', e.target.value)
       const current_size = parseInt(e.target.value)
-      on_settings_changed({[KEY_IMAGE_CAPTURE_DIMENSION_PX]:current_size})
+      on_settings_changed({[KEY_IMAGE_CAPTURE_DIMENSION_PX]: current_size})
       this.initialize(current_size)
    }
 

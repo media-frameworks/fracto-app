@@ -16,6 +16,7 @@ import CompPoints from "./comps/CompPoints";
 import CompImages from "./comps/CompImages";
 import CompMinibrot from "./comps/CompMinibrot";
 import CompBailiwicks from "./comps/CompBailiwicks";
+import CompVideo from "./comps/CompVideo";
 
 export const TAB_HEIGHT_PX = 20
 
@@ -26,10 +27,12 @@ const COMP_KEY_MINIBROT = 'comp_key_minibrot'
 const COMP_KEY_BAILIWICKS = 'comp_key_bailiwicks'
 const COMP_KEY_NURSERY = 'comp_key_nursery'
 const COMP_KEY_ADMIN = 'comp_key_admin'
+const COMP_KEY_VIDEO = 'comp_key_video'
 
 const ACTIVE_COMPS = [
    COMP_KEY_POINTS,
    COMP_KEY_IMAGE,
+   COMP_KEY_VIDEO,
    COMP_KEY_ORBITALS,
    COMP_KEY_MINIBROT,
    COMP_KEY_BAILIWICKS,
@@ -62,6 +65,11 @@ export class PaneComps extends Component {
             />
          case COMP_KEY_IMAGE:
             return <CompImages
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+         case COMP_KEY_VIDEO:
+            return <CompVideo
                page_settings={page_settings}
                on_settings_changed={on_settings_changed}
             />
@@ -101,6 +109,8 @@ export class PaneComps extends Component {
             return 'points'
          case COMP_KEY_IMAGE:
             return 'images'
+         case COMP_KEY_VIDEO:
+            return 'video'
          case COMP_KEY_ORBITALS:
             return 'fields'
          case COMP_KEY_MINIBROT:
