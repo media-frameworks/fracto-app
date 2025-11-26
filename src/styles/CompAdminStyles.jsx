@@ -2,13 +2,14 @@ import styled from "styled-components";
 import {CoolStyles} from '../common/ui/CoolImports'
 
 export class CompAdminStyles {
-   static   ContentWrapper = styled(CoolStyles.Block)`
-       //overflow-y: scroll;
-       padding: 1rem 0.5rem;
-       //background-color: lightseagreen;
+   static CompWrapper = styled(CoolStyles.Block)`
+       margin: 0.5rem 1.0rem;
+   `
+   static ContentWrapper = styled(CoolStyles.Block)`
+       margin: 0.25rem 0.125rem;
    `
    static TileBlockWrapper = styled(CoolStyles.InlineBlock)`
-       padding: 0;
+       margin: 0;
    `
    static DateWrapper = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.italic}
@@ -41,9 +42,7 @@ export class CompAdminStyles {
        margin-left: 1rem;
    `
    static CenteredBlock = styled(CoolStyles.Block)`
-       ${CoolStyles.align_left}
-       border-bottom: 0.1rem solid #aaaaaa;
-       margin: 1.0rem 0 0.5rem;
+       ${CoolStyles.align_center}
    `
    static PatternTypePrompt = styled(CoolStyles.InlineBlock)`
        ${CoolStyles.pointer}
@@ -73,6 +72,12 @@ export class CompAdminStyles {
        padding: 0.125rem 0.5rem;
        color: white;
        letter-spacing: 0.15rem;
+   `
+
+   static TitleLink = styled(CoolStyles.InlineBlock)`
+       ${CoolStyles.pointer}
+       ${CoolStyles.noselect}
+       ${CoolStyles.underline}
    `
 }
 

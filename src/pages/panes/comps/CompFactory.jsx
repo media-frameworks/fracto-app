@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import network from "common/config/network.json";
 
-import ReactTimeAgo from "react-time-ago";
+import {CompFactoryStyles as styles} from 'styles/CompFactoryStyles'
+import {render_comp_modes} from "./CompUtils";
+import {KEY_FACTORY_TYPE} from "../../settings/CompSettings";
+import FactoryAuditor from "./factory/FactoryAuditor";
+import FactoryGenerator from "./factory/FactoryGenerator";
 
-import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
-import {CoolStyles} from "common/ui/CoolImports";
-import LatestTileBlock from "./archive/latest/LatestTileBlock";
-import {NumberInline, SmallNumberInline} from "fracto/styles/FractoStyles";
-import {KEY_COMPS_WIDTH_PX} from 'pages/settings/PaneSettings'
+export const FACTORY_TYPE_AUDITOR = 'factory_type_auditor'
+export const FACTORY_TYPE_GENERATOR = 'factory_type_generator'
 
-const TILE_COUNT = 17;
-const PAGE_REFRESH_TIME_MS = 3000;
+const FACTORY_MODES = [
+   {key: FACTORY_TYPE_AUDITOR, label: 'auditor'},
+   {key: FACTORY_TYPE_GENERATOR, label: 'generator'},
+]
 
 export class CompFactory extends Component {
    static propTypes = {
@@ -20,83 +22,36 @@ export class CompFactory extends Component {
    }
 
    state = {
-      new_tiles: [],
-      updated_tiles: [],
-      interval: null,
-      tile_blocks: {},
    }
 
    componentDidMount() {
-      this.get_recents()
-   }
-
-   get_recents = async () => {
-      const {tile_blocks} = this.state
-      let url = `${network["fracto-prod"]}/recent_tiles.php`
-      try {
-         const fetched = await fetch(url)
-         const recent_tiles = await fetched.json()
-         const item_keys = Object.keys(recent_tiles.new)
-         item_keys.forEach(key => {
-            const short_code = key.slice(0, key.lastIndexOf("."));
-            tile_blocks[short_code] = recent_tiles.new[key]
-         })
-         this.setState({
-            new_tiles: recent_tiles.new,
-            updated_tiles: recent_tiles.updated,
-            tile_blocks,
-         })
-      } catch (e) {
-         console.log(e)
-      }
-      setTimeout(() => {
-         this.get_recents()
-      }, PAGE_REFRESH_TIME_MS)
    }
 
    render() {
-      const {tile_blocks} = this.state
       const {page_settings, on_settings_changed} = this.props
-      const frame_width = page_settings[KEY_COMPS_WIDTH_PX] - 25
-      const margin = frame_width / 80
-      const large_width = (frame_width - 4 * margin) / 3.125
-      const small_width = (frame_width - 8 * margin) / 7.5
-      const item_keys = Object.keys(tile_blocks)
-      const new_tile_list = item_keys
-         .sort((a, b) => tile_blocks[b] - tile_blocks[a])
-         .slice(0, TILE_COUNT)
-         .map((short_code, i) => {
-            const date = new Date(tile_blocks[short_code] * 1000);
-            const top_row = i < 3
-            const title = top_row
-               ? <NumberInline style={{width: `${large_width}px`}}>{short_code}</NumberInline>
-               : <SmallNumberInline style={{width: `${small_width}px`}}>{short_code}</SmallNumberInline>
-            return <styles.TileBlockWrapper
-               style={{marginLeft: `${margin}px`}}
-               key={`recent-${short_code}`}>
-               <LatestTileBlock
-                  short_code={short_code}
-                  size_px={top_row ? large_width : small_width}
-                  timecode={tile_blocks[short_code]}
-                  on_settings_changed={on_settings_changed}
-               />
-               <CoolStyles.Block
-                  style={{textAlign: 'center'}}>
-                  {title}
-               </CoolStyles.Block>
-               <CoolStyles.Block
-                  style={{textAlign: 'center'}}>
-                  <styles.DateWrapper>
-                     <ReactTimeAgo date={date}/>
-                  </styles.DateWrapper>
-               </CoolStyles.Block>
-            </styles.TileBlockWrapper>
-         })
-      const preamble = 'New tiles added moments ago at Fracto HQ'
-      return <styles.ContentWrapper>
-         <styles.PreambleWrapper>{preamble}</styles.PreambleWrapper>
-         {new_tile_list}
-      </styles.ContentWrapper>
+      const modes = render_comp_modes(
+         FACTORY_MODES, KEY_FACTORY_TYPE, page_settings, on_settings_changed)
+      let content = []
+      switch (page_settings[KEY_FACTORY_TYPE]) {
+         case FACTORY_TYPE_AUDITOR:
+            content = <FactoryAuditor
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+            break
+         case FACTORY_TYPE_GENERATOR:
+            content = <FactoryGenerator
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+            break;
+         default:
+            break
+      }
+      return <styles.CompWrapper>
+         {modes}
+         {content}
+      </styles.CompWrapper>
    }
 }
 

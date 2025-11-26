@@ -10,6 +10,9 @@ import {
    VIDEO_MODE_GALLERY,
    VIDEO_MODE_STAGING
 } from "pages/settings/VideoSettings";
+import VideoCaptureField from "./video/VideoCaptureField";
+import VideoStaging from "./video/VideoStaging";
+import VideoGallery from "./video/VideoGallery";
 
 const VIDEO_MODES = [
    {key: VIDEO_MODE_CAPTURE_FIELD, label: 'capture'},
@@ -30,12 +33,34 @@ export class CompVideo extends Component {
    }
 
    render() {
+      const {page_settings, on_settings_changed} = this.props
+      let content = []
+      switch (page_settings[KEY_VIDEO_MODE]) {
+         case VIDEO_MODE_CAPTURE_FIELD:
+            content = <VideoCaptureField
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+            break;
+         case VIDEO_MODE_STAGING:
+            content = <VideoStaging
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+            break;
+         case VIDEO_MODE_GALLERY:
+            content = <VideoGallery
+               page_settings={page_settings}
+               on_settings_changed={on_settings_changed}
+            />
+            break
+         default:
+            content = page_settings[KEY_VIDEO_MODE]
+            break
+      }
       const modes = this.render_video_mode()
-      const content = [
-         modes,
-      ]
       return <styles.ContentWrapper>
-         {modes}
+         {modes}{content}
       </styles.ContentWrapper>
    }
 }

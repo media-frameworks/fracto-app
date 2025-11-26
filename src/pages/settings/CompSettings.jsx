@@ -19,6 +19,8 @@ import {
 import {PATTERN_TYPE_ORBITALS} from "../panes/comps/archive/CompPatterns";
 import {ADMIN_TYPE_SETTINGS} from "../panes/comps/CompAdmin";
 import {FIELDS_TYPE_SEPARATIONS} from "../panes/comps/CompFields";
+import {FACTORY_TYPE_AUDITOR} from "../panes/comps/CompFactory";
+import {AUDIT_NEW_TILES} from "../panes/comps/factory/FactoryAuditor";
 
 export const KEY_IMAGE_WIDTH = 'image_width'
 export const KEY_COLORATION_TYPE = 'coloration_type'
@@ -28,6 +30,7 @@ export const KEY_COLOR_PHASE = 'color_phase'
 export const KEY_PATTERN_TYPE = 'pattern_type'
 export const KEY_ADMIN_TYPE = 'admin_type'
 export const KEY_FIELDS_TYPE = 'fields_type'
+export const KEY_FACTORY_TYPE = 'key_factory_type'
 
 export const KEY_SCRIPT_TREE_WIDTH_PX = 'script_tree_width_px'
 export const KEY_SCRIPT_TREE_HEIGHT_PX = 'script_tree_height_px'
@@ -40,12 +43,15 @@ export const KEY_SCRIPT_EXPANDED_KEYS = 'script_expanded_sets'
 export const KEY_SCRIPT_SELECTED_KEYS = 'script_selected_sets'
 export const KEY_SCRIPT_SELECTED_DATA = 'script_selected_data'
 
+export const KEY_FACTORY_AUDIT_TYPE = 'factory_audit_type'
+
 export const COMPONENT_CAPTURE = 'component_capture'
 export const COMPONENT_BAILIWICKS = 'component_bailiwicks'
 export const COMPONENT_COLORS = 'component_colors'
 export const COMPONENT_SCRIPT = 'component_script'
 export const COMPONENT_PATTERNS = 'component_patterns'
 export const COMPONENT_FIELDS = 'component_fields'
+export const COMPONENT_FACTORY = 'component_factory'
 
 export const COMP_KEYED_SETTINGS = {
    [KEY_IMAGE_WIDTH]: {
@@ -178,6 +184,20 @@ export const COMP_KEYED_SETTINGS = {
       default_value: FIELDS_TYPE_SEPARATIONS,
       description: 'type of fields contents chosen in the UI (separations or peofiles)',
       component: COMPONENT_FIELDS,
+      persist: true,
+   },
+   [KEY_FACTORY_TYPE]: {
+      data_type: TYPE_STRING,
+      default_value: FACTORY_TYPE_AUDITOR,
+      description: 'Type of factory interface (auditor or generator)',
+      component: COMPONENT_FACTORY,
+      persist: true,
+   },
+   [KEY_FACTORY_AUDIT_TYPE]: {
+      data_type: TYPE_STRING,
+      default_value: AUDIT_NEW_TILES,
+      description: 'Type of factory audit (new or updated)',
+      component: COMPONENT_FACTORY,
       persist: true,
    },
 }

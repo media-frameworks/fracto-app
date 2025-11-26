@@ -9,7 +9,7 @@ import {
    LORE_MODE_PRESENT
 } from "pages/settings/LoreSettings";
 import {render_comp_modes} from "../CompUtils";
-import LoreIndex from "../lore/LoreIndex";
+import LoreIndex from "./lore/LoreIndex";
 
 const LORE_MODES = [
    {key: LORE_MODE_INDEX, label: 'index'},
