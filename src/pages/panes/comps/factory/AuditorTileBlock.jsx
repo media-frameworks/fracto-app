@@ -7,7 +7,7 @@ import FractoTileRender from "fracto/FractoTileRender";
 import FractoUtil from "fracto/FractoUtil";
 import CoolStyles from "common/ui/styles/CoolStyles";
 
-export class LatestTileBlock extends Component {
+export class AuditorTileBlock extends Component {
    static propTypes = {
       short_code: PropTypes.string.isRequired,
       timecode: PropTypes.number.isRequired,
@@ -48,4 +48,4 @@ export class LatestTileBlock extends Component {
    }
 }
 
-export default LatestTileBlock
+export default AuditorTileBlock

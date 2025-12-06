@@ -5,7 +5,7 @@ import ReactTimeAgo from "react-time-ago";
 import network from "common/config/network.json";
 
 import {CompAdminStyles as styles} from 'styles/CompAdminStyles'
-import LatestTileBlock from "./LatestTileBlock";
+import AuditorTileBlock from "./AuditorTileBlock";
 import {NumberInline, SmallNumberInline} from "fracto/styles/FractoStyles";
 import {KEY_COMPS_WIDTH_PX} from 'pages/settings/PaneSettings'
 import {KEY_FACTORY_AUDIT_TYPE} from "../../../settings/CompSettings";
@@ -88,7 +88,7 @@ export class FactoryAuditor extends Component {
             return <styles.TileBlockWrapper
                style={{marginLeft: `${margin}px`}}
                key={`recent-${i}`}>
-               <LatestTileBlock
+               <AuditorTileBlock
                   short_code={short_code}
                   size_px={top_row ? large_width : small_width}
                   timecode={tile_blocks[short_code]}

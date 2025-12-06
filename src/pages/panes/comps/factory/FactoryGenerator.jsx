@@ -16,6 +16,8 @@ import {
    CELL_TYPE_CALLBACK
 } from "common/ui/CoolTable";
 import GenerateTileSet from "./GenerateTileSet";
+import TileSetStatus from "./TileSetStatus";
+import TileSetHistory from "./TileSetHistory";
 
 const IMAGE_SERVER_URL = network.image_server_url
 
@@ -245,24 +247,37 @@ export class FactoryGenerator extends Component {
 
    render() {
       const {in_detect, coverage, tile_set, operation_type} = this.state
-      const detect_link = <styles.DetectPrompt
-         style={{opacity: in_detect ? 0.65 : 1.0}}
-         onClick={this.detect_coverage}>
-         detect coverage
-      </styles.DetectPrompt>
-      const coverage_table = coverage ? this.render_coverage_table() : ''
-      const generator = tile_set
-         ? <GenerateTileSet
+      let detect_link = ''
+      let generator = ''
+      let tile_set_status = ''
+      let tile_set_history = ''
+      if (!tile_set) {
+         detect_link = <styles.DetectPrompt
+            style={{opacity: in_detect ? 0.65 : 1.0}}
+            onClick={this.detect_coverage}>
+            detect coverage
+         </styles.DetectPrompt>
+      } else {
+         generator = <GenerateTileSet
             tile_set={tile_set}
             operation_type={operation_type}
             on_tile_complete={this.on_tile_complete}
             on_job_complete={this.on_job_complete}
          />
-         : ''
+         tile_set_status = <TileSetStatus status_data={[]}/>
+         tile_set_history = <TileSetHistory history_data={[]}/>
+      }
+      let coverage_table = ''
+      if (coverage) {
+         coverage_table = this.render_coverage_table()
+      }
+
       return <styles.ContentWrapper>
          {detect_link}
          {coverage_table}
          {generator}
+         {tile_set_status}
+         {tile_set_history}
       </styles.ContentWrapper>
    }
 }
