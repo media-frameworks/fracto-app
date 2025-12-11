@@ -77,7 +77,7 @@ export class VertexList extends Component {
    }
 
    calc_hover_data = (focal_point) => {
-      if (!focal_point.x) {
+      if (!focal_point) {
          return
       }
       const fracto_values = FractoFastCalc.calc(focal_point.x, focal_point.y)
